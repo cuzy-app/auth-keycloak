@@ -15,6 +15,7 @@ Using this module, users can directly log in or register at this HumHub installa
 - Possibility to choose broker's (IdP) mapper name to use for Humhub's default username (on account creation)
 - Can try auto login (only if anonymous registration is allowed)
 
+
 ## Install
 
 ```
@@ -25,6 +26,7 @@ composer install
 ```
 
 And then enable module in Humhub's administration
+
 
 ## Usage
 
