@@ -1,0 +1,9 @@
+{
+  "name": "cuzy-app/humhub-modules-auth-keycloak",
+  "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
+  "minimum-stability": "stable",
+  "type": "library",
+  "require": {
+    "mohammad-waleed/keycloak-admin-client": "^0.18.0"
+  }
+}
