@@ -13,8 +13,18 @@ Using this module, users can directly log in or register at this HumHub installa
 - If email is changed on the broker (IdP) or on Humhub, it can be automatically updated on Humhub or the broker
 - Possibility to choose if user must be linked to the broker (IdP) from the broker's user ID or email
 - Possibility to choose broker's (IdP) mapper name to use for Humhub's default username (on account creation)
-- Can to try auto login (only if anonymous registration is allowed)
+- Can try auto login (only if anonymous registration is allowed)
 
+## Install
+
+```
+cd my-humhub/protected/modules
+git clone https://github.com/cuzy-app/humhub-modules-auth-keycloak.git auth-keycloak
+cd auth-keycloak
+composer install
+```
+
+And then enable module in Humhub's administration
 
 ## Usage
 

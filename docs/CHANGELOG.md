@@ -3,7 +3,7 @@ Changelog
 
 0.3 (June 2, 2021)
 --------------------
-- Chg: Module renamed
+- Chg: Module renamed (uninstall old module, install new one and change module name in config/common.php)
 
 
 0.2.1 (May, 21, 2021)
