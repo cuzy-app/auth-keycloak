@@ -13,7 +13,7 @@ use humhub\modules\user\models\forms\Registration;
 use humhub\modules\user\models\User as ModelUser;
 use yii\web\User as ComponentUser;
 
-
+/** @noinspection MissedFieldInspection */
 return [
     'id' => 'auth-keycloak',
     'class' => humhub\modules\authKeycloak\Module::class,
@@ -37,18 +37,12 @@ return [
         [
             'class' => ModelUser::class,
             'event' => ModelUser::EVENT_AFTER_UPDATE,
-            'callback' => [
-                Events::class,
-                'onModelUserAfterUpdate'
-            ]
+            'callback' => [Events::class, 'onModelUserAfterUpdate']
         ],
         [
             'class' => ComponentUser::class,
             'event' => ComponentUser::EVENT_AFTER_LOGOUT,
-            'callback' => [
-                Events::class,
-                'onComponentUserAfterLogout'
-            ]
+            'callback' => [Events::class, 'onComponentUserAfterLogout']
         ],
     ],
 ];

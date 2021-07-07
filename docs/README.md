@@ -28,9 +28,12 @@ composer install
 And then enable module in Humhub's administration
 
 
-## Usage
+## Requirements
 
-### Keycloak
+Pretty URLs must be enabled ([see documentation](https://docs.humhub.org/docs/admin/installation/#pretty-urls)).
+
+
+## Usage
 
 Create client on the broker (IdP) and configure it:
 - Tab "Settings": "Access Type": choose `confidential`. Save settings.
@@ -58,7 +61,7 @@ Edit `protected/config/common.php` and in the `components` array, add:
                     'usernameMapper' => 'preferred_username',
                     // Title of the button (if autoLogin is disabled)
                     'title' => 'Connect with Keycloak',
-                    // Automatic login
+                    // Automatic login (only if anonymous registration is allowed)
                     'autoLogin' => false,
                     // Hide username field in registration form
                     'hideRegistrationUsernameField' => false,

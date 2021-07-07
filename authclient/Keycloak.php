@@ -9,11 +9,12 @@
 namespace humhub\modules\authKeycloak\authclient;
 
 use Yii;
+use yii\authclient\OAuth2;
 use yii\helpers\Url;
 use humhub\modules\user\models\Auth;
 
 
-class Keycloak extends \yii\authclient\OAuth2
+class Keycloak extends OAuth2
 {
     /**
      * @inheritdoc
@@ -86,7 +87,7 @@ class Keycloak extends \yii\authclient\OAuth2
 
     protected function initUserAttributes()
     {
-        return $this->api('userinfo', 'GET');
+        return $this->api('userinfo');
     }
 
 
@@ -124,7 +125,7 @@ class Keycloak extends \yii\authclient\OAuth2
             'lastname' => 'family_name',
             'email' => 'email',
         ];
-        if ($this->idAttribute == 'id') {
+        if ($this->idAttribute === 'id') {
             // Use Keycloak ID (sub) to match user table
             return array_merge(['id' => 'sub'], $userAttributeMap);
         }
@@ -149,7 +150,7 @@ class Keycloak extends \yii\authclient\OAuth2
         }
 
         // Redirect to broker
-        // The `return` will prevent loggin user if URL doesn't exists
+        // The `return` will prevent logging user if URL doesn't exists
         return Yii::$app->getResponse()->redirect($this->buildAuthUrl());
     }
 
@@ -165,14 +166,15 @@ class Keycloak extends \yii\authclient\OAuth2
     /**
      * @inheritdoc
      * Update Humhub's user email if emails is different on Keycloak
+     * @throws \yii\base\InvalidConfigException
      */
     public function getUserAttributes()
     {
-        if ($this->updateHumhubEmailFromBrokerEmail && $this->idAttribute == 'id') {
+        if ($this->updateHumhubEmailFromBrokerEmail && $this->idAttribute === 'id') {
             $userAttributes = $this->normalizeUserAttributes($this->initUserAttributes());
 
             $userAuth = Auth::findOne(['source' => $this->defaultName(), 'source_id' => $userAttributes['id']]);
-            if ($userAuth !== null && $userAuth->user->email != $userAttributes['email']) {
+            if ($userAuth !== null && $userAuth->user->email !== $userAttributes['email']) {
                 $userAuth->user->email = $userAttributes['email'];
                 $userAuth->user->save();
             }

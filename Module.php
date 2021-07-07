@@ -17,7 +17,7 @@ class Module extends \humhub\components\Module
     /**
      * @var string defines the icon
      */
-    public $icon = 'fa-sign-in';
+    public $icon = 'sign-in';
 
     /**
      * @var string defines path for resources, including the screenshots path for the marketplace
