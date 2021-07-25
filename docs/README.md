@@ -42,35 +42,7 @@ Create client on the broker (IdP) and configure it:
     + "Add builtin" and check: `family name`, `email`, `given name` and `username`
     + Edit "username": in "Token Claim Name", replace `preferred_username` with `id`
 
-
-Edit `protected/config/common.php` and in the `components` array, add:
-```
-        'authClientCollection' => [
-            'clients' => [
-                'Keycloak' => [
-                    'class' => 'humhub\modules\authKeycloak\authclient\Keycloak',
-                    'authUrl' => 'https://idp-domain.tdl/auth/realms/master/protocol/openid-connect/auth',
-                    'tokenUrl' => 'https://idp-domain.tdl/auth/realms/master/protocol/openid-connect/token',
-                    'apiBaseUrl' => 'https://idp-domain.tdl/auth/realms/master/protocol/openid-connect',
-                    'clientId' => 'xxxxxxxxxxx',
-                    // Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")
-                    'clientSecret' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-                    // String attribute to match user tables with email or id
-                    'idAttribute' => 'id',
-                    // Keycloak mapper for username: 'preferred_username', 'sub' (to use Keycloak ID) or other custom Token Claim Name
-                    'usernameMapper' => 'preferred_username',
-                    // Title of the button (if autoLogin is disabled)
-                    'title' => 'Connect with Keycloak',
-                    // Automatic login (only if anonymous registration is allowed)
-                    'autoLogin' => false,
-                    // Hide username field in registration form
-                    'hideRegistrationUsernameField' => false,
-                ],
-            ],
-        ],
-```
-
-More options: see clients in `authclient` folder
+Go to module's settings.
 
 
 ## Author

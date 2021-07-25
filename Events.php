@@ -8,11 +8,14 @@
 
 namespace humhub\modules\authKeycloak;
 
+use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\models\ConfigureForm;
+use humhub\modules\user\authclient\Collection;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
 use yii\base\ActionEvent;
 use Yii;
+use yii\base\Event;
 
 class Events
 {
@@ -24,14 +27,15 @@ class Events
         /** @var Collection $authClientCollection */
         $authClientCollection = $event->sender;
 
-        if (!empty(ConfigureForm::getInstance()->enabled)) {
+        $config = ConfigureForm::getInstance();
+        if ($config->enabled) {
             $authClientCollection->setClient('Keycloak', [
                 'class' => Keycloak::class,
-                'clientId' => ConfigureForm::getInstance()->clientId,
-                'clientSecret' => ConfigureForm::getInstance()->clientSecret,
-                'authUrl' => ConfigureForm::getInstance()->authUrl,
-                'tokenUrl' => ConfigureForm::getInstance()->tokenUrl,
-                'apiBaseUrl' => ConfigureForm::getInstance()->apiBaseUrl
+                'clientId' => $config->clientId,
+                'clientSecret' => $config->clientSecret,
+                'authUrl' => $config->authUrl,
+                'tokenUrl' => $config->tokenUrl,
+                'apiBaseUrl' => $config->apiBaseUrl
             ]);
         }
     }
@@ -52,8 +56,13 @@ class Events
             return;
         }
 
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+
         $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
-        if ($authClient->autoLogin) {
+
+        if ($settings->get('autoLogin')) {
             $event->isValid = false;
             return $authClient->redirectToBroker();
         }
@@ -78,8 +87,13 @@ class Events
             return;
         }
 
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+
         $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
-        if ($authClient->autoLogin) {
+
+        if ($settings->get('autoLogin')) {
             $event->isValid = false;
             return $authClient->redirectToBroker();
         }
@@ -87,7 +101,7 @@ class Events
 
     /**
      * Registration form: hide username field
-     * @param \yii\base\Event $event
+     * @param Event $event
      */
     public static function onUserRegistrationFormBeforeRender ($event)
     {
@@ -100,8 +114,10 @@ class Events
             return;
         }
 
-        $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
-        if (!$authClient->hideRegistrationUsernameField) {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+        if (!$settings->get('hideRegistrationUsernameField')) {
             return;
         }
 
@@ -134,8 +150,8 @@ class Events
 
             if (Yii::$app->authClientCollection->hasClient('Keycloak')) {
 
-                $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
-                if ($authClient->updatedBrokerEmailFromHumhubEmail && !empty($authClient->keycloakApiParams)) {
+                $config = ConfigureForm::getInstance();
+                if ($config->updatedBrokerEmailFromHumhubEmail && $config->hasApiParams()) {
 
                     $userAuth = Auth::findOne(['source' => 'Keycloak', 'user_id' => $user->id]);
                     if ($userAuth !== null) {
@@ -144,7 +160,12 @@ class Events
                             require Yii::getAlias('@auth-keycloak/vendor/autoload.php');
                         }
 
-                        $client = \Keycloak\Admin\KeycloakClient::factory($authClient->keycloakApiParams);
+                        $client = \Keycloak\Admin\KeycloakClient::factory([
+                            'realm' => $config->apiRealm,
+                            'username' => $config->apiUsername,
+                            'password' => $config->apiPassword,
+                            'baseUri' => $config->apiRootUrl,
+                        ]);
                         $realm = $client->getRealm();
 
                         // Update email
@@ -174,8 +195,8 @@ class Events
         /** @var User $user */
         $user = $event->identity;
 
-        $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
-        if ($authClient->removeKeycloakSessionsAfterLogout && !empty($authClient->keycloakApiParams)) {
+        $config = ConfigureForm::getInstance();
+        if ($config->removeKeycloakSessionsAfterLogout && $config->hasApiParams()) {
 
             $userAuth = Auth::findOne(['source' => 'Keycloak', 'user_id' => $user->id]);
             if ($userAuth !== null) {
@@ -184,13 +205,18 @@ class Events
                     require Yii::getAlias('@auth-keycloak/vendor/autoload.php');
                 }
 
-                $client = \Keycloak\Admin\KeycloakClient::factory($authClient->keycloakApiParams);
+                $client = \Keycloak\Admin\KeycloakClient::factory([
+                    'realm' => $config->apiRealm,
+                    'username' => $config->apiUsername,
+                    'password' => $config->apiPassword,
+                    'baseUri' => $config->apiRootUrl,
+                ]);
 
                 // Search for client with clientId of $authClient
                 foreach ($client->getClients() as $clientDefinition) {
                     if (
                         isset($clientDefinition['clientId'])
-                        && $clientDefinition['clientId'] === $authClient->clientId
+                        && $clientDefinition['clientId'] === $config->clientId
                         && isset($clientDefinition['id'])
                     ) {
                         // Get id of the client (different from clientId)

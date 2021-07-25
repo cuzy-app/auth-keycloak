@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.4 (July 25, 2021)
+--------------------
+- Enh #2: Admin Settings Interface (thanks @ArchBlood)
+
+
 0.3 (June 2, 2021)
 --------------------
 - Chg: Module renamed (uninstall old module, install new one and change module name in config/common.php)

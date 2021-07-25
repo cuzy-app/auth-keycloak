@@ -8,6 +8,7 @@
 
 namespace humhub\modules\authKeycloak;
 
+use humhub\modules\authKeycloak\models\ConfigureForm;
 use Yii;
 use yii\helpers\Url;
 use humhub\components\Module as BaseModule;
@@ -25,21 +26,12 @@ class Module extends BaseModule
      */
     public $resourcesPath = 'resources';
 
-        /**
+    /**
      * @inheritdoc
      */
     public function getConfigUrl()
     {
         return Url::to(['/auth-keycloak/admin']);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function disable()
-    {
-        // Cleanup all module data, don't remove the parent::disable()!!!
-        parent::disable();
     }
 
     public function getName()

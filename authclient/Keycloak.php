@@ -8,6 +8,8 @@
 
 namespace humhub\modules\authKeycloak\authclient;
 
+use humhub\modules\authKeycloak\models\ConfigureForm;
+use humhub\modules\authKeycloak\Module;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\helpers\Url;
@@ -20,69 +22,31 @@ class Keycloak extends OAuth2
      * @inheritdoc
      * https://broker-domain.tdl/auth/realms/master/protocol/openid-connect/auth
      */
-    public $authUrl = Yii::$app->getModule('auth-keycloak')->settings->get('authUrl', $this->authUrl);
+    public $authUrl;
  
     /**
      * @inheritdoc
      * https://broker-domain.tdl/auth/realms/master/protocol/openid-connect/token
      */
-    public $tokenUrl =Yii::$app->getModule('auth-keycloak')->settings->get('tokenUrl', $this->tokenUrl);
+    public $tokenUrl;
  
     /**
      * @inheritdoc
      * https://broker-domain.tdl/auth/realms/master/protocol/openid-connect
      */
-    public $apiBaseUrl = Yii::$app->getModule('auth-keycloak')->settings->get('apiBaseUrl', $this->apiBaseUrl);
+    public $apiBaseUrl;
 
-    /**
-     * @var string attribute to match user tables with email or id
-     */
-    public $idAttribute = 'id';
 
-    /**
-     * @var string Keycloak mapper for username: 'preferred_username', 'sub' (to use Keycloak ID) or other custom Token Claim Name
-     */
-    public $usernameMapper = 'preferred_username';
-    
-    /**
-     * @var boolean auto login (possible only if anonymous registration is allowed)
-     */
-    public $autoLogin = false;
+    public function init()
+    {
+        $config = ConfigureForm::getInstance();
 
-    /**
-     * @var boolean remove user's Keycloak sessions after logout
-     * Uses Keycloak API ($this->keycloakApiParams are required)
-     */
-    public $removeKeycloakSessionsAfterLogout = false;
+        $this->authUrl = $config->authUrl;
+        $this->tokenUrl = $config->tokenUrl;
+        $this->apiBaseUrl = $config->apiBaseUrl;
 
-    /**
-     * @var boolean hide username field in registration form
-     */
-    public $hideRegistrationUsernameField = false;
-
-    /**
-     * @var bool update Humhub's user email from broker's (Keycloak) user email on login
-     * Possible only if $this->idAttribute value is set to 'id'
-     */
-    public $updateHumhubEmailFromBrokerEmail = true;
-
-    /**
-     * @var bool update broker's (Keycloak) user email on Humhub's user email update
-     * Uses Keycloak API ($this->keycloakApiParams are required)
-     */
-    public $updatedBrokerEmailFromHumhubEmail = false;
-
-    /**
-     * @var array Keycloak API params for authentification
-     * Example:
-     [
-        'realm'=>'master',
-        'username'=>'an_admin_user_name',
-        'password'=>'admin_user_password',
-        'baseUri'=>'https://broker-domain.tdl'
-     ]
-     */
-    public $keycloakApiParams = [];
+        parent::init();
+    }
 
 
     protected function initUserAttributes()
@@ -101,7 +65,7 @@ class Keycloak extends OAuth2
 
     protected function defaultName()
     {
-        return 'keycloak';
+        return 'Keycloak';
     }
 
     protected function defaultTitle()
@@ -119,16 +83,22 @@ class Keycloak extends OAuth2
 
     protected function defaultNormalizeUserAttributeMap()
     {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+
         $userAttributeMap = [
-            'username' => $this->usernameMapper,
+            'username' => $settings->get('usernameMapper'),
             'firstname' => 'given_name',
             'lastname' => 'family_name',
             'email' => 'email',
         ];
-        if ($this->idAttribute === 'id') {
+
+        if ($settings->get('idAttribute') === 'id') {
             // Use Keycloak ID (sub) to match user table
             return array_merge(['id' => 'sub'], $userAttributeMap);
         }
+
         // Use Keycloak email to match user table
         return $userAttributeMap;
     }
@@ -159,7 +129,7 @@ class Keycloak extends OAuth2
      */
     public function getReturnUrl()
     {
-        return Url::to('/user/auth/external?authclient=Keycloak', true);
+        return Url::to(['/user/auth/external', 'authclient' => 'Keycloak'], true);
     }
 
 
@@ -170,7 +140,11 @@ class Keycloak extends OAuth2
      */
     public function getUserAttributes()
     {
-        if ($this->updateHumhubEmailFromBrokerEmail && $this->idAttribute === 'id') {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+
+        if ($settings->get('updateHumhubEmailFromBrokerEmail') && $settings->get('idAttribute') === 'id') {
             $userAttributes = $this->normalizeUserAttributes($this->initUserAttributes());
 
             $userAuth = Auth::findOne(['source' => $this->defaultName(), 'source_id' => $userAttributes['id']]);
