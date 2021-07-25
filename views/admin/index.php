@@ -34,11 +34,12 @@ use humhub\libs\Html;
             <br>
             <?= $form->field($model, 'redirectUri')->textInput(['readonly' => true]); ?>
             <br>
+            <?= $form->field($model, 'idAttribute'); ?>
+            <?= $form->field($model, 'usernameMapper'); ?>
+            <br>
 
             <h4><?= Yii::t('AuthKeycloakModule.base', 'Advanced settings (optional)'); ?></h4>
 
-            <?= $form->field($model, 'idAttribute'); ?>
-            <?= $form->field($model, 'usernameMapper'); ?>
             <?= $form->field($model, 'title'); ?>
             <?= $form->field($model, 'autoLogin')->checkbox(); ?>
             <?= $form->field($model, 'hideRegistrationUsernameField')->checkbox(); ?>
