@@ -8,7 +8,7 @@
 
 namespace humhub\modules\authKeycloak;
 
-use humhub\authKeycloak\models\ConfigureForm;
+use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
 use yii\base\ActionEvent;
