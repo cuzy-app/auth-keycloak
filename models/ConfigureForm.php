@@ -117,7 +117,7 @@ class ConfigureForm extends Model
     public function rules()
     {
         return [
-            [['clientId', 'clientSecret', 'authUrl', 'tokenUrl', 'apiBaseUrl', 'idAttribute', 'usernameMapper', 'autoLogin', 'hideRegistrationUsernameField', 'removeKeycloakSessionsAfterLogout', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail'], 'required'],
+            [['clientId', 'clientSecret', 'authUrl', 'tokenUrl', 'apiBaseUrl', 'idAttribute', 'usernameMapper'], 'required'],
             [['clientId', 'clientSecret', 'authUrl', 'tokenUrl', 'apiBaseUrl', 'idAttribute', 'usernameMapper', 'title', 'apiRealm', 'apiUsername', 'apiPassword', 'apiRootUrl'], 'string'],
             [['enabled', 'autoLogin', 'hideRegistrationUsernameField', 'removeKeycloakSessionsAfterLogout', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail'], 'boolean'],
         ];
