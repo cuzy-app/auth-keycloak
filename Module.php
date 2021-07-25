@@ -30,7 +30,7 @@ class Module extends BaseModule
      */
     public function getConfigUrl()
     {
-        return Url::to(['/authKeycloak/admin']);
+        return Url::to(['/auth-keycloak/admin']);
     }
 
     /**
