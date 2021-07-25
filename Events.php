@@ -8,14 +8,34 @@
 
 namespace humhub\modules\authKeycloak;
 
+use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
 use yii\base\ActionEvent;
 use Yii;
 
-
 class Events
 {
+    /**
+     * @param Event $event
+     */
+    public static function onAuthClientCollectionInit($event)
+    {
+        /** @var Collection $authClientCollection */
+        $authClientCollection = $event->sender;
+
+        if (!empty(ConfigureForm::getInstance()->enabled)) {
+            $authClientCollection->setClient('Keycloak', [
+                'class' => Keycloak::class,
+                'clientId' => ConfigureForm::getInstance()->clientId,
+                'clientSecret' => ConfigureForm::getInstance()->clientSecret,
+                'authUrl' => ConfigureForm::getInstance()->authUrl,
+                'tokenUrl' => ConfigureForm::getInstance()->tokenUrl,
+                'apiBaseUrl' => ConfigureForm::getInstance()->apiBaseUrl
+            ]);
+        }
+    }
+
     /**
      * Adds auto login possibility
      * @param ActionEvent $event
@@ -38,7 +58,6 @@ class Events
             return $authClient->redirectToBroker();
         }
     }
-
 
     /**
      * Adds auto login possibility
@@ -92,7 +111,6 @@ class Events
         unset($hform->definition['elements']['User']['title']);
         $hform->definition['elements']['User']['elements']['username']['type'] = 'hidden';
     }
-
 
     /**
      * If user email has changed in Humhub, update it on the broker (IdP)

@@ -20,19 +20,19 @@ class Keycloak extends OAuth2
      * @inheritdoc
      * https://broker-domain.tdl/auth/realms/master/protocol/openid-connect/auth
      */
-    public $authUrl;
+    public $authUrl = Yii::$app->getModule('auth-keycloak')->settings->get('authUrl', $this->authUrl);
  
     /**
      * @inheritdoc
      * https://broker-domain.tdl/auth/realms/master/protocol/openid-connect/token
      */
-    public $tokenUrl;
+    public $tokenUrl =Yii::$app->getModule('auth-keycloak')->settings->get('tokenUrl', $this->tokenUrl);
  
     /**
      * @inheritdoc
      * https://broker-domain.tdl/auth/realms/master/protocol/openid-connect
      */
-    public $apiBaseUrl;
+    public $apiBaseUrl = Yii::$app->getModule('auth-keycloak')->settings->get('apiBaseUrl', $this->apiBaseUrl);
 
     /**
      * @var string attribute to match user tables with email or id
@@ -106,7 +106,7 @@ class Keycloak extends OAuth2
 
     protected function defaultTitle()
     {
-        return 'keycloak';
+        return 'Keycloak';
     }
 
     protected function defaultViewOptions()
