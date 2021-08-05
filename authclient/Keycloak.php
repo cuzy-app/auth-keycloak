@@ -70,7 +70,11 @@ class Keycloak extends OAuth2
 
     protected function defaultTitle()
     {
-        return 'Keycloak';
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+
+        return $settings->get('title', Yii::t('AuthKeycloakModule.base', ConfigureForm::DEFAULT_TITLE));
     }
 
     protected function defaultViewOptions()
