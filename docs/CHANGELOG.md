@@ -1,6 +1,12 @@
 Changelog
 =========
 
+
+0.4.1 (August 17, 2021)
+--------------------
+- Fix: In the settings form, autologin checkbox was not saved
+
+
 0.4 (July 25, 2021)
 --------------------
 - Enh #2: Admin Settings Interface (thanks @ArchBlood)
