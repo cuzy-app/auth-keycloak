@@ -221,6 +221,7 @@ class ConfigureForm extends Model
             $this->title = static::DEFAULT_TITLE;
         }
         $module->settings->set('title', $this->title);
+        $module->settings->set('autoLogin', $this->autoLogin);
         $module->settings->set('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
 
         // API settings
