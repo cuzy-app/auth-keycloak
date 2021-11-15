@@ -179,7 +179,7 @@ class ConfigureForm extends Model
         $module = Yii::$app->getModule('auth-keycloak');
         $settings = $module->settings;
 
-        $this->enabled = (boolean)$settings->get('enabled', $this->enabled);
+        $this->enabled = (bool)$settings->get('enabled', $this->enabled);
         $this->clientId = $settings->get('clientId');
         $this->clientSecret = $settings->get('clientSecret');
         $this->authUrl = $settings->get('authUrl');
@@ -188,11 +188,11 @@ class ConfigureForm extends Model
         $this->idAttribute = $settings->get('idAttribute', $this->idAttribute);
         $this->usernameMapper = $settings->get('usernameMapper', $this->usernameMapper);
         $this->title = $settings->get('title', Yii::t('AuthKeycloakModule.base', static::DEFAULT_TITLE));
-        $this->autoLogin = (boolean)$settings->get('autoLogin', $this->autoLogin);
-        $this->hideRegistrationUsernameField = (boolean)$settings->get('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
-        $this->removeKeycloakSessionsAfterLogout = (boolean)$settings->get('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
-        $this->updateHumhubEmailFromBrokerEmail = (boolean)$settings->get('updateHumhubEmailFromBrokerEmail', $this->updateHumhubEmailFromBrokerEmail);
-        $this->updatedBrokerEmailFromHumhubEmail = (boolean)$settings->get('updatedBrokerEmailFromHumhubEmail', $this->updatedBrokerEmailFromHumhubEmail);
+        $this->autoLogin = (bool)$settings->get('autoLogin', $this->autoLogin);
+        $this->hideRegistrationUsernameField = (bool)$settings->get('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
+        $this->removeKeycloakSessionsAfterLogout = (bool)$settings->get('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
+        $this->updateHumhubEmailFromBrokerEmail = (bool)$settings->get('updateHumhubEmailFromBrokerEmail', $this->updateHumhubEmailFromBrokerEmail);
+        $this->updatedBrokerEmailFromHumhubEmail = (bool)$settings->get('updatedBrokerEmailFromHumhubEmail', $this->updatedBrokerEmailFromHumhubEmail);
         $this->apiRealm = $settings->get('apiRealm', $this->apiRealm);
         $this->apiUsername = $settings->get('apiUsername', $this->apiUsername);
         $this->apiPassword = $settings->get('apiPassword', $this->apiPassword);
