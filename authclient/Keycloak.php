@@ -1,9 +1,9 @@
 <?php
 /**
  * * Keycloak Sign-In
- * @link https://www.cuzy.app
- * @license https://www.cuzy.app/cuzy-license
- * @author [Marc FARRE](https://marc.fun)
+ * @link https://github.com/cuzy-app/humhub-modules-auth-keycloak
+ * @license https://github.com/cuzy-app/humhub-modules-auth-keycloak/blob/master/docs/LICENCE.md
+ * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
  */
 
 namespace humhub\modules\authKeycloak\authclient;
@@ -113,11 +113,11 @@ class Keycloak extends OAuth2
 
         // Try to set a better return URL after login
         $urlToRedirect = Url::current([], true);
-        if (strpos($urlToRedirect, Url::to('/user/auth', true)) === 0) {
+        if (strpos($urlToRedirect, Url::to(['/user/auth'], true)) === 0) {
             $urlToRedirect = Yii::$app->request->referrer;
         }
         if (
-            strpos($urlToRedirect, Url::to('/user/auth', true)) !== 0
+            strpos($urlToRedirect, Url::to(['/user/auth'], true)) !== 0
             && strpos($urlToRedirect, Url::base(true)) === 0 // Referrer URL is not an other website
         ) {
             Yii::$app->user->setReturnUrl($urlToRedirect);

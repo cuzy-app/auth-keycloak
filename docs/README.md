@@ -35,19 +35,15 @@ Pretty URLs must be enabled ([see documentation](https://docs.humhub.org/docs/ad
 
 ## Usage
 
-Create client on the broker (IdP) and configure it:
+On Keycloak, create a client for Humhub and configure it:
 - Tab "Settings": "Access Type": choose `confidential`. Save settings.
 - Tab "Credentials": copy the secret key
 - Tab "Mappers":
     + "Add builtin" and check: `family name`, `email`, `given name` and `username`
     + Edit "username": in "Token Claim Name", replace `preferred_username` with `id`
 
-Go to module's settings.
-
-
-## Author
-
-https://www.cuzy.app/
+Go to Humhub module's settings.
+You can find endpoint URLs on Keycloak: "Realm Settings" -> "OpenID Endpoint Configuration"
 
 
 ## Repository
@@ -55,6 +51,11 @@ https://www.cuzy.app/
 https://github.com/cuzy-app/humhub-modules-auth-keycloak
 
 
+## Publisher
+
+[CUZY.APP](https://www.cuzy.app/)
+
+
 ## Licence
 
-https://github.com/cuzy-app/humhub-modules-auth-keycloak/blob/main/docs/LICENCE.md
+[GNU AGPL](https://github.com/cuzy-app/humhub-modules-auth-keycloak/blob/master/docs/LICENCE.md)

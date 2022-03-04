@@ -1,9 +1,9 @@
 <?php
 /**
  * * Keycloak Sign-In
- * @link https://www.cuzy.app
- * @license https://www.cuzy.app/cuzy-license
- * @author [Marc FARRE](https://marc.fun)
+ * @link https://github.com/cuzy-app/humhub-modules-auth-keycloak
+ * @license https://github.com/cuzy-app/humhub-modules-auth-keycloak/blob/master/docs/LICENCE.md
+ * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
  */
 
 namespace humhub\modules\authKeycloak;
@@ -12,10 +12,14 @@ use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\user\authclient\Collection;
 use humhub\modules\user\models\Auth;
+use humhub\modules\user\models\forms\Registration;
 use humhub\modules\user\models\User;
-use yii\base\ActionEvent;
+use Keycloak\Admin\KeycloakClient;
 use Yii;
+use yii\base\ActionEvent;
 use yii\base\Event;
+use yii\base\InvalidConfigException;
+use yii\db\AfterSaveEvent;
 
 class Events
 {
@@ -43,7 +47,7 @@ class Events
     /**
      * Adds auto login possibility
      * @param ActionEvent $event
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public static function onUserAuthControllerBeforeAction(ActionEvent $event)
     {
@@ -72,7 +76,7 @@ class Events
      * Adds auto login possibility
      * @param ActionEvent $event
      * @return mixed
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public static function onUserRegistrationControllerBeforeAction(ActionEvent $event)
     {
@@ -103,7 +107,7 @@ class Events
      * Registration form: hide username field
      * @param Event $event
      */
-    public static function onUserRegistrationFormBeforeRender ($event)
+    public static function onUserRegistrationFormBeforeRender($event)
     {
         if (
             Yii::$app->request->isConsoleRequest
@@ -121,7 +125,7 @@ class Events
             return;
         }
 
-        /** @var \humhub\modules\user\models\forms\Registration $hform */
+        /** @var Registration $hform */
         $hform = $event->sender;
 
         unset($hform->definition['elements']['User']['title']);
@@ -130,12 +134,12 @@ class Events
 
     /**
      * If user email has changed in Humhub, update it on the broker (IdP)
-     * @param $event
-     * @throws \yii\base\InvalidConfigException
+     * @param AfterSaveEvent $event
+     * @throws InvalidConfigException
      */
     public static function onModelUserAfterUpdate($event)
     {
-        if (!isset($event->sender)) {
+        if (!isset($event->sender, $event->changedAttributes)) {
             return;
         }
 
@@ -160,7 +164,7 @@ class Events
                             require Yii::getAlias('@auth-keycloak/vendor/autoload.php');
                         }
 
-                        $client = \Keycloak\Admin\KeycloakClient::factory([
+                        $client = KeycloakClient::factory([
                             'realm' => $config->apiRealm,
                             'username' => $config->apiUsername,
                             'password' => $config->apiPassword,
@@ -205,7 +209,7 @@ class Events
                     require Yii::getAlias('@auth-keycloak/vendor/autoload.php');
                 }
 
-                $client = \Keycloak\Admin\KeycloakClient::factory([
+                $client = KeycloakClient::factory([
                     'realm' => $config->apiRealm,
                     'username' => $config->apiUsername,
                     'password' => $config->apiPassword,
@@ -226,7 +230,7 @@ class Events
                         $clientSessions = $client->getClientSessions([
                             'id' => $idOfClient,
                         ]);
-                        foreach($clientSessions as $session) {
+                        foreach ($clientSessions as $session) {
                             if (isset($session['id'])) {
 
                                 // revoke session
