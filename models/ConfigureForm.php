@@ -2,114 +2,136 @@
 
 namespace humhub\modules\authKeycloak\models;
 
+use humhub\modules\authKeycloak\Module;
 use Yii;
 use yii\base\Model;
 use yii\helpers\Url;
-use humhub\modules\authKeycloak\Module;
 
 /**
  * The module configuration model
  */
 class ConfigureForm extends Model
 {
+    public const DEFAULT_TITLE = 'Connect with Keycloak';
     /**
      * @var boolean
      */
     public $enabled = false;
-
     /**
      * @var string
      */
     public $clientId;
-
     /**
      * @var string
      */
     public $clientSecret;
-
     /**
      * @var string
      */
     public $authUrl;
- 
     /**
      * @var string
      */
     public $tokenUrl;
- 
     /**
      * @var string
      */
     public $apiBaseUrl;
-
     /**
      * @var string readonly
      */
     public $redirectUri;
-
     /**
      * @var string
      */
     public $idAttribute = 'id';
-
     /**
      * @var string
      */
     public $usernameMapper = 'preferred_username';
-
     /**
      * @var string
      */
     public $title;
-
     /**
      * @var bool
      */
     public $autoLogin = false;
-
     /**
      * @var bool
      */
     public $hideRegistrationUsernameField = false;
-
     /**
      * @var bool
      */
     public $removeKeycloakSessionsAfterLogout = false;
-
     /**
      * @var bool
      */
     public $updateHumhubEmailFromBrokerEmail = true;
-
     /**
      * @var bool
      */
     public $updatedBrokerEmailFromHumhubEmail = false;
-
     /**
      * @var string
      */
     public $apiRealm = 'master';
-
     /**
      * @var string
      */
     public $apiUsername = '';
-
     /**
      * @var string
      */
     public $apiPassword = '';
-
     /**
      * @var string
      */
     public $apiRootUrl = '';
 
+    /**
+     * Returns a loaded instance of this configuration model
+     * @return static
+     */
+    public static function getInstance()
+    {
+        $config = new static();
+        $config->loadSettings();
 
-    const DEFAULT_TITLE = 'Connect with Keycloak';
+        return $config;
+    }
 
+    /**
+     * Loads the current module settings
+     */
+    public function loadSettings()
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+
+        $this->enabled = (bool)$settings->get('enabled', $this->enabled);
+        $this->clientId = $settings->get('clientId');
+        $this->clientSecret = $settings->get('clientSecret');
+        $this->authUrl = $settings->get('authUrl');
+        $this->tokenUrl = $settings->get('tokenUrl');
+        $this->apiBaseUrl = $settings->get('apiBaseUrl');
+        $this->idAttribute = $settings->get('idAttribute', $this->idAttribute);
+        $this->usernameMapper = $settings->get('usernameMapper', $this->usernameMapper);
+        $this->title = $settings->get('title', Yii::t('AuthKeycloakModule.base', static::DEFAULT_TITLE));
+        $this->autoLogin = (bool)$settings->get('autoLogin', $this->autoLogin);
+        $this->hideRegistrationUsernameField = (bool)$settings->get('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
+        $this->removeKeycloakSessionsAfterLogout = (bool)$settings->get('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
+        $this->updateHumhubEmailFromBrokerEmail = (bool)$settings->get('updateHumhubEmailFromBrokerEmail', $this->updateHumhubEmailFromBrokerEmail);
+        $this->updatedBrokerEmailFromHumhubEmail = (bool)$settings->get('updatedBrokerEmailFromHumhubEmail', $this->updatedBrokerEmailFromHumhubEmail);
+        $this->apiRealm = $settings->get('apiRealm', $this->apiRealm);
+        $this->apiUsername = $settings->get('apiUsername', $this->apiUsername);
+        $this->apiPassword = $settings->get('apiPassword', $this->apiPassword);
+        $this->apiRootUrl = $settings->get('apiRootUrl', $this->apiRootUrl);
+
+        $this->redirectUri = Url::to(['/user/auth/external', 'authclient' => 'Keycloak'], true);
+    }
 
     /**
      * @inheritdoc
@@ -171,37 +193,6 @@ class ConfigureForm extends Model
     }
 
     /**
-     * Loads the current module settings
-     */
-    public function loadSettings()
-    {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('auth-keycloak');
-        $settings = $module->settings;
-
-        $this->enabled = (bool)$settings->get('enabled', $this->enabled);
-        $this->clientId = $settings->get('clientId');
-        $this->clientSecret = $settings->get('clientSecret');
-        $this->authUrl = $settings->get('authUrl');
-        $this->tokenUrl = $settings->get('tokenUrl');
-        $this->apiBaseUrl = $settings->get('apiBaseUrl');
-        $this->idAttribute = $settings->get('idAttribute', $this->idAttribute);
-        $this->usernameMapper = $settings->get('usernameMapper', $this->usernameMapper);
-        $this->title = $settings->get('title', Yii::t('AuthKeycloakModule.base', static::DEFAULT_TITLE));
-        $this->autoLogin = (bool)$settings->get('autoLogin', $this->autoLogin);
-        $this->hideRegistrationUsernameField = (bool)$settings->get('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
-        $this->removeKeycloakSessionsAfterLogout = (bool)$settings->get('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
-        $this->updateHumhubEmailFromBrokerEmail = (bool)$settings->get('updateHumhubEmailFromBrokerEmail', $this->updateHumhubEmailFromBrokerEmail);
-        $this->updatedBrokerEmailFromHumhubEmail = (bool)$settings->get('updatedBrokerEmailFromHumhubEmail', $this->updatedBrokerEmailFromHumhubEmail);
-        $this->apiRealm = $settings->get('apiRealm', $this->apiRealm);
-        $this->apiUsername = $settings->get('apiUsername', $this->apiUsername);
-        $this->apiPassword = $settings->get('apiPassword', $this->apiPassword);
-        $this->apiRootUrl = $settings->get('apiRootUrl', $this->apiRootUrl);
-
-        $this->redirectUri = Url::to(['/user/auth/external', 'authclient' => 'Keycloak'], true);
-    }
-
-    /**
      * Saves module settings
      */
     public function saveSettings()
@@ -253,18 +244,6 @@ class ConfigureForm extends Model
     public function hasApiParams()
     {
         return $this->apiRealm && $this->apiUsername && $this->apiPassword && $this->apiRootUrl;
-    }
-
-    /**
-     * Returns a loaded instance of this configuration model
-     * @return static
-     */
-    public static function getInstance()
-    {
-        $config = new static();
-        $config->loadSettings();
-
-        return $config;
     }
 
 }
