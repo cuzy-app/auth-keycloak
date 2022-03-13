@@ -76,7 +76,7 @@ class RefreshToken
         if ($refresh && empty($credentials['refresh_token'])) {
             return [];
         }
-        $url = "auth/realms/" . $options['realm'] . "/protocol/openid-connect/token";
+        $url = "realms/" . $options['realm'] . "/protocol/openid-connect/token";
         $params = [
             'client_id' => 'admin-cli',
             'grant_type' => $refresh ? 'refresh_token' : 'password',
