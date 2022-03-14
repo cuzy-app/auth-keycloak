@@ -2,13 +2,18 @@
 
 namespace Keycloak\Admin\Classes;
 
-use \GuzzleHttp\Command\CommandInterface;
-use \GuzzleHttp\Command\Guzzle\Operation;
-use \GuzzleHttp\Command\Guzzle\Parameter;
-use \GuzzleHttp\Psr7;
-use \Psr\Http\Message\MessageInterface;
-use \Psr\Http\Message\RequestInterface;
-use \GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
+use GuzzleHttp\Command\CommandInterface;
+use GuzzleHttp\Command\Guzzle\Operation;
+use GuzzleHttp\Command\Guzzle\Parameter;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Psr7\Utils;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\RequestInterface;
+use GuzzleHttp\Command\Guzzle\RequestLocation\JsonLocation;
+
+use Psr\Http\Message\StreamInterface;
+
+use function GuzzleHttp\Psr7\stream_for;
 
 /**
  * Creates a JSON document
@@ -44,11 +49,35 @@ class FullBodyLocation extends JsonLocation
         RequestInterface $request,
         Parameter $param
     ) {
-        $this->jsonData[] = $this->prepareValue(
+        $this->jsonData = $this->prepareValue(
             $command[$param->getName()],
             $param
         );
 
-        return $request->withBody(Psr7\stream_for(\GuzzleHttp\json_encode($this->jsonData)));
+        if ($this->jsonContentType && !$request->hasHeader('Content-Type')) {
+            $request = $request->withHeader('Content-Type', $this->jsonContentType);
+        }
+
+        return $request->withBody($this->getStream(\GuzzleHttp\json_encode($this->jsonData)));
+    }
+
+    public function after(CommandInterface $command, RequestInterface $request, Operation $operation)
+    {
+        return $request;
+    }
+
+    /**
+     * Create stream from given data
+     *
+     * @param string $data
+     * @return StreamInterface
+     */
+    final protected function getStream($data)
+    {
+        if (class_exists(Utils::class)) {
+            return Utils::streamFor($data); // guzzlehttp/psr7 >= 2.0
+        }
+
+        return stream_for($data); // guzzlehttp/psr7 < 2.0
     }
 }

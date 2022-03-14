@@ -4,6 +4,6 @@
   "minimum-stability": "stable",
   "type": "library",
   "require": {
-    "mohammad-waleed/keycloak-admin-client": "^0.18.0"
+    "mohammad-waleed/keycloak-admin-client": "^0.30.0"
   }
 }

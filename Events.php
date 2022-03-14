@@ -165,12 +165,12 @@ class Events
                         }
 
                         $client = KeycloakClient::factory([
-                            'realm' => $config->apiRealm,
+                            'realm' => 'master', // The admin user must be in master realm
                             'username' => $config->apiUsername,
                             'password' => $config->apiPassword,
                             'baseUri' => $config->apiRootUrl,
                         ]);
-                        $realm = $client->getRealm();
+                        $client->setRealmName($config->apiRealm);
 
                         // Update email
                         $client->updateUser(array_merge(
@@ -210,11 +210,12 @@ class Events
                 }
 
                 $client = KeycloakClient::factory([
-                    'realm' => $config->apiRealm,
+                    'realm' => 'master', // The admin user must be in master realm
                     'username' => $config->apiUsername,
                     'password' => $config->apiPassword,
                     'baseUri' => $config->apiRootUrl,
                 ]);
+                $client->setRealmName($config->apiRealm);
 
                 // Search for client with clientId of $authClient
                 foreach ($client->getClients() as $clientDefinition) {

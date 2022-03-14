@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use Keycloak\Admin\Classes\FullBodyLocation;
+use Keycloak\Admin\TokenStorages\RuntimeTokenStorage;
 
 /**
  * Class KeycloakClient
@@ -257,14 +258,21 @@ use Keycloak\Admin\Classes\FullBodyLocation;
  * @method array updateRealmRoleManagementPermissionsByRoleId (array $args = array()) { @command Keycloak updateRealmRoleManagementPermissionsByRoleId }
  *
  * @method array createUser(array $args = array()) { @command Keycloak createUser }
+ * @method array getUserCount(array $args = array()) { @command Keycloak getUserCount }
  * @method array getUsers(array $args = array()) { @command Keycloak getUsers }
  * @method array getUser(array $args = array()) { @command Keycloak getUser }
  * @method array getUserGroups(array $args = array()) { @command Keycloak getUserGroups }
  * @method array getUserGroupsCount(array $args = array()) { @command Keycloak getUserGroupsCount }
  * @method array updateUser(array $args = array()) { @command Keycloak updateUser }
+ * @method array updatePartialUser(array $args = array()) { @command Keycloak updatePartialUser }
  * @method array deleteUser(array $args = array()) { @command Keycloak deleteUser }
+ * @method array executeActionsEmail(array $args = array()) { @command Keycloak executeActionsEmail }
+ * @method array sendVerifyEmail(array $args = array()) { @command Keycloak sendVerifyEmail }
  * @method array addUserToGroup(array $args = array()) { @command Keycloak addUserToGroup }
  * @method array deleteUserFromGroup(array $args = array()) { @command Keycloak deleteUserFromGroup }
+ * @method array resetUserPassword(array $args = array()) { @command Keycloak resetUserPassword }
+ *
+ * @method array syncUserStorage(array $args = array()) { @command Keycloak syncUserStorage }
  *
  */
 
@@ -287,6 +295,7 @@ class KeycloakClient extends GuzzleClient
             'version'  => '1.0',
             'baseUri'  => null,
             'verify'   => true,
+            'token_storage' => new RuntimeTokenStorage(),
         );
 
         // Create client configuration
@@ -296,13 +305,31 @@ class KeycloakClient extends GuzzleClient
 
         $stack = new HandlerStack();
         $stack->setHandler(new CurlHandler());
-        $stack->push(new RefreshToken());
+        
+        $middlewares = isset($config["middlewares"]) && is_array($config["middlewares"]) ? $config["middlewares"] : [];
+        foreach ($middlewares as $middleware) {
+            if (is_callable($middleware)) {
+                $stack->push($middleware);
+            }
+        }
+
+        $stack->push(new RefreshToken($config['token_storage']));
 
         $config['handler'] = $stack;
 
-        $description = new Description(include __DIR__ . "/Resources/{$file}");
+        $serviceDescription = include __DIR__ . "/Resources/{$file}";
+        $customOperations = isset($config["custom_operations"]) && is_array($config["custom_operations"]) ? $config["custom_operations"] : [];
+        foreach ($customOperations as $operationKey => $operation) {
+            // Do not override built-in functionality
+            if (isset($serviceDescription['operations'][$operationKey])) {
+                continue;
+            }
+            $serviceDescription['operations'][$operationKey] = $operation;
+        }
+        $description = new Description($serviceDescription);
+
         // Create the new Keycloak Client with our Configuration
-        return new self(
+        return new static(
             new Client($config),
             $description,
             new Serializer($description, [
@@ -342,7 +369,7 @@ class KeycloakClient extends GuzzleClient
      */
     public function getBaseUri()
     {
-        $this->getConfig('baseUri');
+        return $this->getConfig('baseUri');
     }
 
 

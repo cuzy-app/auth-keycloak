@@ -3693,7 +3693,7 @@ return array(
         ),
 
         'partialImportRealm' => array(
-            'uri'         => 'admin/realms/{realm}/partial-export',
+            'uri'         => 'admin/realms/{realm}/partialImport',
             'description' => 'Partial import from a JSON file to an existing realm.',
             'httpMethod'  => 'POST',
             'parameters'  => array(
@@ -5024,6 +5024,51 @@ return array(
             ) + $UserRepresentation
         ),
 
+        'getUserCount' => array(
+            'uri'         => 'admin/realms/{realm}/users/count',
+            'description' => 'Get the number of users',
+            'httpMethod'  => 'GET',
+            'parameters'  => array(
+                'realm' => array(
+                    'location'    => 'uri',
+                    'description' => 'The Realm name',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'emailVerified' => array(
+                    'location'    => 'query',
+                    'type'        => 'boolean',
+                    'required'    => false,
+                ),
+                'email' => array(
+                    'location'    => 'query',
+                    'type'        => 'string',
+                    'required'    => false,
+                ),
+                'firstName' => array(
+                    'location'    => 'query',
+                    'type'        => 'string',
+                    'required'    => false,
+                ),
+                'lastName' => array(
+                    'location'    => 'query',
+                    'type'        => 'string',
+                    'required'    => false,
+                ),
+                'search' => array(
+                    'location'    => 'query',
+                    'description' => 'A String contained in username, first or last name, or email',
+                    'type'        => 'string',
+                    'required'    => false,
+                ),
+                'username' => array(
+                    'location'    => 'query',
+                    'type'        => 'string',
+                    'required'    => false,
+                )
+            ),
+        ),
+
         'getUsers' => array(
             'uri'         => 'admin/realms/{realm}/users',
             'description' => 'Get users Returns a list of users, filtered according to query parameters',
@@ -5044,6 +5089,12 @@ return array(
                     'location'    => 'query',
                     'type'        => 'string',
                     'required'    => false,
+                ),
+                'exact' => array(
+                    'location'    => 'query',
+                    'type'        => 'string',
+                    'required'    => false,
+                    'enum'        => ['true', 'false'],
                 ),
                 'first' => array(
                     'location'    => 'query',
@@ -5076,7 +5127,7 @@ return array(
                     'location'    => 'query',
                     'type'        => 'string',
                     'required'    => false,
-                )
+                ),
             ),
         ),
 
@@ -5160,6 +5211,26 @@ return array(
             ) + $UserRepresentation
         ),
 
+        'updatePartialUser' => array(
+            'uri' => 'admin/realms/{realm}/users/{id}',
+            'description' => 'Update a user (Username must be unique)',
+            'httpMethod' => 'PATCH',
+            'parameters' => array(
+                'realm' => array(
+                    'location'    => 'uri',
+                    'description' => 'The Realm name',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'id' => array(
+                    'location'    => 'uri',
+                    'description' => 'User id',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+            ) + $UserRepresentation
+        ),
+
         'deleteUser' => array(
             'uri' => 'admin/realms/{realm}/users/{id}',
             'description' => 'Delete a user',
@@ -5176,6 +5247,81 @@ return array(
                     'description' => 'User id',
                     'type'        => 'string',
                     'required'    => true,
+                ),
+            ),
+        ),
+
+        'executeActionsEmail' => array(
+            'uri' => 'admin/realms/{realm}/users/{id}/execute-actions-email',
+            'description' => 'Send a update account email to the user An email contains a link the user can click to perform a set of required actions.',
+            'httpMethod' => 'PUT',
+            'parameters' => array(
+                'realm' => array(
+                    'location'    => 'uri',
+                    'description' => 'realm name (not id!)',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'id' => array(
+                    'location'    => 'uri',
+                    'description' => 'User id',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'client_id' => array(
+                    'location'    => 'query',
+                    'description' => 'Client id',
+                    'type'        => 'string',
+                    'required'    => false,
+                ),
+                'lifespan' => array(
+                    'location'    => 'query',
+                    'description' => 'Number of seconds after which the generated token expires',
+                    'type'        => 'integer',
+                    'required'    => false,
+                ),
+                'redirect_uri' => array(
+                    'location'    => 'query',
+                    'description' => 'Redirect uri',
+                    'type'        => 'string',
+                    'required'    => false,
+                ),
+                'actions' => array(
+                    'location' => 'fullBody',
+                    'type' => 'array',
+                    'required' => true
+                ),
+            ),
+        ),
+        
+        'sendVerifyEmail' => array(
+            'uri' => 'admin/realms/{realm}/users/{id}/send-verify-email',
+            'description' => 'Send an email-verification email to the user An email contains a link the user can click to verify their email address.',
+            'httpMethod' => 'PUT',
+            'parameters' => array(
+                'realm' => array(
+                    'location'    => 'uri',
+                    'description' => 'The Realm name',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'id' => array(
+                    'location'    => 'uri',
+                    'description' => 'User id',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'client_id' => array(
+                    'location'    => 'query',
+                    'description' => 'Client id',
+                    'type'        => 'string',
+                    'required'    => false,
+                ),
+                'redirect_uri' => array(
+                    'location'    => 'query',
+                    'description' => 'Redirect uri',
+                    'type'        => 'string',
+                    'required'    => false,
                 ),
             ),
         ),
@@ -5230,6 +5376,52 @@ return array(
                     'required'    => true,
                 ),
             ),
+        ),
+
+        'resetUserPassword' => array(
+            'uri' => 'admin/realms/{realm}/users/{id}/reset-password',
+            'description' => 'Set up a new password for the user',
+            'httpMethod' => 'PUT',
+            'parameters' => array(
+                'realm' => array(
+                    'location'    => 'uri',
+                    'description' => 'The Realm name',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'id' => array(
+                    'location'    => 'uri',
+                    'description' => 'User id',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+            ) + $CredentialRepresentation,
+        ),
+
+        'syncUserStorage' => array(
+            'uri'         => 'admin/realms/{realm}/user-storage/{id}/sync',
+            'description' => 'Trigger sync of users. Action can be "triggerFullSync" or "triggerChangedUsersSync"',
+            'httpMethod'  => 'POST',
+            'parameters'  => array(
+                'realm' => array(
+                    'location'    => 'uri',
+                    'description' => 'The Realm name',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'id' => array(
+                    'location' => 'uri',
+                    'description' => 'Storage id',
+                    'type' => 'string',
+                    'required' => true
+                ),
+                'action' => array(
+                    'location' => 'query',
+                    'description' => 'Action',
+                    'type' => 'string',
+                    'required' => false
+                )
+            )
         ),
 
     ) //End of Operations Array

@@ -2,8 +2,11 @@
 
 [![Total Downloads](https://img.shields.io/packagist/dt/mohammad-waleed/keycloak-admin-client.svg?style=flat-square)](https://packagist.org/packages/mohammad-waleed/keycloak-admin-client)
 
+[![Donate](https://img.shields.io/badge/Paypal-Donate-blue?style=flat-square)](https://paypal.me/mbarghash?locale.x=en_US)
+
 - [Introduction](#introduction)
 - [How to use](#how-to-use)
+- [Customization](#customization)
 - [Supported APIs](#supported-apis)
 	- [Attack Detection](#attack-detection)
 	- [Authentication Management](#authentication-management)
@@ -33,35 +36,34 @@
 This is a php client to connect to keycloak admin rest apis with no headache.
 
 Features:
+1. Easy to use
+2. No need to get token or generate it it's already handled by the client
+3. No need to specify any urls other than the base uri
+4. No encode/decode for json just data as you expect
 
-1- Easy to use 
+Works with Keycloak 7.0+ admin REST API.
 
-2- No need to get token or generate it it's already handled by the client
-
-3- No need to specify any urls other than the base uri
-
-4- No encode/decode for json just data as you expect
-
-works with Keycloak 7.0 admin rest api
-
-https://www.keycloak.org/docs-api/7.0/rest-api/index.html
+https://www.keycloak.org/documentation -> "Administration REST API"
 
 
 # How to use
 
-1- Create new client 
+#### 1. Create new client 
 
 ```php
 $client = Keycloak\Admin\KeycloakClient::factory([
-    'realm'=>'master',
-    'username'=>'admin',
-    'password'=>'1234',
-    'client_id'=>'admin-cli',
-    'baseUri'=>'http://127.0.0.1:8180'
-    ]);
+    'realm' => 'master',
+    'username' => 'admin',
+    'password' => '1234',
+    'client_id' => 'admin-cli',
+    'baseUri' => 'http://127.0.0.1:8180',
+]);
 ```
 
-2- Use it
+Since version 0.30, if your Keycloak base URL starts with `auth/`, add it to `baseUri` (e.g. http://127.0.0.1:8180/auth). Base URL for Keycloak versions 7 to 16 have systematically `auth/`. On Keycloak 17+ it depends on your settings.
+
+
+#### 2. Use it
 
 ```php
 $client->getUsers();
@@ -94,18 +96,131 @@ $client->getUsers();
 */
 
 $client->createUser([
-    'username'=>'test',
-    'email'=>'test@test.com',
-    'enabled'=>true,
-    'credentials'=>[
+    'username' => 'test',
+    'email' => 'test@test.com',
+    'enabled' => true,
+    'credentials' => [
         [
             'type'=>'password',
-            'value'=>'1234'
-        ]
-    ]
-    ]);
-
+            'value'=>'1234',
+        ],
+    ],
+]);
 ```
+
+# Customization
+
+### Supported credentials
+
+It is possible to change the credential's type used to authenticate by changing the configuration of the keycloak client.
+
+Currently, the following credentials are supported
+- password credentials, used by default
+  - to authenticate with a user account
+  ````php
+  $client = Keycloak\Admin\KeycloakClient::factory([
+      ...
+      'grant_type' => 'password',
+      'username' => 'admin',
+      'password' => '1234',
+  ]);
+  ````
+- client credentials
+  - to authenticate with a client service account
+  ````php
+  $client = Keycloak\Admin\KeycloakClient::factory([
+      ...
+      'grant_type' => 'client_credentials',
+      'client_id' => 'admin-cli',
+      'client_secret' => '84ab3d98-a0c3-44c7-b532-306f222ce1ff',
+  ]);
+  ````
+
+### Injecting middleware
+
+It is possible to inject [Guzzle client middleware](https://docs.guzzlephp.org/en/stable/handlers-and-middleware.html#middleware) 
+in the keycloak client configuration using the `middlewares` keyword.
+
+For example: 
+```php 
+use GuzzleHttp\Middleware;
+use Psr\Http\Message\RequestInterface;
+
+$client = Keycloak\Admin\KeycloakClient::factory([
+    ...
+    'middlewares' => [
+        // throws exceptions when request fails
+        Middleware::httpErrors(),
+        // other custom middlewares
+        Middleware::mapRequest(function (RequestInterface $request) {
+            return $request;
+        }),
+    ],
+]);
+```
+
+### Changing how the token is saved and stored
+
+By default, the token is saved at runtime. This means that the previous token is not used when creating a new client.
+
+You can customize how the token is stored in the client configuration by implementing your own `TokenStorage`, 
+an interface which describes how the token is stored and retrieved.
+```php 
+class CustomTokenStorage implements TokenStorage 
+{
+    public function getToken() 
+    {
+        // TODO
+    }
+    
+    public function saveToken(array $token)
+    {
+        // TODO
+    }
+}
+
+$client = Keycloak\Admin\KeycloakClient::factory([
+    ...
+    'token_storage' => new CustomTokenStorage(),
+]);
+```
+
+### Custom Keycloak endpoints
+
+It is possible to inject [Guzzle Service Operations](https://guzzle3.readthedocs.io/webservice-client/guzzle-service-descriptions.html#operations)
+in the keycloak client configuration using the `custom_operations` keyword. This way you can extend the built-in supported endpoints with custom.
+
+```php
+$client = KeycloakClient::factory([
+...
+    'custom_operations' => [
+        'getUsersByAttribute' => [
+            'uri' => '/auth/realms/{realm}/userapi-rest/users/search-by-attr',
+            'description' => 'Get users by attribute Returns a list of users, filtered according to query parameters',
+            'httpMethod' => 'GET',
+            'parameters' => [
+                'realm' => [
+                    'location' => 'uri',
+                    'description' => 'The Realm name',
+                    'type' => 'string',
+                    'required' => true,
+                ],
+                'attr' => [
+                    'location' => 'query',
+                    'type' => 'string',
+                    'required' => true,
+                ],
+                'value' => [
+                    'location' => 'query',
+                    'type' => 'string',
+                    'required' => true,
+                ],
+            ],
+        ],
+    ]
+]);
+```
+
 
 # Supported APIs
 
@@ -185,12 +300,12 @@ $client->createUser([
 
 | API | Function Name | Supported |
 |-----|:-------------:|:---------:|
-| Add client-level roles to the group role mapping (couldn't make it seems like an issue with keycloak itslef ??) | addGroupClientRoleMappings | ❌ |
+| Add client-level roles to the group role mapping | addGroupClientRoleMappings | ✔️ |
 | Get client-level role mappings for the group, and the app | getGroupClientRoleMappings | ✔️ |
 | Delete client-level roles from group role mapping | deleteGroupClientRoleMappings | ✔️ |
 | Get available client-level roles that can be mapped to the group | getAvailableGroupClientRoleMappings | ✔️ |
 | Get effective client-level role mappings This recurses any composite roles for groups | getGroupClientRoleMappingsWithComposite | ✔️ |
-| Add client-level roles to the user role mapping (couldn't make it seems like an issue with keycloak itslef ??) | addUserClientRoleMappings | ❌ |
+| Add client-level roles to the user role mapping | addUserClientRoleMappings | ✔️ |
 | Get client-level role mappings for the user, and the app | getUserClientRoleMappings | ✔️ |
 | Delete client-level roles from user role mapping | deleteUserClientRoleMappings | ✔️ |
 | Get available client-level roles that can be mapped to the user | getAvailableUserClientRoleMappings | ✔️ |
@@ -300,7 +415,7 @@ Note: Ids are sent as clientScopeId or clientId and mapperId everything else is 
 
 | API | Function Name | Supported |
 |-----|:-------------:|:---------:|
-| Create multiple mappers (keycloak have an issue where it doesn't extract the request correctly)| createClientScopeProtocolMappers | ✔️ |
+| Create multiple mappers | createClientScopeProtocolMappers | ✔️ |
 | Create a mapper | createClientScopeProtocolMapper | ✔️ |
 | Get mappers | getClientScopeProtocolMappers | ✔️ |
 | Get mapper by id | getClientScopeProtocolMapperById | ✔️ |
@@ -360,13 +475,13 @@ Note: Ids are sent as clientScopeId or clientId and mapperId everything else is 
 | API | Function Name | Supported |
 |-----|:-------------:|:---------:|
 | Get role mappings | getGroupRoleMappings | ✔️ |
-| Add realm-level role mappings to the group (Keycloak gives null pointer exception)| addGlobalRolesToGroup | ❌ |
+| Add realm-level role mappings to the group | addGlobalRolesToGroup | ✔️ |
 | Get realm-level role mappings | getGroupRealmRoleMappings | ✔️ |
 | Delete realm-level role mappings | deleteGroupRealmRoleMappings | ✔️ |
 | Get realm-level roles that can be mapped | getAvailableGroupRealmRoleMappings | ✔️ |
 | Get effective realm-level role mappings This will recurse all composite roles to get the result. | getEffectiveGroupRealmRoleMappings | ✔️ |
 | Get role mappings | getUserRoleMappings | ✔️ |
-| Add realm-level role mappings to the user (Keycloak gives null pointer exception) | addGlobalRolesToUser | ❌ |
+| Add realm-level role mappings to the user | addGlobalRolesToUser | ✔️ |
 | Get realm-level role mappings | getUserRealmRoleMappings | ✔️ |
 | Delete realm-level role mappings | deleteUserRealmRoleMappings | ✔️ |
 | Get realm-level roles that can be mapped | getAvailableUserRealmRoleMappings | ✔️ |
@@ -381,9 +496,9 @@ Note: Ids are sent as clientScopeId or clientId and mapperId everything else is 
 | Get a role by name (Client Specific) | getClientRole | ✔️ |
 | Update a role by name (Client Specific) | updateClientRole | ✔️ |
 | Delete a role by name (Client Specific) | deleteClientRole | ✔️ |
-| Add a composite to the role (Client Specific) | addCompositeRoleToClientRole | ❌ |
+| Add a composite to the role (Client Specific) | addCompositeRoleToClientRole | ✔️ |
 | Get composites of the role (Client Specific) | getClientRoleCompositeRoles | ✔️ |
-| Remove roles from the role’s composite (Client Specific) | deleteCompositeRoleFromClientRole | ❌ |
+| Remove roles from the role’s composite (Client Specific) | deleteCompositeRoleFromClientRole | ✔️ |
 | An app-level roles for the specified app for the role’s composite (Client Specific) | getClientRoleCompositeRolesForClient | ✔️ |
 | Get realm-level roles of the role’s composite (Client Specific) | getClientRoleCompositeRolesForRealm | ✔️ |
 | Return List of Groups that have the specified role name (Client Specific) | getClientRoleGroups | ✔️ |
@@ -395,9 +510,9 @@ Note: Ids are sent as clientScopeId or clientId and mapperId everything else is 
 | Get a role by name | getRealmRole | ✔️ |
 | Update a role by name | updateRealmRole | ✔️ |
 | Delete a role by name | deleteRealmRole | ✔️ |
-| Add a composite to the role | addCompositeRoleToRealmRole | ❌ |
+| Add a composite to the role | addCompositeRoleToRealmRole | ✔️ |
 | Get composites of the role | getRealmRoleCompositeRoles | ✔️ |
-| Remove roles from the role’s composite | deleteCompositeRoleFromRealmRole | ❌ |
+| Remove roles from the role’s composite | deleteCompositeRoleFromRealmRole | ✔️ |
 | An app-level roles for the specified app for the role’s composite | getRealmRoleCompositeRolesForClient | ✔️ |
 | Get realm-level roles of the role’s composite | getRealmRoleCompositeRolesForRealm | ✔️ |
 | Return List of Groups that have the specified role name | getRealmRoleGroups | ✔️ |
@@ -412,9 +527,9 @@ Note: Ids are sent as clientScopeId or clientId and mapperId everything else is 
 | Get a specific role’s representation | getRealmRoleById | ✔️ |
 | Update the role | updateRealmRoleById | ✔️ |
 | Delete the role | deleteRealmRoleById | ✔️ |
-| Make the role a composite role by associating some child roles | addCompositeRoleToRealmRoleByRoleId | ❌ |
+| Make the role a composite role by associating some child roles | addCompositeRoleToRealmRoleByRoleId | ✔️ |
 | Get role’s children Returns a set of role’s children provided the role is a composite. | getRealmRoleCompositeRolesByRoleId | ✔️ |
-| Remove a set of roles from the role’s composite | deleteCompositeRoleFromRealmRoleByRoleId | ❌ |
+| Remove a set of roles from the role’s composite | deleteCompositeRoleFromRealmRoleByRoleId | ✔️ |
 | Get client-level roles for the client that are in the role’s composite | getRealmRoleCompositeRolesForClientByRoleId | ✔️ |
 | Get realm-level roles that are in the role’s composite | getRealmRoleCompositeRolesForRealmByRoleId | ✔️ |
 | Return object stating whether role Authoirzation permissions have been initialized or not and a reference | getRealmRoleManagementPermissionsByRoleId | ✔️ |
@@ -464,14 +579,15 @@ Note: Ids are sent as clientScopeId or clientId and mapperId everything else is 
 |-----|:-------------:|:---------:|
 | Create a new user Username must be unique. | createUser | ✔️ |
 | Get users Returns a list of users, filtered according to query parameters | getUsers | ✔️ |
-| GET /{realm}/users/count | | ❌ |
+| GET /{realm}/users/count | getUserCount | ✔️ |
 | Get representation of the user | getUser | ️️️✔️ |
 | Update the user | updateUser | ️️️✔️ |
+| Update partial data for the user | updatePartialUser | ️️️✔️ |
 | Delete the user | deleteUser | ️️️✔️ |
 | Get consents granted by the user | | ❌ |
 | Revoke consent and offline tokens for particular client from user | | ❌ |
 | Disable all credentials for a user of a specific type | | ❌ |
-| Send a update account email to the user An email contains a link the user can click to perform a set of required actions. | | ❌ |
+| Send a update account email to the user An email contains a link the user can click to perform a set of required actions. | executeActionsEmail | ✔️ |
 | Get social logins associated with the user | | ❌ |
 | Add a social login provider to the user | | ❌ |
 | Remove a social login provider from user | | ❌ |
@@ -483,8 +599,8 @@ Note: Ids are sent as clientScopeId or clientId and mapperId everything else is 
 | Remove all user sessions associated with the user Also send notification to all clients that have an admin URL to invalidate the sessions for the particular user. | | ❌ |
 | Get offline sessions associated with the user and client | | ❌ |
 | Remove TOTP from the user | | ❌ |
-| Set up a new password for the user. | | ❌ |
-| Send an email-verification email to the user An email contains a link the user can click to verify their email address. | | ❌ |
+| Set up a new password for the user. | resetUserPassword | ✔️ |
+| Send an email-verification email to the user An email contains a link the user can click to verify their email address. | sendVerifyEmail | ✔️ |
 | Get sessions associated with the user | | ❌ |
 
  ## [Root]()
