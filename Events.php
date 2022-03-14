@@ -170,7 +170,10 @@ class Events
                             'password' => $config->apiPassword,
                             'baseUri' => $config->apiRootUrl,
                         ]);
-                        $client->setRealmName($config->apiRealm);
+                        if ($config->apiRealm !== 'master') {
+                            $client->setRealmName($config->apiRealm);
+                        }
+                        $realm = $client->getRealm();
 
                         // Update email
                         $client->updateUser(array_merge(
@@ -215,7 +218,9 @@ class Events
                     'password' => $config->apiPassword,
                     'baseUri' => $config->apiRootUrl,
                 ]);
-                $client->setRealmName($config->apiRealm);
+                if ($config->apiRealm !== 'master') {
+                    $client->setRealmName($config->apiRealm);
+                }
 
                 // Search for client with clientId of $authClient
                 foreach ($client->getClients() as $clientDefinition) {
