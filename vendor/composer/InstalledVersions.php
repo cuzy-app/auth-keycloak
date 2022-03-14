@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'bf6aa9dce4cca1083969de5267a91e6ddc14b42b',
+    'reference' => '20a798bebbb0d3f4cf71a1ec57beba59fd4e0b42',
     'name' => 'cuzy-app/humhub-modules-auth-keycloak',
   ),
   'versions' => 
@@ -41,7 +41,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'bf6aa9dce4cca1083969de5267a91e6ddc14b42b',
+      'reference' => '20a798bebbb0d3f4cf71a1ec57beba59fd4e0b42',
     ),
     'guzzlehttp/command' => 
     array (
@@ -165,12 +165,12 @@ private static $installed = array (
     ),
     'symfony/deprecation-contracts' => 
     array (
-      'pretty_version' => 'v3.0.0',
-      'version' => '3.0.0.0',
+      'pretty_version' => 'v2.5.0',
+      'version' => '2.5.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c726b64c1ccfe2896cb7df2e1331c357ad1c8ced',
+      'reference' => '6f981ee24cf69ee7ce9736146d1c57c2780598a8',
     ),
     'symfony/polyfill-php80' => 
     array (
