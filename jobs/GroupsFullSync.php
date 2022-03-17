@@ -86,23 +86,12 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
         }
         $this->keycloakApi = new KeycloakApi();
 
-        $this->keycloakGroupsNamesById = $this->keycloakApi->getGroupsNamesById();
-        if (!is_array($this->keycloakGroupsNamesById)) {
-            Yii::error('Error retrieving groups on Keycloak: ', 'auth-keycloak');
+
+        $this->initUsersKeycloakIdToHumhubId();
+        if (!$this->initKeycloakGroupsNamesById()) {
             return;
         }
-
-        $this->humhubGroupsByKeycloakId = GroupKeycloak::find()
-            ->where(['not', ['keycloak_id' => null]])
-            ->indexBy('keycloak_id')
-            ->all();
-
-        $auths = Auth::find()
-            ->orderBy(['id' => SORT_ASC]) // Get the latest if it has multiple
-            ->where(['source' => Keycloak::DEFAULT_NAME])
-            ->indexBy('user_id') // Remove duplicated
-            ->all();
-        $this->usersKeycloakIdToHumhubId = ArrayHelper::map($auths, 'source_id', 'user_id');
+        $this->initHumhubGroupsByKeycloakId();
 
         if ($config->syncKeycloakGroupsToHumhub()) {
             $this->addKeycloakGroupsToHumhub();
@@ -128,6 +117,49 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
             }
             if ($config->syncKeycloakGroupsToHumhub()) {
                 $this->renameHumhubGroups();
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    protected function initUsersKeycloakIdToHumhubId()
+    {
+        $auths = Auth::find()
+            ->orderBy(['id' => SORT_ASC]) // Get the latest if it has multiple
+            ->where(['source' => Keycloak::DEFAULT_NAME])
+            ->indexBy('user_id') // Remove duplicated
+            ->all();
+        $this->usersKeycloakIdToHumhubId = ArrayHelper::map($auths, 'source_id', 'user_id');
+    }
+
+    /**
+     * @return bool
+     */
+    protected function initKeycloakGroupsNamesById()
+    {
+        $this->keycloakGroupsNamesById = $this->keycloakApi->getGroupsNamesById();
+        if (!is_array($this->keycloakGroupsNamesById)) {
+            Yii::error('Error retrieving groups on Keycloak: ', 'auth-keycloak');
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return void
+     */
+    protected function initHumhubGroupsByKeycloakId()
+    {
+        $this->humhubGroupsByKeycloakId = GroupKeycloak::find()
+            ->where(['not', ['keycloak_id' => null]])
+            ->indexBy('keycloak_id')
+            ->all();
+        // Remove groups not in Keycloak
+        foreach ($this->humhubGroupsByKeycloakId as $keycloakGroupId => $humhubGroup) {
+            if (!array_key_exists($keycloakGroupId, $this->keycloakGroupsNamesById)) {
+                unset($this->humhubGroupsByKeycloakId[$keycloakGroupId]);
             }
         }
     }
