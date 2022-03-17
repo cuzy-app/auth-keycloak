@@ -172,7 +172,6 @@ class KeycloakApi extends Component
         if (
             !$this->isConnected()
             || ($groupKeycloak = GroupKeycloak::findOne($groupId)) === null
-            || $groupKeycloak->keycloak_id !== null
         ) {
             return false;
         }
