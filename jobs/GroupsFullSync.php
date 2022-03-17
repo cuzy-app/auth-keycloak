@@ -137,13 +137,21 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
      */
     protected function addKeycloakGroupsToHumhub()
     {
+        $groupsKeycloakByHumhubName = GroupKeycloak::find()
+            ->where(['keycloak_id' => null])
+            ->indexBy('name')
+            ->all();
         foreach ($this->keycloakGroupsNamesById as $keycloakGroupId => $keycloakGroupName) {
             // Check if Humhub group exists
             if (!array_key_exists($keycloakGroupId, $this->humhubGroupsByKeycloakId)) {
-                // Add missing group to Humhub
-                $groupKeycloak = new GroupKeycloak();
+                // Search for existing Humhub group with same name
+                if (array_key_exists($keycloakGroupName, $groupsKeycloakByHumhubName)) {
+                    $groupKeycloak = $groupsKeycloakByHumhubName[$keycloakGroupName];
+                } else { // Add missing group to Humhub
+                    $groupKeycloak = new GroupKeycloak();
+                    $groupKeycloak->name = $keycloakGroupName;
+                }
                 $groupKeycloak->keycloak_id = $keycloakGroupId;
-                $groupKeycloak->name = $keycloakGroupName;
                 if (!$groupKeycloak->save()) {
                     continue;
                 }
