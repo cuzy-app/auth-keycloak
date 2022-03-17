@@ -1,6 +1,17 @@
 Changelog
 =========
 
+1.0.0 (March 17, 2022)
+--------------------
+- Enh: Added groups synchronization (see README)
+- Cnh: Settings page refactoring
+- Chn: Minimum Humhub version is now 1.9
+
+If updating from a previous version:
+ - If, on your previous version, you have "Attribute to match user tables with `email` or `id`" defined to `email`, as this version now uses only `id` attribute, you might have some users that cannot login anymore to Humhub if their email is different on Humhub and Keycloak. You should update their email on Keycloak to match.
+ - If updating without the marketplace, proceed to database migration: "Administration" -> "Information" -> "Database"
+
+
 0.4.2 (March 14, 2022)
 --------------------
 - Chn: Compatibility with Keycloak 17+ as it has removed the default `auth/` in the base URL

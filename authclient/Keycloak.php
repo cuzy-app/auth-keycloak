@@ -10,101 +10,51 @@ namespace humhub\modules\authKeycloak\authclient;
 
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\Module;
+use humhub\modules\user\models\Auth;
 use Yii;
 use yii\authclient\OAuth2;
+use yii\base\InvalidConfigException;
 use yii\helpers\Url;
-use humhub\modules\user\models\Auth;
 
 
 class Keycloak extends OAuth2
 {
+    public const DEFAULT_NAME = 'Keycloak';
+
     /**
      * @inheritdoc
-     * https://broker-domain.tdl/auth/realms/master/protocol/openid-connect/auth
      */
     public $authUrl;
- 
+
     /**
      * @inheritdoc
-     * https://broker-domain.tdl/auth/realms/master/protocol/openid-connect/token
      */
     public $tokenUrl;
- 
+
     /**
      * @inheritdoc
-     * https://broker-domain.tdl/auth/realms/master/protocol/openid-connect
      */
     public $apiBaseUrl;
 
-
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
-        $config = ConfigureForm::getInstance();
+        $config = new ConfigureForm();
 
-        $this->authUrl = $config->authUrl;
-        $this->tokenUrl = $config->tokenUrl;
-        $this->apiBaseUrl = $config->apiBaseUrl;
+        $this->apiBaseUrl = $config->baseUrl . '/realms/' . $config->realm . '/protocol/openid-connect';
+        $this->authUrl = $this->apiBaseUrl . '/auth';
+        $this->tokenUrl = $this->apiBaseUrl . '/token';
 
         parent::init();
     }
-
-
-    protected function initUserAttributes()
-    {
-        return $this->api('userinfo');
-    }
-
 
     public function applyAccessTokenToRequest($request, $accessToken)
     {
         $data = $request->getData();
         $data['Authorization'] = 'Bearer ' . $accessToken->getToken();
         $request->setHeaders($data);
-    }
-
-
-    protected function defaultName()
-    {
-        return 'Keycloak';
-    }
-
-    protected function defaultTitle()
-    {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('auth-keycloak');
-        $settings = $module->settings;
-
-        return $settings->get('title', Yii::t('AuthKeycloakModule.base', ConfigureForm::DEFAULT_TITLE));
-    }
-
-    protected function defaultViewOptions()
-    {
-        return [
-            'cssIcon' => 'fa fa-sign-in',
-            'buttonBackgroundColor' => '#e0492f',
-        ];
-    }
-
-    protected function defaultNormalizeUserAttributeMap()
-    {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('auth-keycloak');
-        $settings = $module->settings;
-
-        $userAttributeMap = [
-            'username' => $settings->get('usernameMapper'),
-            'firstname' => 'given_name',
-            'lastname' => 'family_name',
-            'email' => 'email',
-        ];
-
-        if ($settings->get('idAttribute') === 'id') {
-            // Use Keycloak ID (sub) to match user table
-            return array_merge(['id' => 'sub'], $userAttributeMap);
-        }
-
-        // Use Keycloak email to match user table
-        return $userAttributeMap;
     }
 
     public function redirectToBroker()
@@ -136,11 +86,10 @@ class Keycloak extends OAuth2
         return Url::to(['/user/auth/external', 'authclient' => 'Keycloak'], true);
     }
 
-
     /**
      * @inheritdoc
      * Update Humhub's user email if emails is different on Keycloak
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getUserAttributes()
     {
@@ -148,10 +97,10 @@ class Keycloak extends OAuth2
         $module = Yii::$app->getModule('auth-keycloak');
         $settings = $module->settings;
 
-        if ($settings->get('updateHumhubEmailFromBrokerEmail') && $settings->get('idAttribute') === 'id') {
+        if ($settings->get('updateHumhubEmailFromBrokerEmail')) {
             $userAttributes = $this->normalizeUserAttributes($this->initUserAttributes());
 
-            $userAuth = Auth::findOne(['source' => $this->defaultName(), 'source_id' => $userAttributes['id']]);
+            $userAuth = Auth::findOne(['source' => static::DEFAULT_NAME, 'source_id' => $userAttributes['id']]);
             if ($userAuth !== null && $userAuth->user->email !== $userAttributes['email']) {
                 $userAuth->user->email = $userAttributes['email'];
                 $userAuth->user->save();
@@ -159,5 +108,47 @@ class Keycloak extends OAuth2
         }
 
         return parent::getUserAttributes();
+    }
+
+    protected function initUserAttributes()
+    {
+        return $this->api('userinfo');
+    }
+
+    protected function defaultName()
+    {
+        return static::DEFAULT_NAME;
+    }
+
+    protected function defaultTitle()
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+
+        return $settings->get('title', Yii::t('AuthKeycloakModule.base', ConfigureForm::DEFAULT_TITLE));
+    }
+
+    protected function defaultViewOptions()
+    {
+        return [
+            'cssIcon' => 'fa fa-sign-in',
+            'buttonBackgroundColor' => '#e0492f',
+        ];
+    }
+
+    protected function defaultNormalizeUserAttributeMap()
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+
+        return [
+            'id' => 'sub',
+            'username' => $settings->get('usernameMapper'),
+            'firstname' => 'given_name',
+            'lastname' => 'family_name',
+            'email' => 'email',
+        ];
     }
 }

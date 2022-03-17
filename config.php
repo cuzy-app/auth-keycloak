@@ -6,13 +6,17 @@
  * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
  */
 
+use humhub\commands\CronController;
 use humhub\modules\authKeycloak\Events;
 use humhub\modules\user\authclient\Collection;
 use humhub\modules\user\controllers\AuthController;
 use humhub\modules\user\controllers\RegistrationController;
+use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\forms\Registration;
-use humhub\modules\user\models\User as ModelUser;
-use yii\web\User as ComponentUser;
+use humhub\modules\user\models\Group;
+use humhub\modules\user\models\GroupUser;
+use humhub\modules\user\models\User;
+use yii\web\User as UserComponent;
 
 /** @noinspection MissedFieldInspection */
 return [
@@ -20,12 +24,91 @@ return [
     'class' => humhub\modules\authKeycloak\Module::class,
     'namespace' => 'humhub\modules\authKeycloak',
     'events' => [
-        ['class' => AuthController::class, 'event' => AuthController::EVENT_BEFORE_ACTION, 'callback' => [Events::class, 'onUserAuthControllerBeforeAction']],
-        ['class' => RegistrationController::class, 'event' => RegistrationController::EVENT_BEFORE_ACTION, 'callback' => [Events::class, 'onUserRegistrationControllerBeforeAction']],
-        ['class' => Registration::class, 'event' => Registration::EVENT_BEFORE_RENDER, 'callback' => [Events::class, 'onUserRegistrationFormBeforeRender']],
-        ['class' => ModelUser::class, 'event' => ModelUser::EVENT_AFTER_UPDATE, 'callback' => [Events::class, 'onModelUserAfterUpdate']],
-        ['class' => ComponentUser::class, 'event' => ComponentUser::EVENT_AFTER_LOGOUT, 'callback' => [Events::class, 'onComponentUserAfterLogout']],
-        [Collection::class, Collection::EVENT_AFTER_CLIENTS_SET, [Events::class, 'onAuthClientCollectionInit']]
+        [
+            'class' => AuthController::class,
+            'event' => AuthController::EVENT_BEFORE_ACTION,
+            'callback' => [Events::class, 'onUserAuthControllerBeforeAction']
+        ],
+        [
+            'class' => RegistrationController::class,
+            'event' => RegistrationController::EVENT_BEFORE_ACTION,
+            'callback' => [Events::class, 'onUserRegistrationControllerBeforeAction']
+        ],
+        [
+            'class' => Registration::class,
+            'event' => Registration::EVENT_BEFORE_RENDER,
+            'callback' => [Events::class, 'onUserRegistrationFormBeforeRender']
+        ],
+        [
+            'class' => User::class,
+            'event' => User::EVENT_AFTER_UPDATE,
+            'callback' => [Events::class, 'onModelUserAfterUpdate']
+        ],
+        [
+            'class' => UserComponent::class,
+            'event' => UserComponent::EVENT_AFTER_LOGOUT,
+            'callback' => [Events::class, 'onComponentUserAfterLogout']
+        ],
+        [
+            Collection::class,
+            Collection::EVENT_AFTER_CLIENTS_SET,
+            [Events::class, 'onAuthClientCollectionInit']
+        ],
+        [
+            'class' => Group::class,
+            'event' => Group::EVENT_AFTER_INSERT,
+            'callback' => [
+                Events::class,
+                'onModelGroupAfterInsert'
+            ]
+        ],
+        [
+            'class' => Group::class,
+            'event' => Group::EVENT_AFTER_DELETE,
+            'callback' => [
+                Events::class,
+                'onModelGroupAfterDelete'
+            ]
+        ],
+        [   // use _BEFORE_ and not _AFTER_
+            'class' => Group::class,
+            'event' => Group::EVENT_AFTER_UPDATE,
+            'callback' => [
+                Events::class,
+                'onModelGroupAfterUpdate'
+            ]
+        ],
+        [
+            'class' => GroupUser::class,
+            'event' => GroupUser::EVENT_AFTER_INSERT,
+            'callback' => [
+                Events::class,
+                'onModelGroupUserAfterInsert'
+            ]
+        ],
+        [
+            'class' => GroupUser::class,
+            'event' => GroupUser::EVENT_AFTER_DELETE,
+            'callback' => [
+                Events::class,
+                'onModelGroupUserAfterDelete'
+            ]
+        ],
+        [
+            'class' => CronController::class,
+            'event' => CronController::EVENT_ON_DAILY_RUN,
+            'callback' => [Events::class, 'onCronDailyRun']
+        ],
+        [
+            'class' => Auth::class,
+            'event' => Auth::EVENT_AFTER_INSERT,
+            'callback' => [Events::class, 'onAuthAfterInsert']
+        ],
+        [
+            'class' => Auth::class,
+            'event' => Auth::EVENT_AFTER_UPDATE,
+            'callback' => [Events::class, 'onAuthAfterUpdate']
+        ],
     ],
 ];
 ?>

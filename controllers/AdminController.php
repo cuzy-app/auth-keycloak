@@ -8,16 +8,15 @@
 
 namespace humhub\modules\authKeycloak\controllers;
 
-use Yii;
 use humhub\modules\admin\components\Controller;
 use humhub\modules\authKeycloak\models\ConfigureForm;
+use Yii;
 
 /**
  * Module configuation
  */
 class AdminController extends Controller
 {
-
     /**
      * Render admin only page
      *
@@ -25,13 +24,12 @@ class AdminController extends Controller
      */
     public function actionIndex()
     {
-        $model = ConfigureForm::getInstance();
+        $model = new ConfigureForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->saveSettings()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->save()) {
             $this->view->saved();
         }
 
         return $this->render('index', ['model' => $model]);
     }
-
 }

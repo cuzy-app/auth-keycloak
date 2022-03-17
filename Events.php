@@ -8,18 +8,25 @@
 
 namespace humhub\modules\authKeycloak;
 
+use humhub\commands\CronController;
 use humhub\modules\authKeycloak\authclient\Keycloak;
+use humhub\modules\authKeycloak\components\KeycloakApi;
+use humhub\modules\authKeycloak\jobs\GroupsFullSync;
+use humhub\modules\authKeycloak\jobs\GroupsUserSync;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\user\authclient\Collection;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\forms\Registration;
+use humhub\modules\user\models\Group;
+use humhub\modules\user\models\GroupUser;
 use humhub\modules\user\models\User;
-use Keycloak\Admin\KeycloakClient;
+use Throwable;
 use Yii;
 use yii\base\ActionEvent;
 use yii\base\Event;
 use yii\base\InvalidConfigException;
 use yii\db\AfterSaveEvent;
+use yii\web\Response;
 
 class Events
 {
@@ -31,15 +38,12 @@ class Events
         /** @var Collection $authClientCollection */
         $authClientCollection = $event->sender;
 
-        $config = ConfigureForm::getInstance();
+        $config = new ConfigureForm();
         if ($config->enabled) {
             $authClientCollection->setClient('Keycloak', [
                 'class' => Keycloak::class,
                 'clientId' => $config->clientId,
                 'clientSecret' => $config->clientSecret,
-                'authUrl' => $config->authUrl,
-                'tokenUrl' => $config->tokenUrl,
-                'apiBaseUrl' => $config->apiBaseUrl
             ]);
         }
     }
@@ -47,27 +51,25 @@ class Events
     /**
      * Adds auto login possibility
      * @param ActionEvent $event
+     * @return void|\yii\console\Response|Response
      * @throws InvalidConfigException
      */
     public static function onUserAuthControllerBeforeAction(ActionEvent $event)
     {
         if (
             !Yii::$app->user->isGuest
-            || !Yii::$app->authClientCollection->hasClient('Keycloak')
             || $event->action->id !== 'login'
+            || !Yii::$app->authClientCollection->hasClient('Keycloak')
             || !Yii::$app->getModule('user')->settings->get('auth.anonymousRegistration') // if anonymous registration is not allowed and someone try to create an account, do not redirect to broker to avoid looping redirections
         ) {
             return;
         }
 
-        /** @var Module $module */
-        $module = Yii::$app->getModule('auth-keycloak');
-        $settings = $module->settings;
-
-        $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
-
-        if ($settings->get('autoLogin')) {
+        $config = new ConfigureForm();
+        if ($config->enabled && $config->autoLogin) {
             $event->isValid = false;
+            /** @var Keycloak $authClient */
+            $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
             return $authClient->redirectToBroker();
         }
     }
@@ -75,7 +77,7 @@ class Events
     /**
      * Adds auto login possibility
      * @param ActionEvent $event
-     * @return mixed
+     * @return void|\yii\console\Response|Response
      * @throws InvalidConfigException
      */
     public static function onUserRegistrationControllerBeforeAction(ActionEvent $event)
@@ -84,21 +86,18 @@ class Events
             !Yii::$app->user->isGuest
             || Yii::$app->request->isConsoleRequest
             || Yii::$app->controller->module->id === 'admin'
-            || !Yii::$app->authClientCollection->hasClient('Keycloak')
             || $event->action->id !== 'index'
+            || !Yii::$app->authClientCollection->hasClient('Keycloak')
             || !Yii::$app->request->get('token') // If not invited
         ) {
             return;
         }
 
-        /** @var Module $module */
-        $module = Yii::$app->getModule('auth-keycloak');
-        $settings = $module->settings;
-
-        $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
-
-        if ($settings->get('autoLogin')) {
+        $config = new ConfigureForm();
+        if ($config->enabled && $config->autoLogin) {
             $event->isValid = false;
+            /** @var Keycloak $authClient */
+            $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
             return $authClient->redirectToBroker();
         }
     }
@@ -118,24 +117,18 @@ class Events
             return;
         }
 
-        /** @var Module $module */
-        $module = Yii::$app->getModule('auth-keycloak');
-        $settings = $module->settings;
-        if (!$settings->get('hideRegistrationUsernameField')) {
-            return;
+        $config = new ConfigureForm();
+        if ($config->enabled && $config->hideRegistrationUsernameField) {
+            /** @var Registration $hform */
+            $hform = $event->sender;
+            unset($hform->definition['elements']['User']['title']);
+            $hform->definition['elements']['User']['elements']['username']['type'] = 'hidden';
         }
-
-        /** @var Registration $hform */
-        $hform = $event->sender;
-
-        unset($hform->definition['elements']['User']['title']);
-        $hform->definition['elements']['User']['elements']['username']['type'] = 'hidden';
     }
 
     /**
      * If user email has changed in Humhub, update it on the broker (IdP)
      * @param AfterSaveEvent $event
-     * @throws InvalidConfigException
      */
     public static function onModelUserAfterUpdate($event)
     {
@@ -149,43 +142,13 @@ class Events
         // Get changed attributes
         $changedAttributes = $event->changedAttributes;
 
-        // If email has changed
-        if (array_key_exists('email', $changedAttributes)) {
-
-            if (Yii::$app->authClientCollection->hasClient('Keycloak')) {
-
-                $config = ConfigureForm::getInstance();
-                if ($config->updatedBrokerEmailFromHumhubEmail && $config->hasApiParams()) {
-
-                    $userAuth = Auth::findOne(['source' => 'Keycloak', 'user_id' => $user->id]);
-                    if ($userAuth !== null) {
-
-                        if (!class_exists('Keycloak\Admin\KeycloakClient')) {
-                            require Yii::getAlias('@auth-keycloak/vendor/autoload.php');
-                        }
-
-                        $client = KeycloakClient::factory([
-                            'realm' => 'master', // The admin user must be in master realm
-                            'username' => $config->apiUsername,
-                            'password' => $config->apiPassword,
-                            'baseUri' => $config->apiRootUrl,
-                        ]);
-                        if ($config->apiRealm !== 'master') {
-                            $client->setRealmName($config->apiRealm);
-                        }
-                        $realm = $client->getRealm();
-
-                        // Update email
-                        $client->updateUser(array_merge(
-                            [
-                                'id' => $userAuth->source_id,
-                                'email' => $user->email,
-                            ],
-                            ($realm['registrationEmailAsUsername'] ? ['username' => $user->email] : [])
-                        ));
-                    }
-                }
-            }
+        $config = new ConfigureForm();
+        if (
+            array_key_exists('email', $changedAttributes)
+            && $config->enabled
+            && $config->updatedBrokerEmailFromHumhubEmail
+        ) {
+            (new KeycloakApi())->updateUserEmail($user);
         }
     }
 
@@ -195,59 +158,198 @@ class Events
      */
     public static function onComponentUserAfterLogout($event)
     {
-        if (!Yii::$app->authClientCollection->hasClient('Keycloak')) {
-            return;
-        }
-
         /** @var User $user */
         $user = $event->identity;
 
-        $config = ConfigureForm::getInstance();
-        if ($config->removeKeycloakSessionsAfterLogout && $config->hasApiParams()) {
+        $config = new ConfigureForm();
+        if (
+            $config->enabled
+            && $config->removeKeycloakSessionsAfterLogout
+        ) {
+            (new KeycloakApi())->revokeUserSession($user->id);
+        }
+    }
 
-            $userAuth = Auth::findOne(['source' => 'Keycloak', 'user_id' => $user->id]);
-            if ($userAuth !== null) {
 
-                if (!class_exists('Keycloak\Admin\KeycloakClient')) {
-                    require Yii::getAlias('@auth-keycloak/vendor/autoload.php');
-                }
+    /**
+     * @param $event
+     * @return void
+     */
+    public static function onModelGroupAfterInsert($event)
+    {
+        if (
+            empty($event->sender)
+            || !(new ConfigureForm())->syncHumhubGroupsToKeycloak()
+        ) {
+            return;
+        }
 
-                $client = KeycloakClient::factory([
-                    'realm' => 'master', // The admin user must be in master realm
-                    'username' => $config->apiUsername,
-                    'password' => $config->apiPassword,
-                    'baseUri' => $config->apiRootUrl,
-                ]);
-                if ($config->apiRealm !== 'master') {
-                    $client->setRealmName($config->apiRealm);
-                }
+        /** @var Group $group */
+        $group = $event->sender;
 
-                // Search for client with clientId of $authClient
-                foreach ($client->getClients() as $clientDefinition) {
-                    if (
-                        isset($clientDefinition['clientId'])
-                        && $clientDefinition['clientId'] === $config->clientId
-                        && isset($clientDefinition['id'])
-                    ) {
-                        // Get id of the client (different from clientId)
-                        $idOfClient = $clientDefinition['id'];
+        (new KeycloakApi())->createGroup($group->id);
+    }
 
-                        // Get user sessions
-                        $clientSessions = $client->getClientSessions([
-                            'id' => $idOfClient,
-                        ]);
-                        foreach ($clientSessions as $session) {
-                            if (isset($session['id'])) {
 
-                                // revoke session
-                                $client->revokeUserSession([
-                                    'session' => $session['id'],
-                                ]);
-                            }
-                        }
-                    }
-                }
-            }
+    /**
+     * @param $event
+     * @return void
+     */
+    public static function onModelGroupAfterDelete($event)
+    {
+        if (
+            empty($event->sender)
+            || !(new ConfigureForm())->syncHumhubGroupsToKeycloak(true)
+        ) {
+            return;
+        }
+
+        /** @var Group $group */
+        $group = $event->sender;
+
+        (new KeycloakApi())->removeGroup($group->keycloak_id);
+    }
+
+
+    /**
+     * @param $event
+     * @return void
+     */
+    public static function onModelGroupAfterUpdate($event)
+    {
+        if (
+            empty($event->sender)
+            || !isset($event->changedAttributes)
+            || !(new ConfigureForm())->syncHumhubGroupsToKeycloak()
+        ) {
+            return;
+        }
+
+        /** @var Group $group */
+        $group = $event->sender;
+
+        // Get changed attributes
+        $changedAttributes = $event->changedAttributes;
+
+        // If name has changed
+        if (array_key_exists('name', $changedAttributes)) {
+            (new KeycloakApi())->renameGroup($group->id);
+        }
+    }
+
+
+    /**
+     * @param $event
+     * @return void
+     */
+    public static function onModelGroupUserAfterInsert($event)
+    {
+        if (
+            empty($event->sender)
+            || !(new ConfigureForm())->syncHumhubGroupsToKeycloak()
+        ) {
+            return;
+        }
+
+        /** @var GroupUser $groupUser */
+        $groupUser = $event->sender;
+
+        $group = $groupUser->group;
+        $user = $groupUser->user;
+        if ($group === null || $user === null) {
+            return;
+        }
+
+        (new KeycloakApi())->addUserToGroup($user->id, $group->id);
+    }
+
+
+    /**
+     * @param $event
+     * @return void
+     */
+    public static function onModelGroupUserAfterDelete($event)
+    {
+        if (
+            empty($event->sender)
+            || !(new ConfigureForm())->syncHumhubGroupsToKeycloak(true)
+        ) {
+            return;
+        }
+
+        /** @var GroupUser $groupUser */
+        $groupUser = $event->sender;
+
+        $group = $groupUser->group;
+        $user = $groupUser->user;
+        if ($group === null || $user === null) {
+            return;
+        }
+
+        (new KeycloakApi())->deleteUserFromGroup($user->id, $group->id);
+    }
+
+
+    /**
+     * @param $event
+     * @return void
+     * @throws Throwable
+     */
+    public static function onCronDailyRun($event)
+    {
+        /** @var CronController $controller */
+        $controller = $event->sender;
+        $controller->stdout("Auth Keycloak module: Adding to jobs Keycloak groups synchronization with the API ");
+
+        Yii::$app->queue->push(new GroupsFullSync());
+    }
+
+    /**
+     * @param $event
+     * @return void
+     */
+    public static function onAuthAfterInsert($event)
+    {
+        if (
+            empty($event->sender)
+            || !(new ConfigureForm())->syncKeycloakGroupsToHumhub()
+        ) {
+            return;
+        }
+
+        /** @var Auth $auth */
+        $auth = $event->sender;
+
+        if ($auth->source === Keycloak::DEFAULT_NAME) {
+            Yii::$app->queue->push(new GroupsUserSync(['userId' => $auth->user_id]));
+        }
+    }
+
+    /**
+     * @param $event
+     * @return void
+     */
+    public static function onAuthAfterUpdate($event)
+    {
+        if (
+            empty($event->sender)
+            || !isset($event->changedAttributes)
+            || !(new ConfigureForm())->syncKeycloakGroupsToHumhub()
+        ) {
+            return;
+        }
+
+        /** @var Auth $auth */
+        $auth = $event->sender;
+
+        // Get changed attributes
+        $changedAttributes = $event->changedAttributes;
+
+        if (
+            $auth->source === Keycloak::DEFAULT_NAME
+            && array_key_exists('source', $changedAttributes)
+        ) {
+            Yii::$app->queue->push(new GroupsUserSync(['userId' => $auth->user_id]));
         }
     }
 }

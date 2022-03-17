@@ -2,10 +2,10 @@
     "id": "auth-keycloak",
     "name": "Keycloak Sign-In",
     "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
-    "keywords": [],
-    "version": "0.4.2",
+    "keywords": ["auth", "keycloak"],
+    "version": "1.0.0",
     "humhub": {
-        "minVersion": "1.7"
+        "minVersion": "1.9"
     },
     "homepage": "https://github.com/cuzy-app/humhub-modules-auth-keycloak",
     "authors": [

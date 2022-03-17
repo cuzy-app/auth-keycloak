@@ -1,10 +1,13 @@
 <?php
 
-/* @var $this \humhub\modules\ui\view\components\View */
-/* @var $model \humhubContrib\authKeycloak\models\ConfigureForm */
+/* @var $this View */
 
-use yii\bootstrap\ActiveForm;
+/* @var $model ConfigureForm */
+
 use humhub\libs\Html;
+use humhub\modules\authKeycloak\models\ConfigureForm;
+use humhub\modules\ui\form\widgets\ActiveForm;
+use humhub\modules\ui\view\components\View;
 
 ?>
 <div class="container-fluid">
@@ -13,53 +16,50 @@ use humhub\libs\Html;
             <?= Yii::t('AuthKeycloakModule.base', '<strong>Keycloak</strong> Sign-In configuration') ?></div>
 
         <div class="panel-body">
-            <p>
-                <?= Html::a(Yii::t('AuthKeycloakModule.base', 'Keycloak Documentation'), 'https://www.keycloak.org/documentation', ['class' => 'btn btn-primary pull-right btn-sm', 'target' => '_blank']); ?>
-                <?= Yii::t('AuthKeycloakModule.base', 'Please follow the Keycloak instructions to create the required <strong>OAuth client</strong> credentials.'); ?>
-                <br>
-            </p>
-            <br>
-
-            <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]); ?>
-
-            <?= $form->field($model, 'enabled')->checkbox(); ?>
-
-            <br>
-            <?= $form->field($model, 'clientId'); ?>
-            <?= $form->field($model, 'clientSecret')->textInput(['type' => 'password']); ?>
-            <br>
-            <?= $form->field($model, 'authUrl'); ?>
-            <?= $form->field($model, 'tokenUrl'); ?>
-            <?= $form->field($model, 'apiBaseUrl'); ?>
-            <br>
-            <?= $form->field($model, 'redirectUri')->textInput(['readonly' => true]); ?>
-            <br>
-            <?= $form->field($model, 'idAttribute'); ?>
-            <?= $form->field($model, 'usernameMapper'); ?>
-            <br>
-
-            <h4><?= Yii::t('AuthKeycloakModule.base', 'Advanced settings (optional)'); ?></h4>
-
-            <?= $form->field($model, 'title'); ?>
-            <?= $form->field($model, 'autoLogin')->checkbox(); ?>
-            <?= $form->field($model, 'hideRegistrationUsernameField')->checkbox(); ?>
-            <?= $form->field($model, 'removeKeycloakSessionsAfterLogout')->checkbox(); ?>
-            <?= $form->field($model, 'updateHumhubEmailFromBrokerEmail')->checkbox(); ?>
-            <?= $form->field($model, 'updatedBrokerEmailFromHumhubEmail')->checkbox(); ?>
-            <br>
-
-            <h4><?= Yii::t('AuthKeycloakModule.base', 'Keycloak API settings'); ?></h4>
-
-            <?= $form->field($model, 'apiRealm'); ?>
-            <?= $form->field($model, 'apiUsername'); ?>
-            <?= $form->field($model, 'apiPassword')->textInput(['type' => 'password']); ?>
-            <?= $form->field($model, 'apiRootUrl'); ?>
-
-            <div class="form-group">
-                <?= Html::saveButton() ?>
+            <div class="alert alert-info">
+                <div><?= Yii::t('AuthKeycloakModule.base', 'On Keycloak, create a client for Humhub and configure it:') ?></div>
+                <ul>
+                    <li><?= Yii::t('AuthKeycloakModule.base', '{Settings} tab -> {AccessType}: choose {confidential}. Save settings.', ['Settings' => '“Settings”', 'AccessType' => '“Access Type”', 'confidential' => '“confidential”',]) ?></li>
+                    <li><?= Yii::t('AuthKeycloakModule.base', '{Credentials} tab: copy the secret key', ['Credentials' => '“Credentials”']) ?></li>
+                    <li><?= Yii::t('AuthKeycloakModule.base', '{Mappers} tab:', ['Mappers' => '“Mappers”']) ?></li>
+                    <ul>
+                        <li><?= Yii::t('AuthKeycloakModule.base', 'Button {AddBuiltin} and check theses attributes:', ['AddBuiltin' => '“Add builtin”']) ?>
+                            “family name”, “email”, “given name”, “username”
+                        </li>
+                        <li><?= Yii::t('AuthKeycloakModule.base', 'Edit {usernameAttribute} and in {TokenClaimName}, replace {preferredUsernameAttribute} with {idAttribute}', ['usernameAttribute' => '“username”', 'TokenClaimName' => '“Token Claim Name”', 'preferredUsernameAttribute' => '“preferred_username”', 'idAttribute' => '“id”']) ?></li>
+                    </ul>
+                </ul>
             </div>
+            <br>
 
-            <?php ActiveForm::end(); ?>
+            <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]) ?>
+
+            <?= $form->field($model, 'enabled')->checkbox() ?>
+            <?= $form->field($model, 'clientId') ?>
+            <?= $form->field($model, 'clientSecret')->textInput(['type' => 'password']) ?>
+            <?= $form->field($model, 'realm') ?>
+            <?= $form->field($model, 'baseUrl') ?>
+            <?= $form->field($model, 'redirectUri')->textInput(['readonly' => true]) ?>
+            <?= $form->field($model, 'usernameMapper') ?>
+
+            <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings (optional)')) ?>
+            <?= $form->field($model, 'title') ?>
+            <?= $form->field($model, 'autoLogin')->checkbox() ?>
+            <?= $form->field($model, 'hideRegistrationUsernameField')->checkbox() ?>
+            <?= $form->endCollapsibleFields(); ?>
+
+            <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings requiring an admin user for the API (optional)')) ?>
+            <?= $form->field($model, 'apiUsername') ?>
+            <?= $form->field($model, 'apiPassword')->textInput(['type' => 'password']) ?>
+            <?= $form->field($model, 'removeKeycloakSessionsAfterLogout')->checkbox() ?>
+            <?= $form->field($model, 'updateHumhubEmailFromBrokerEmail')->checkbox() ?>
+            <?= $form->field($model, 'updatedBrokerEmailFromHumhubEmail')->checkbox() ?>
+            <?= $form->field($model, 'groupsSyncMode')->dropDownList($model->groupsSyncModeItems()) ?>
+            <?= $form->endCollapsibleFields(); ?>
+
+            <?= Html::saveButton() ?>
+
+            <?php ActiveForm::end() ?>
 
         </div>
     </div>

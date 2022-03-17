@@ -1,49 +1,33 @@
 # Keycloak Sign-In
 
-Integrating Keycloak Sign-In (OAuth 2.0)
-
-
-## Overview
-
-Using this module, users can directly log in or register at this HumHub installation with an account on an identity provider using [Keycloak](https://www.keycloak.org/) open source's application.
+Using this module, users can directly log in or register with their [Keycloak](https://www.keycloak.org/) credentials at this HumHub installation. 
+A new button "Keycloak" (can be renamed) will appear on the login page.
 
 
 ## Features
 
-- If email is changed on the broker (IdP) or on Humhub, it can be automatically updated on Humhub or the broker
-- Possibility to choose if user must be linked to the broker (IdP) from the broker's user ID or email
-- Possibility to choose broker's (IdP) mapper name to use for Humhub's default username (on account creation)
-- Can try auto login (only if anonymous registration is allowed)
+- Auto login
+- Users' groups and email synchronization between Keycloak and Humhub in both directions (1):
+  - Humhub to Keycloak sync is done in real time
+  - Keycloak to Humhub sync is done once a day
+  - Keycloak subgroups are not synced
 
-
-## Install
-
-```
-cd my-humhub/protected/modules
-git clone https://github.com/cuzy-app/humhub-modules-auth-keycloak.git auth-keycloak
-cd auth-keycloak
-composer install
-```
-
-And then enable module in Humhub's administration
+(1) E.g. when a user on Humhub becomes member of a group the module will:
+1. check if a group with the same name exists on Keycloak
+2. create the group on Keycloak if not exists
+3. add this group to the corresponding user on Keycloak
 
 
 ## Requirements
 
-Pretty URLs must be enabled ([see documentation](https://docs.humhub.org/docs/admin/installation/#pretty-urls)).
+For auto login: on Humhub, anonymous registration must be allowed
+For users' groups and email synchronization: on Keycloak, users attributes must be writable (it can be tested by changing the email address of a user on Keycloak administration).
 
 
-## Usage
+## Configuration
 
-On Keycloak, create a client for Humhub and configure it:
-- Tab "Settings": "Access Type": choose `confidential`. Save settings.
-- Tab "Credentials": copy the secret key
-- Tab "Mappers":
-    + "Add builtin" and check: `family name`, `email`, `given name` and `username`
-    + Edit "username": in "Token Claim Name", replace `preferred_username` with `id`
-
-Go to Humhub module's settings.
-You can find endpoint URLs on Keycloak: "Realm Settings" -> "OpenID Endpoint Configuration"
+Go to module's configuration at: `Administration -> Modules -> Keycloak Auth -> Settings`. 
+And follow the instructions.
 
 
 ## Repository
