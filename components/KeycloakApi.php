@@ -145,7 +145,7 @@ class KeycloakApi extends Component
         // Check if Keycloak group exists
         if (($groupKeycloak = GroupKeycloak::findOne($groupId)) === null) {
             // Try creating it
-            if ($createGroupIfNotExists && $this->createGroup($groupId)) {
+            if ($createGroupIfNotExists && $this->linkSameGroupNameOrCreateGroup($groupId)) {
                 $groupKeycloak = GroupKeycloak::findOne($groupId);
             } else {
                 return false;
@@ -167,7 +167,7 @@ class KeycloakApi extends Component
      * @param int $groupId
      * @return bool
      */
-    public function createGroup($groupId)
+    public function linkSameGroupNameOrCreateGroup($groupId)
     {
         if (
             !$this->isConnected()

@@ -187,7 +187,7 @@ class Events
         /** @var Group $group */
         $group = $event->sender;
 
-        (new KeycloakApi())->createGroup($group->id);
+        (new KeycloakApi())->linkSameGroupNameOrCreateGroup($group->id);
     }
 
 

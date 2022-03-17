@@ -168,9 +168,12 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
     {
         foreach (GroupKeycloak::find()->all() as $humhubGroup) {
             // Check if Keycloak group exists
-            if (!array_key_exists($humhubGroup->keycloak_id, $this->keycloakGroupsNamesById)) {
+            if (
+                $humhubGroup->keycloak_id === null
+                || !array_key_exists($humhubGroup->keycloak_id, $this->keycloakGroupsNamesById)
+            ) {
                 // Create group on Keycloak
-                $this->keycloakApi->createGroup($humhubGroup->id);
+                $this->keycloakApi->linkSameGroupNameOrCreateGroup($humhubGroup->id);
                 // Update Humhub group with the new created Keycloak ID
                 $humhubGroup = GroupKeycloak::findOne($humhubGroup->id);
                 $this->keycloakGroupsNamesById[$humhubGroup->keycloak_id] = $humhubGroup->name;
