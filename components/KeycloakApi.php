@@ -380,7 +380,6 @@ class KeycloakApi extends Component
         if (!$this->isConnected()) {
             return null;
         }
-
         $first = 0;
         $memberIds = [];
         while (!isset($currentMembers) || count($currentMembers) === static::MAX_USERS_RESULT) {
@@ -390,8 +389,9 @@ class KeycloakApi extends Component
                 'max' => static::MAX_USERS_RESULT,
             ]);
             $currentMemberIds = array_map(static function ($member) {
-                return $member['id'];
+                return $member['id'] ?? null;
             }, $currentMembers);
+            $currentMemberIds = array_filter($currentMemberIds);
             $memberIds = array_merge($memberIds, $currentMemberIds);
             $first += static::MAX_USERS_RESULT;
         }
