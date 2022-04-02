@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '20a798bebbb0d3f4cf71a1ec57beba59fd4e0b42',
+    'reference' => '8209d2b7ad7b6c23758453e1c25427eed58b307b',
     'name' => 'cuzy-app/humhub-modules-auth-keycloak',
   ),
   'versions' => 
@@ -41,7 +41,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '20a798bebbb0d3f4cf71a1ec57beba59fd4e0b42',
+      'reference' => '8209d2b7ad7b6c23758453e1c25427eed58b307b',
     ),
     'guzzlehttp/command' => 
     array (
@@ -54,12 +54,12 @@ private static $installed = array (
     ),
     'guzzlehttp/guzzle' => 
     array (
-      'pretty_version' => '7.4.1',
-      'version' => '7.4.1.0',
+      'pretty_version' => '7.4.2',
+      'version' => '7.4.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ee0a041b1760e6a53d2a39c8c34115adc2af2c79',
+      'reference' => 'ac1ec1cd9b5624694c3a40be801d94137afb12b4',
     ),
     'guzzlehttp/guzzle-services' => 
     array (
@@ -81,12 +81,12 @@ private static $installed = array (
     ),
     'guzzlehttp/psr7' => 
     array (
-      'pretty_version' => '2.1.0',
-      'version' => '2.1.0.0',
+      'pretty_version' => '2.2.1',
+      'version' => '2.2.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '089edd38f5b8abba6cb01567c2a8aaa47cec4c72',
+      'reference' => 'c94a94f120803a18554c1805ef2e539f8285f9a2',
     ),
     'guzzlehttp/uri-template' => 
     array (

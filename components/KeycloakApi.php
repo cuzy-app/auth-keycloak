@@ -277,7 +277,7 @@ class KeycloakApi extends Component
             'realm' => 'master', // The admin user must be in master realm
             'username' => $config->apiUsername,
             'password' => $config->apiPassword,
-            'baseUri' => $config->baseUrl,
+            'baseUri' => $config->baseUrl . '/',
         ]);
         if ($config->realm !== 'master') {
             $this->api->setRealmName($config->realm);
@@ -298,14 +298,13 @@ class KeycloakApi extends Component
         ) {
             return null;
         }
-
         // Update email
         $result = $this->api->updateUser(array_merge(
             [
                 'id' => $userAuth->source_id,
                 'email' => $user->email,
             ],
-            ($this->realm['registrationEmailAsUsername'] ? ['username' => $user->email] : [])
+            ((isset($this->realm['registrationEmailAsUsername']) && $this->realm['registrationEmailAsUsername']) ? ['username' => $user->email] : [])
         ));
         if (!empty($result['errorMessage'])) {
             Yii::error('Error saving user\'s new email on Keycloak (user ID: ' . $user->id . '): ' . $result['errorMessage'], 'auth-keycloak');

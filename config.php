@@ -50,9 +50,9 @@ return [
             'callback' => [Events::class, 'onComponentUserAfterLogout']
         ],
         [
-            Collection::class,
-            Collection::EVENT_AFTER_CLIENTS_SET,
-            [Events::class, 'onAuthClientCollectionInit']
+            'class' => Collection::class,
+            'event' => Collection::EVENT_AFTER_CLIENTS_SET,
+            'callback' => [Events::class, 'onAuthClientCollectionInit']
         ],
         [
             'class' => Group::class,

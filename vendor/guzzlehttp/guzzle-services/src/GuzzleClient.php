@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\ClientInterface;
@@ -6,6 +7,7 @@ use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\Handler\ValidatedDescriptionHandler;
 use GuzzleHttp\Command\ServiceClient;
 use GuzzleHttp\HandlerStack;
+use InvalidArgumentException;
 
 /**
  * Default Guzzle web service client implementation.
@@ -41,13 +43,14 @@ class GuzzleClient extends ServiceClient
      * @param array $config Configuration options
      */
     public function __construct(
-        ClientInterface $client,
+        ClientInterface      $client,
         DescriptionInterface $description,
-        callable $commandToRequestTransformer = null,
-        callable $responseToResultTransformer = null,
-        HandlerStack $commandHandlerStack = null,
-        array $config = []
-    ) {
+        callable             $commandToRequestTransformer = null,
+        callable             $responseToResultTransformer = null,
+        HandlerStack         $commandHandlerStack = null,
+        array                $config = []
+    )
+    {
         $this->config = $config;
         $this->description = $description;
         $serializer = $this->getSerializer($commandToRequestTransformer);
@@ -58,44 +61,10 @@ class GuzzleClient extends ServiceClient
     }
 
     /**
-     * Returns the command if valid; otherwise an Exception
-     * @param string $name
-     * @param array  $args
-     * @return CommandInterface
-     * @throws \InvalidArgumentException
-     */
-    public function getCommand($name, array $args = [])
-    {
-        if (!$this->description->hasOperation($name)) {
-            $name = ucfirst($name);
-            if (!$this->description->hasOperation($name)) {
-                throw new \InvalidArgumentException(
-                    "No operation found named {$name}"
-                );
-            }
-        }
-
-        // Merge in default command options
-        $args += $this->getConfig('defaults');
-
-        return parent::getCommand($name, $args);
-    }
-
-    /**
-     * Return the description
-     *
-     * @return DescriptionInterface
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
      * Returns the passed Serializer when set, a new instance otherwise
      *
      * @param callable|null $commandToRequestTransformer
-     * @return \GuzzleHttp\Command\Guzzle\Serializer
+     * @return Serializer
      */
     private function getSerializer($commandToRequestTransformer)
     {
@@ -108,37 +77,15 @@ class GuzzleClient extends ServiceClient
      * Returns the passed Deserializer when set, a new instance otherwise
      *
      * @param callable|null $responseToResultTransformer
-     * @return \GuzzleHttp\Command\Guzzle\Deserializer
+     * @return Deserializer
      */
     private function getDeserializer($responseToResultTransformer)
     {
-        $process = (! isset($this->config['process']) || $this->config['process'] === true);
+        $process = (!isset($this->config['process']) || $this->config['process'] === true);
 
         return $responseToResultTransformer !== null
             ? $responseToResultTransformer
             : new Deserializer($this->description, $process);
-    }
-
-    /**
-     * Get the config of the client
-     *
-     * @param array|string $option
-     * @return mixed
-     */
-    public function getConfig($option = null)
-    {
-        return $option === null
-            ? $this->config
-            : (isset($this->config[$option]) ? $this->config[$option] : []);
-    }
-
-    /**
-     * @param $option
-     * @param $value
-     */
-    public function setConfig($option, $value)
-    {
-        $this->config[$option] = $value;
     }
 
     /**
@@ -165,5 +112,61 @@ class GuzzleClient extends ServiceClient
             // Question: What is the result when the Deserializer is bypassed?
             // Possible answer: The raw response.
         }
+    }
+
+    /**
+     * Returns the command if valid; otherwise an Exception
+     * @param string $name
+     * @param array $args
+     * @return CommandInterface
+     * @throws InvalidArgumentException
+     */
+    public function getCommand($name, array $args = [])
+    {
+        if (!$this->description->hasOperation($name)) {
+            $name = ucfirst($name);
+            if (!$this->description->hasOperation($name)) {
+                throw new InvalidArgumentException(
+                    "No operation found named {$name}"
+                );
+            }
+        }
+
+        // Merge in default command options
+        $args += $this->getConfig('defaults');
+
+        return parent::getCommand($name, $args);
+    }
+
+    /**
+     * Get the config of the client
+     *
+     * @param array|string $option
+     * @return mixed
+     */
+    public function getConfig($option = null)
+    {
+        return $option === null
+            ? $this->config
+            : (isset($this->config[$option]) ? $this->config[$option] : []);
+    }
+
+    /**
+     * @param $option
+     * @param $value
+     */
+    public function setConfig($option, $value)
+    {
+        $this->config[$option] = $value;
+    }
+
+    /**
+     * Return the description
+     *
+     * @return DescriptionInterface
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

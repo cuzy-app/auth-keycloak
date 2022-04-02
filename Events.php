@@ -58,6 +58,7 @@ class Events
     {
         if (
             !Yii::$app->user->isGuest
+            || Yii::$app->request->isConsoleRequest
             || $event->action->id !== 'login'
             || !Yii::$app->authClientCollection->hasClient('Keycloak')
             || !Yii::$app->getModule('user')->settings->get('auth.anonymousRegistration') // if anonymous registration is not allowed and someone try to create an account, do not redirect to broker to avoid looping redirections
@@ -82,13 +83,13 @@ class Events
      */
     public static function onUserRegistrationControllerBeforeAction(ActionEvent $event)
     {
+        // user/registration    user/auth/login
         if (
             !Yii::$app->user->isGuest
             || Yii::$app->request->isConsoleRequest
-            || Yii::$app->controller->module->id === 'admin'
             || $event->action->id !== 'index'
-            || !Yii::$app->authClientCollection->hasClient('Keycloak')
             || !Yii::$app->request->get('token') // If not invited
+            || !Yii::$app->authClientCollection->hasClient('Keycloak')
         ) {
             return;
         }

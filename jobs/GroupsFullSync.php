@@ -86,8 +86,6 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
         }
         $this->keycloakApi = new KeycloakApi();
 
-
-        $this->initUsersKeycloakIdToHumhubId();
         if (!$this->initKeycloakGroupsNamesById()) {
             return;
         }
@@ -100,6 +98,7 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
             $this->addHumhubGroupsToKeycloak();
         }
 
+        $this->initUsersKeycloakIdToHumhubId();
         $this->initKeycloakGroupsMembers();
         $this->initHumhubGroupsMembers();
 
@@ -119,19 +118,6 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
                 $this->renameHumhubGroups();
             }
         }
-    }
-
-    /**
-     * @return void
-     */
-    protected function initUsersKeycloakIdToHumhubId()
-    {
-        $auths = Auth::find()
-            ->orderBy(['id' => SORT_ASC]) // Get the latest if it has multiple
-            ->where(['source' => Keycloak::DEFAULT_NAME])
-            ->indexBy('user_id') // Remove duplicated
-            ->all();
-        $this->usersKeycloakIdToHumhubId = ArrayHelper::map($auths, 'source_id', 'user_id');
     }
 
     /**
@@ -209,12 +195,26 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
                 || !array_key_exists($humhubGroup->keycloak_id, $this->keycloakGroupsNamesById)
             ) {
                 // Link to a same group name on Keycloak or create group on Keycloak
-                $this->keycloakApi->linkSameGroupNameOrCreateGroup($humhubGroup->id);
-                // Update Humhub group with the new created Keycloak ID
-                $humhubGroup = GroupKeycloak::findOne($humhubGroup->id);
-                $this->keycloakGroupsNamesById[$humhubGroup->keycloak_id] = $humhubGroup->name;
+                if ($this->keycloakApi->linkSameGroupNameOrCreateGroup($humhubGroup->id)) {
+                    // Update Humhub group with the new created Keycloak ID
+                    $humhubGroup = GroupKeycloak::findOne($humhubGroup->id);
+                    $this->keycloakGroupsNamesById[$humhubGroup->keycloak_id] = $humhubGroup->name;
+                }
             }
         }
+    }
+
+    /**
+     * @return void
+     */
+    protected function initUsersKeycloakIdToHumhubId()
+    {
+        $auths = Auth::find()
+            ->orderBy(['id' => SORT_ASC]) // Get the latest if it has multiple
+            ->where(['source' => Keycloak::DEFAULT_NAME])
+            ->indexBy('user_id') // Remove duplicated
+            ->all();
+        $this->usersKeycloakIdToHumhubId = ArrayHelper::map($auths, 'source_id', 'user_id');
     }
 
     /**
