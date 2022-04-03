@@ -76,10 +76,10 @@ class Keycloak extends OAuth2
     }
 
     /**
-     * @param string $url
+     * @param string|null $url
      * @return bool
      */
-    protected function redirectUrlIsValid(string $url)
+    protected function redirectUrlIsValid(?string $url)
     {
         // URL is another website
         if (strpos($url, Url::base(true)) !== 0) {
