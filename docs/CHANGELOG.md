@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Unreleased
+--------------------
+- Fix: Error message after account creation if invited by email to a space
+
+
 1.0.1 (March 18, 2022)
 --------------------
 - Fix: API synchronization is now working on old Keycloak instances
