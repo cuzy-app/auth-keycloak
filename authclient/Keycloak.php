@@ -68,7 +68,8 @@ class Keycloak extends OAuth2
         }
         if (
             strpos($urlToRedirect, Url::to(['/user/auth'], true)) !== 0
-            && strpos($urlToRedirect, Url::base(true)) === 0 // Referrer URL is not an other website
+            && strpos($urlToRedirect, Url::to(['/user/registration'], true)) !== 0
+            && strpos($urlToRedirect, Url::base(true)) === 0 // Referrer URL is not another website
         ) {
             Yii::$app->user->setReturnUrl($urlToRedirect);
         }
