@@ -63,20 +63,37 @@ class Keycloak extends OAuth2
 
         // Try to set a better return URL after login
         $urlToRedirect = Url::current([], true);
-        if (strpos($urlToRedirect, Url::to(['/user/auth'], true)) === 0) {
+        if (!$this->redirectUrlIsValid($urlToRedirect)) {
             $urlToRedirect = Yii::$app->request->referrer;
         }
-        if (
-            strpos($urlToRedirect, Url::to(['/user/auth'], true)) !== 0
-            && strpos($urlToRedirect, Url::to(['/user/registration'], true)) !== 0
-            && strpos($urlToRedirect, Url::base(true)) === 0 // Referrer URL is not another website
-        ) {
+        if ($this->redirectUrlIsValid($urlToRedirect)) {
             Yii::$app->user->setReturnUrl($urlToRedirect);
         }
 
         // Redirect to broker
         // The `return` will prevent logging user if URL doesn't exists
         return Yii::$app->getResponse()->redirect($this->buildAuthUrl());
+    }
+
+    /**
+     * @param string $url
+     * @return bool
+     */
+    protected function redirectUrlIsValid(string $url)
+    {
+        // URL is another website
+        if (strpos($url, Url::base(true)) !== 0) {
+            return false;
+        }
+        // URL is not for the user module
+        if (strpos($url, Url::to(['/user'], true)) !== 0) {
+            return true;
+        }
+        // URL is for the user module: URL is valid only for these controllers
+        return
+            strpos($url, Url::to(['/user/account'], true)) === 0
+            || strpos($url, Url::to(['/user/people'], true)) === 0
+            || strpos($url, Url::to(['/user/profile'], true)) === 0;
     }
 
     /**
