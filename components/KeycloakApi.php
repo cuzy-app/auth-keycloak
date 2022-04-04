@@ -174,11 +174,12 @@ class KeycloakApi extends Component
             }
         }
 
-        $result = $this->api->addUserToGroup([
+        // performance reasons, we do not check if user exists, so we cannot check if addUserToGroup sends errors as we could have the "User not found" message.
+        $this->api->addUserToGroup([
             'id' => $userAuth->source_id,
             'groupId' => $groupKeycloak->keycloak_id
         ]);
-        return !$this->hasError($result, 'Error adding group ID ' . $groupId . ' to user ID ' . $userId . '');
+        return true;
     }
 
     /**
@@ -361,7 +362,6 @@ class KeycloakApi extends Component
 
             // Get user sessions
             $clientSessions = $api->getClientSessions([
-                'realm' => $config->realm,
                 'id' => $idOfClient,
             ]);
             if ($this->hasError($clientSessions, 'Error getting client sessions for client ID ' . $idOfClient)) {
