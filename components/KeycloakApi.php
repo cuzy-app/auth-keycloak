@@ -326,7 +326,7 @@ class KeycloakApi extends Component
             return null;
         }
 
-        $keycloakApi = new KeycloakApi();
+        $keycloakApi = new static();
         if (!$keycloakApi->isConnected()) {
             return false;
         }
@@ -335,7 +335,12 @@ class KeycloakApi extends Component
         $config = new ConfigureForm();
 
         // Search for the client used with this Humhub
-        foreach ($api->getClients() as $clientDefinition) {
+        $clients = $api->getClients();
+        if (!empty($clients['error'])) {
+            Yii::error('Error getting clients on Keycloak: ' . $clients['error'], 'auth-keycloak');
+            return false;
+        }
+        foreach ($clients as $clientDefinition) {
             if (
                 !isset($clientDefinition['clientId'], $clientDefinition['id'])
                 || $clientDefinition['clientId'] !== $config->clientId
@@ -350,6 +355,10 @@ class KeycloakApi extends Component
             $clientSessions = $api->getClientSessions([
                 'id' => $idOfClient,
             ]);
+            if (!empty($clientSessions['error'])) {
+                Yii::error('Error getting client sessions for client ID ' . $idOfClient . ' on Keycloak: ' . $clientSessions['error'], 'auth-keycloak');
+                return false;
+            }
             foreach ($clientSessions as $session) {
                 if (
                     isset($session['id'])
