@@ -80,7 +80,10 @@ class KeycloakApi extends Component
         }
         if (count($errors) > 0) {
             if ($addErrorToLog) {
-                Yii::error(('Auth Keycloak module error' . $message ? ': ' . $message : '') . '. Error message: ' . implode(' | ', $errors), 'auth-keycloak');
+                Yii::error(
+                    'Auth Keycloak module error' . ($message ? ': ' . $message : '') . '. Error message: ' . implode(' | ', $errors),
+                    'auth-keycloak'
+                );
             }
             return true;
         }
