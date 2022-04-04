@@ -49,11 +49,7 @@ class KeycloakApi extends Component
         }
         $result = $this->api->removeGroup(['id' => $groupKeycloakId]);
 
-        if (!empty($result['errorMessage'])) {
-            Yii::error('Auth Keycloak module: Keycloak groups to Humhub groups users synchronization with the API failed...', 'auth-keycloak');
-            return false;
-        }
-        return true;
+        return !$this->hasError($result, 'Keycloak groups to Humhub groups users synchronization with the API failed');
     }
 
     /**
@@ -62,6 +58,33 @@ class KeycloakApi extends Component
     public function isConnected()
     {
         return $this->api !== null && $this->realm !== null;
+    }
+
+    /**
+     * @param $response
+     * @param $message
+     * @param $addErrorToLog
+     * @return bool
+     */
+    protected function hasError($response, $message = null, $addErrorToLog = true)
+    {
+        $errors = [];
+        if (!empty($response['error'])) {
+            $errors[] = $response['error'];
+        }
+        if (!empty($response['errorMessage'])) {
+            $errors[] = $response['errorMessage'];
+        }
+        if (!empty($response['error_description'])) {
+            $errors[] = $response['error_description'];
+        }
+        if (count($errors) > 0) {
+            if ($addErrorToLog) {
+                Yii::error(('Auth Keycloak module error' . $message ? ': ' . $message : '') . '. Error message: ' . implode(' | ', $errors), 'auth-keycloak');
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -82,11 +105,7 @@ class KeycloakApi extends Component
             'name' => $groupKeycloak->name,
         ]);
 
-        if (!empty($result['errorMessage'])) {
-            Yii::error('Error removing group ID ' . $groupKeycloak->id . ' on Keycloak: ' . $result['errorMessage'], 'auth-keycloak');
-            return false;
-        }
-        return true;
+        return !$this->hasError($result, 'Error removing group ID ' . $groupKeycloak->id);
     }
 
     /**
@@ -102,11 +121,11 @@ class KeycloakApi extends Component
             return [];
         }
         $result = $this->api->getUserGroups(['id' => $userAuth->source_id]);
-        if (
-            !empty($result['errorMessage'])
-            || !is_array($result)
-        ) {
-            Yii::error('Error retrieving users groups from Keycloak (user ID: ' . $userId . '): ' . ($result['errorMessage'] ?? 'result is not an array'), 'auth-keycloak');
+        if ($this->hasError($result, 'Error retrieving user\'s groups from Keycloak (user ID: ' . $userId . ')')) {
+            return [];
+        }
+        if (!is_array($result)) {
+            Yii::error('Error retrieving user\'s groups from Keycloak for user ID: ' . $userId . ' (result is not an array)', 'auth-keycloak');
             return [];
         }
         return array_map(static function ($group) {
@@ -156,11 +175,7 @@ class KeycloakApi extends Component
             'id' => $userAuth->source_id,
             'groupId' => $groupKeycloak->keycloak_id
         ]);
-        if (!empty($result['errorMessage'])) {
-            Yii::error('Error adding group ID ' . $groupId . ' to user ID ' . $userId . ' on Keycloak: ' . $result['errorMessage'], 'auth-keycloak');
-            return false;
-        }
-        return true;
+        return !$this->hasError($result, 'Error adding group ID ' . $groupId . ' to user ID ' . $userId . '');
     }
 
     /**
@@ -185,8 +200,7 @@ class KeycloakApi extends Component
         // Try creating group
         $result = $this->api->createGroup(['name' => $groupKeycloak->name]);
 
-        if (!empty($result['errorMessage'])) {
-            Yii::error('Error creating group ID ' . $groupKeycloak->id . ' on Keycloak: ' . $result['errorMessage'], 'auth-keycloak');
+        if ($this->hasError($result, 'Error creating group ID ' . $groupKeycloak->id)) {
             return false;
         }
 
@@ -218,11 +232,11 @@ class KeycloakApi extends Component
             return null;
         }
         $result = $this->api->getGroups();
-        if (
-            !empty($result['errorMessage'])
-            || !is_array($result)
-        ) {
-            Yii::error('Error retrieving groups from Keycloak: ' . ($result['errorMessage'] ?? 'result is not an array'), 'auth-keycloak');
+        if ($this->hasError($result, 'Error retrieving groups')) {
+            return null;
+        }
+        if (!is_array($result)) {
+            Yii::error('Error retrieving groups from Keycloak (result is not an array)', 'auth-keycloak');
             return null;
         }
         return ArrayHelper::map($result, 'id', 'name');
@@ -246,11 +260,7 @@ class KeycloakApi extends Component
             'id' => $userAuth->source_id,
             'groupId' => $groupKeycloak->keycloak_id
         ]);
-        if (!empty($result['errorMessage'])) {
-            Yii::error('Error deleting group ID ' . $groupId . ' to user ID ' . $userId . ' on Keycloak: ' . $result['errorMessage'], 'auth-keycloak');
-            return false;
-        }
-        return true;
+        return !$this->hasError($result, 'Error deleting group ID ' . $groupId . ' to user ID ' . $userId);
     }
 
     /**
@@ -306,11 +316,7 @@ class KeycloakApi extends Component
             ],
             ((isset($this->realm['registrationEmailAsUsername']) && $this->realm['registrationEmailAsUsername']) ? ['username' => $user->email] : [])
         ));
-        if (!empty($result['errorMessage'])) {
-            Yii::error('Error saving user\'s new email on Keycloak (user ID: ' . $user->id . '): ' . $result['errorMessage'], 'auth-keycloak');
-            return false;
-        }
-        return true;
+        return !$this->hasError($result, 'Error saving user\'s new email on Keycloak for user ID: ' . $user->id);
     }
 
     /**
@@ -336,8 +342,7 @@ class KeycloakApi extends Component
 
         // Search for the client used with this Humhub
         $clients = $api->getClients();
-        if (!empty($clients['error'])) {
-            Yii::error('Error getting clients on Keycloak: ' . $clients['error'], 'auth-keycloak');
+        if ($this->hasError($clients, 'Error getting clients')) {
             return false;
         }
         foreach ($clients as $clientDefinition) {
@@ -353,10 +358,10 @@ class KeycloakApi extends Component
 
             // Get user sessions
             $clientSessions = $api->getClientSessions([
+                'realm' => $config->realm,
                 'id' => $idOfClient,
             ]);
-            if (!empty($clientSessions['error'])) {
-                Yii::error('Error getting client sessions for client ID ' . $idOfClient . ' on Keycloak: ' . $clientSessions['error'], 'auth-keycloak');
+            if ($this->hasError($clientSessions, 'Error getting client sessions for client ID ' . $idOfClient)) {
                 return false;
             }
             foreach ($clientSessions as $session) {
@@ -368,8 +373,7 @@ class KeycloakApi extends Component
                     $result = $api->revokeUserSession([
                         'session' => $session['id'],
                     ]);
-                    if (!empty($result['errorMessage'])) {
-                        Yii::error('Error revoking user\'s session on Keycloak (user ID: ' . $userId . '): ' . $result['errorMessage'], 'auth-keycloak');
+                    if ($this->hasError($result, 'Error revoking user\'s session on Keycloak for user ID: ' . $userId)) {
                         return false;
                     }
                 }
