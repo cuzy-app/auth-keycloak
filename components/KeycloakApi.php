@@ -62,11 +62,12 @@ class KeycloakApi extends Component
 
     /**
      * @param $response
-     * @param $message
-     * @param $addErrorToLog
+     * @param string|null $message
+     * @param bool $addErrorToLog
+     * @param string|null $errorToIgnoreForLog by default, 'User not found' as we do not check if the user exists to avoid an extra API request
      * @return bool
      */
-    protected function hasError($response, $message = null, $addErrorToLog = true)
+    protected function hasError($response, ?string $message = null, bool $addErrorToLog = true, ?string $errorToIgnoreForLog = 'User not found')
     {
         $errors = [];
         if (!empty($response['error'])) {
@@ -79,9 +80,10 @@ class KeycloakApi extends Component
             $errors[] = $response['error_description'];
         }
         if (count($errors) > 0) {
-            if ($addErrorToLog) {
+            $errorMessage = implode(' | ', $errors);
+            if ($addErrorToLog && strpos($errorMessage, $errorToIgnoreForLog) === false) {
                 Yii::error(
-                    'Auth Keycloak module error' . ($message ? ': ' . $message : '') . '. Error message: ' . implode(' | ', $errors),
+                    'Auth Keycloak module error' . ($message ? ': ' . $message : '') . '. Error message: ' . $errorMessage,
                     'auth-keycloak'
                 );
             }
@@ -174,12 +176,11 @@ class KeycloakApi extends Component
             }
         }
 
-        // performance reasons, we do not check if user exists, so we cannot check if addUserToGroup sends errors as we could have the "User not found" message.
-        $this->api->addUserToGroup([
+        $result = $this->api->addUserToGroup([
             'id' => $userAuth->source_id,
             'groupId' => $groupKeycloak->keycloak_id
         ]);
-        return true;
+        return !$this->hasError($result, 'Error adding group ID ' . $groupId . ' to user ID ' . $userId);
     }
 
     /**

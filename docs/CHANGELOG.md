@@ -1,9 +1,10 @@
 Changelog
 =========
 
-Unreleased
+1.0.2 (April 8, 2022)
 --------------------
 - Fix: Error message after account creation if invited by email to a space
+- Enh: Better errors handling on Keycloak API requests
 
 
 1.0.1 (March 18, 2022)
