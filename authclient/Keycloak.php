@@ -179,7 +179,10 @@ class Keycloak extends OAuth2
     protected function normalizeUserAttributes($attributes)
     {
         $attributes = parent::normalizeUserAttributes($attributes);
-        if ($attributes['username'] === $attributes['email']) {
+        if (
+            isset($attributes['username'], $attributes['email'])
+            && $attributes['username'] === $attributes['email']
+        ) {
             /* @var $userModule \humhub\modules\user\Module */
             $userModule = Yii::$app->getModule('user');
             $attributes['username'] = BaseInflector::id2camel(
