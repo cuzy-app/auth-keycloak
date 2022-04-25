@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'ይህን የuth ደንበኛ አንቃ',
   'Hide username field in registration form' => 'የምዝገባ ቅጽ ውስጥ የተጠቃሚ ስም መስክ ደብቅ',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'ከሃምሁብ እስከ በቁልፍ ክላክ ማመሳሰል በእውነተኛ ሰዓት ተከናውኗል። ከሁምሁብ ጋር የቁልፍ ካባ ማመሳሰል በቀን አንድ ጊዜ ይከናወናል። የቁልፍ ካባ ንዑስ ቡድኖች አልተመሳሰሉም።',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'በ Keycloak የተላከው የተጠቃሚ ስም የተጠቃሚው ኢሜል ከሆነ ከመጀመሪያ እና ከአያት ስም (CamelCase ቅርጸት የተሰራ) በራስ-ሰር በተፈጠረ የተጠቃሚ ስም ይተካል።',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'ብጁ ርዕስ ካዘጋጁ በተጠበቀው/ውቅር አቃፊ ውስጥ ብጁ የትርጉም ፋይል ከሌለዎት ወደ ተጠቃሚው ቋንቋ አይተረጎምም። ነባሪ ርዕስ ለማዘጋጀት ባዶ ይተውት።',
   'Keycloak API admin password' => 'የኪሎክ ኤፒአይ አስተዳዳሪ ይለፍ ቃል',
   'Keycloak API admin username' => 'የ Keycloak API አስተዳዳሪ የተጠቃሚ ስም',

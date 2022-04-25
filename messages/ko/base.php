@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => '이 인증 클라이언트 활성화',
   'Hide username field in registration form' => '등록 양식에서 사용자 이름 필드 숨기기',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Humhub to Keycloak 동기화는 실시간으로 이루어집니다. Keycloak to Humhub 동기화는 하루에 한 번 수행됩니다. Keycloak 하위 그룹은 동기화되지 않습니다.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Keycloak에서 보낸 사용자 이름이 사용자의 이메일인 경우 이름과 성에서 자동 생성된 사용자 이름으로 대체됩니다(CamelCase 형식).',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => '사용자 정의 제목을 설정하면 보호/구성 폴더에 사용자 정의 번역 파일이 없는 한 사용자의 언어로 번역되지 않습니다. 기본 제목을 설정하려면 비워 둡니다.',
   'Keycloak API admin password' => 'Keycloak API 관리자 비밀번호',
   'Keycloak API admin username' => 'Keycloak API 관리자 사용자 이름',

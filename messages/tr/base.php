@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Bu kimlik doğrulama istemcisini etkinleştir',
   'Hide username field in registration form' => 'Kayıt formunda kullanıcı adı alanını gizle',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Humhub - Keycloak senkronizasyonu gerçek zamanlı olarak yapılır. Keycloak to Humhub senkronizasyonu günde bir kez yapılır. Keycloak alt grupları eşitlenmez.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Keycloak tarafından gönderilen kullanıcı adı kullanıcının e-postasıysa, ad ve soyadından (CamelCase formatlı) otomatik olarak oluşturulan bir kullanıcı adı ile değiştirilir.',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Özel bir başlık ayarlarsanız, korumalı/config klasöründe özel bir çeviri dosyanız olmadığı sürece, kullanıcının diline çevrilmez. Varsayılan başlığı ayarlamak için boş bırakın.',
   'Keycloak API admin password' => 'Keycloak API yönetici şifresi',
   'Keycloak API admin username' => 'Keycloak API yönetici kullanıcı adı',

@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Activați acest client de autentificare',
   'Hide username field in registration form' => 'Ascunde câmpul nume de utilizator din formularul de înregistrare',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Sincronizarea Humhub cu Keycloak se face în timp real. Sincronizarea Keycloak cu Humhub se face o dată pe zi. Subgrupurile Keycloak nu sunt sincronizate.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Dacă numele de utilizator trimis de Keycloak este e-mailul utilizatorului, acesta este înlocuit cu un nume de utilizator generat automat din nume și prenume (formatat CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Dacă setați un titlu personalizat, acesta nu va fi tradus în limba utilizatorului decât dacă aveți un fișier de traducere personalizat în folderul protejat/config. Lăsați necompletat pentru a seta titlul implicit.',
   'Keycloak API admin password' => 'Parola de administrator API Keycloak',
   'Keycloak API admin username' => 'Nume de utilizator administrator API Keycloak',

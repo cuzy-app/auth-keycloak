@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => '启用此身份验证客户端',
   'Hide username field in registration form' => '在注册表单中隐藏用户名字段',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Humhub 到 Keycloak 的同步是实时完成的。 Keycloak 到 Humhub 的同步每天进行一次。 Keycloak 子组不同步。',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => '如果 Keycloak 发送的用户名是用户的电子邮件，则替换为根据名字和姓氏自动生成的用户名（CamelCase 格式）',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => '如果您设置了自定义标题，除非您在 protected/config 文件夹中有自定义翻译文件，否则它不会被翻译成用户的语言。留空以设置默认标题。',
   'Keycloak API admin password' => 'Keycloak API 管理员密码',
   'Keycloak API admin username' => 'Keycloak API 管理员用户名',

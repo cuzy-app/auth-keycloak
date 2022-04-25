@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Omogućite ovaj auth klijent',
   'Hide username field in registration form' => 'Sakrij polje za korisničko ime u obrascu za registraciju',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Sinkronizacija Humhub-a s Keycloakom obavlja se u stvarnom vremenu. Sinkronizacija Keycloak-a s Humhub-om obavlja se jednom dnevno. Keycloak podgrupe nisu sinkronizirane.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Ako je korisničko ime koje šalje Keycloak korisnikova e-pošta, zamjenjuje se korisničkim imenom automatski generiranim od imena i prezimena (format CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Ako postavite prilagođeni naslov, on neće biti preveden na jezik korisnika osim ako nemate prilagođenu prijevodnu datoteku u zaštićenoj/konfiguracijskoj mapi. Ostavite prazno za postavljanje zadanog naslova.',
   'Keycloak API admin password' => 'Keycloak API administratorska lozinka',
   'Keycloak API admin username' => 'Keycloak API administratorsko korisničko ime',

@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Aktifkan klien autentikasi ini',
   'Hide username field in registration form' => 'Sembunyikan bidang nama pengguna di formulir pendaftaran',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Sinkronisasi Humhub ke Keycloak dilakukan secara real time. Sinkronisasi Keycloak ke Humhub dilakukan sekali sehari. Subgrup keycloak tidak disinkronkan.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Jika nama pengguna yang dikirim oleh Keycloak adalah email pengguna, itu diganti dengan nama pengguna yang dibuat secara otomatis dari nama depan dan belakang (format CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Jika Anda menetapkan judul khusus, itu tidak akan diterjemahkan ke bahasa pengguna kecuali Anda memiliki file terjemahan khusus di folder protected/config. Biarkan kosong untuk menyetel judul default.',
   'Keycloak API admin password' => 'Kata sandi admin API Keycloak',
   'Keycloak API admin username' => 'Nama pengguna admin Keycloak API',

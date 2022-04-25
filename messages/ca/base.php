@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Activa aquest client d\'autenticació',
   'Hide username field in registration form' => 'Amaga el camp del nom d\'usuari al formulari de registre',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'La sincronització de Humhub amb Keycloak es fa en temps real. La sincronització de Keycloak amb Humhub es fa un cop al dia. Els subgrups de claus no estan sincronitzats.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Si el nom d\'usuari enviat per Keycloak és el correu electrònic de l\'usuari, se substituirà per un nom d\'usuari generat automàticament a partir del nom i cognom (format CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Si configureu un títol personalitzat, no es traduirà a l\'idioma de l\'usuari tret que tingueu un fitxer de traducció personalitzat a la carpeta protegida/config. Deixa en blanc per definir el títol predeterminat.',
   'Keycloak API admin password' => 'Contrasenya d\'administrador de l\'API Keycloak',
   'Keycloak API admin username' => 'Nom d\'usuari administrador de l\'API Keycloak',

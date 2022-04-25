@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Bật ứng dụng khách xác thực này',
   'Hide username field in registration form' => 'Ẩn trường tên người dùng trong biểu mẫu đăng ký',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Đồng bộ hóa Humhub với Keycloak được thực hiện trong thời gian thực. Đồng bộ hóa từ khóa sang Humhub được thực hiện mỗi ngày một lần. Các nhóm con của Keycloak không được đồng bộ hóa.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Nếu tên người dùng do Keycloak gửi là email của người dùng, nó sẽ được thay thế bằng tên người dùng được tạo tự động từ họ và tên (được định dạng CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Nếu bạn đặt tiêu đề tùy chỉnh, tiêu đề đó sẽ không được dịch sang ngôn ngữ của người dùng trừ khi bạn có tệp dịch tùy chỉnh trong thư mục bảo vệ / cấu hình. Để trống để đặt tiêu đề mặc định.',
   'Keycloak API admin password' => 'Mật khẩu quản trị API Keycloak',
   'Keycloak API admin username' => 'Tên người dùng quản trị API Keycloak',

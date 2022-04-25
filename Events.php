@@ -40,13 +40,14 @@ class Events
 
         $config = new ConfigureForm();
         if ($config->enabled) {
-            $authClientCollection->setClient('Keycloak', [
+            $authClientCollection->setClient(Keycloak::DEFAULT_NAME, [
                 'class' => Keycloak::class,
                 'clientId' => $config->clientId,
                 'clientSecret' => $config->clientSecret,
             ]);
         }
     }
+
 
     /**
      * Adds auto login possibility
@@ -60,7 +61,7 @@ class Events
             !Yii::$app->user->isGuest
             || Yii::$app->request->isConsoleRequest
             || $event->action->id !== 'login'
-            || !Yii::$app->authClientCollection->hasClient('Keycloak')
+            || !Yii::$app->authClientCollection->hasClient(Keycloak::DEFAULT_NAME)
             || !Yii::$app->getModule('user')->settings->get('auth.anonymousRegistration') // if anonymous registration is not allowed and someone try to create an account, do not redirect to broker to avoid looping redirections
         ) {
             return;
@@ -70,10 +71,11 @@ class Events
         if ($config->enabled && $config->autoLogin) {
             $event->isValid = false;
             /** @var Keycloak $authClient */
-            $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
+            $authClient = Yii::$app->authClientCollection->getClient(Keycloak::DEFAULT_NAME);
             return $authClient->redirectToBroker();
         }
     }
+
 
     /**
      * Adds auto login possibility
@@ -89,7 +91,7 @@ class Events
             || Yii::$app->request->isConsoleRequest
             || $event->action->id !== 'index'
             || !Yii::$app->request->get('token') // If not invited
-            || !Yii::$app->authClientCollection->hasClient('Keycloak')
+            || !Yii::$app->authClientCollection->hasClient(Keycloak::DEFAULT_NAME)
         ) {
             return;
         }
@@ -98,10 +100,11 @@ class Events
         if ($config->enabled && $config->autoLogin) {
             $event->isValid = false;
             /** @var Keycloak $authClient */
-            $authClient = Yii::$app->authClientCollection->getClient('Keycloak');
+            $authClient = Yii::$app->authClientCollection->getClient(Keycloak::DEFAULT_NAME);
             return $authClient->redirectToBroker();
         }
     }
+
 
     /**
      * Registration form: hide username field
@@ -113,19 +116,25 @@ class Events
             Yii::$app->request->isConsoleRequest
             || Yii::$app->controller->module->id === 'admin'
             || Yii::$app->request->get('token') // If invited
-            || !Yii::$app->authClientCollection->hasClient('Keycloak')
+            || !Yii::$app->authClientCollection->hasClient(Keycloak::DEFAULT_NAME)
         ) {
             return;
         }
 
         $config = new ConfigureForm();
-        if ($config->enabled && $config->hideRegistrationUsernameField) {
-            /** @var Registration $hform */
-            $hform = $event->sender;
+        /** @var Registration $hform */
+        $hform = $event->sender;
+        $errors = $hform->getErrors();
+        if (
+            $config->enabled
+            && $config->hideRegistrationUsernameField
+            && !isset($errors['username'])
+        ) {
             unset($hform->definition['elements']['User']['title']);
             $hform->definition['elements']['User']['elements']['username']['type'] = 'hidden';
         }
     }
+
 
     /**
      * If user email has changed in Humhub, update it on the broker (IdP)
@@ -152,6 +161,7 @@ class Events
             (new KeycloakApi())->updateUserEmail($user);
         }
     }
+
 
     /**
      * Remove session on Keycloak after logout
@@ -305,6 +315,7 @@ class Events
         Yii::$app->queue->push(new GroupsFullSync());
     }
 
+
     /**
      * @param $event
      * @return void
@@ -326,6 +337,7 @@ class Events
         }
     }
 
+    
     /**
      * @param $event
      * @return void

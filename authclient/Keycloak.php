@@ -14,6 +14,7 @@ use humhub\modules\user\models\Auth;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\base\InvalidConfigException;
+use yii\helpers\BaseInflector;
 use yii\helpers\Url;
 
 
@@ -101,7 +102,7 @@ class Keycloak extends OAuth2
      */
     public function getReturnUrl()
     {
-        return Url::to(['/user/auth/external', 'authclient' => 'Keycloak'], true);
+        return Url::to(['/user/auth/external', 'authclient' => static::DEFAULT_NAME], true);
     }
 
     /**
@@ -115,6 +116,7 @@ class Keycloak extends OAuth2
         $module = Yii::$app->getModule('auth-keycloak');
         $settings = $module->settings;
 
+        // Update Humhub user's email
         if ($settings->get('updateHumhubEmailFromBrokerEmail')) {
             $userAttributes = $this->normalizeUserAttributes($this->initUserAttributes());
 
@@ -170,5 +172,22 @@ class Keycloak extends OAuth2
         ];
     }
 
-
+    /**
+     * If the username sent by Keycloak is the user's email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)
+     * @inerhitdoc
+     */
+    protected function normalizeUserAttributes($attributes)
+    {
+        $attributes = parent::normalizeUserAttributes($attributes);
+        if ($attributes['username'] === $attributes['email']) {
+            /* @var $userModule \humhub\modules\user\Module */
+            $userModule = Yii::$app->getModule('user');
+            $attributes['username'] = BaseInflector::id2camel(
+                BaseInflector::slug(
+                    $attributes['firstname'] . ' ' . $attributes['lastname']
+                )
+            );
+        }
+        return $attributes;
+    }
 }

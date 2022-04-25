@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => '',
   'Hide username field in registration form' => '',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => '',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => '',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => '',
   'Keycloak API admin password' => '',
   'Keycloak API admin username' => '',

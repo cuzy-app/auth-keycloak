@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'אפשר לקוח אישור זה',
   'Hide username field in registration form' => 'הסתר את שדה שם המשתמש בטופס הרישום',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'סנכרון Humhub ל-Keycloak נעשה בזמן אמת. סנכרון Keycloak ל- Humhub מתבצע פעם ביום. תת-קבוצות Keycloak אינן מסונכרנות.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'אם שם המשתמש שנשלח על ידי Keycloak הוא האימייל של המשתמש, הוא מוחלף על ידי שם משתמש שנוצר אוטומטית מהשם הפרטי והמשפחה (בפורמט CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'אם תגדיר כותרת מותאמת אישית, היא לא תתורגם לשפת המשתמש אלא אם כן יש לך קובץ תרגום מותאם אישית בתיקייה מוגנת/קונפיגורציה. השאר ריק כדי להגדיר כותרת ברירת מחדל.',
   'Keycloak API admin password' => 'סיסמת אדמין של Keycloak API',
   'Keycloak API admin username' => 'שם משתמש של מנהל מערכת Keycloak API',

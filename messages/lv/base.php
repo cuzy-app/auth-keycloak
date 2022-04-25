@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Iespējot šo autentifikācijas klientu',
   'Hide username field in registration form' => 'Slēpt lietotājvārda lauku reģistrācijas formā',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Humhub un Keycloak sinhronizācija tiek veikta reāllaikā. Keycloak sinhronizācija ar Humhub tiek veikta reizi dienā. Keycloak apakšgrupas netiek sinhronizētas.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Ja Keycloak nosūtītais lietotājvārds ir lietotāja e-pasts, tas tiek aizstāts ar lietotājvārdu, kas automātiski ģenerēts no vārda un uzvārda (CamelCase formatēts)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Ja iestatāt pielāgotu nosaukumu, tas netiks tulkots lietotāja valodā, ja vien aizsargātajā/konfigurācijas mapē nebūs pielāgota tulkošanas faila. Atstājiet tukšu, lai iestatītu noklusējuma nosaukumu.',
   'Keycloak API admin password' => 'Keycloak API administratora parole',
   'Keycloak API admin username' => 'Keycloak API administratora lietotājvārds',

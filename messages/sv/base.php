@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Aktivera denna autentiseringsklient',
   'Hide username field in registration form' => 'Dölj användarnamnsfältet i registreringsformuläret',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Synk från Humhub till Keycloak görs i realtid. Keycloak till Humhub synkronisering görs en gång om dagen. Keycloak-undergrupper synkroniseras inte.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Om användarnamnet som skickas av Keycloak är användarens e-post, ersätts det av ett användarnamn som automatiskt genereras från för- och efternamn (CamelCase-formaterat)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Om du ställer in en anpassad titel kommer den inte att översättas till användarens språk om du inte har en anpassad översättningsfil i mappen protected/config. Lämna tomt för att ställa in standardtitel.',
   'Keycloak API admin password' => 'Keycloak API admin lösenord',
   'Keycloak API admin username' => 'Keycloak API admin användarnamn',

@@ -279,7 +279,7 @@ class KeycloakApi extends Component
         if (
             !$config->enabled
             || !$config->hasApiParams()
-            || !Yii::$app->authClientCollection->hasClient('Keycloak')
+            || !Yii::$app->authClientCollection->hasClient(Keycloak::DEFAULT_NAME)
         ) {
             return;
         }

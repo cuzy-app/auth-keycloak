@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'この認証クライアントを有効にする',
   'Hide username field in registration form' => '登録フォームのユーザー名フィールドを非表示にする',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'HumhubからKeycloakへの同期はリアルタイムで行われます。 KeycloakからHumhubへの同期は1日1回行われます。 Keycloakサブグループは同期されません。',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Keycloakによって送信されたユーザー名がユーザーの電子メールである場合、それは姓名から自動生成されたユーザー名に置き換えられます（CamelCase形式）',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'カスタムタイトルを設定した場合、protected / configフォルダーにカスタム翻訳ファイルがない限り、ユーザーの言語に翻訳されません。デフォルトのタイトルを設定するには、空白のままにします。',
   'Keycloak API admin password' => 'KeycloakAPI管理者パスワード',
   'Keycloak API admin username' => 'KeycloakAPI管理者ユーザー名',

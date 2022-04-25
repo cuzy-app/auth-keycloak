@@ -70,7 +70,7 @@ return [
                 'onModelGroupAfterDelete'
             ]
         ],
-        [   // use _BEFORE_ and not _AFTER_
+        [
             'class' => Group::class,
             'event' => Group::EVENT_AFTER_UPDATE,
             'callback' => [
@@ -111,4 +111,3 @@ return [
         ],
     ],
 ];
-?>

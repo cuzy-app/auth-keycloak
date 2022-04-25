@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Ativar este cliente de autenticação',
   'Hide username field in registration form' => 'Ocultar campo de nome de usuário no formulário de registro',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'A sincronização do Humhub com o Keycloak é feita em tempo real. A sincronização do Keycloak com o Humhub é feita uma vez por dia. Os subgrupos do Keycloak não são sincronizados.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Se o nome de usuário enviado pelo Keycloak for o e-mail do usuário, ele será substituído por um nome de usuário gerado automaticamente a partir do nome e do sobrenome (formatado em CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Se você definir um título personalizado, ele não será traduzido para o idioma do usuário, a menos que você tenha um arquivo de tradução personalizado na pasta protected/config. Deixe em branco para definir o título padrão.',
   'Keycloak API admin password' => 'Senha de administrador da API Keycloak',
   'Keycloak API admin username' => 'Nome de usuário do administrador da API Keycloak',

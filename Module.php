@@ -8,14 +8,11 @@
 
 namespace humhub\modules\authKeycloak;
 
-use humhub\modules\authKeycloak\models\ConfigureForm;
-use Yii;
-use yii\helpers\Url;
 use humhub\components\Module as BaseModule;
+use yii\helpers\Url;
 
 class Module extends BaseModule
 {
-    
     /**
      * @var string defines the icon
      */

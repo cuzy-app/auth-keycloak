@@ -8,6 +8,7 @@
 
 namespace humhub\modules\authKeycloak\models;
 
+use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\jobs\GroupsFullSync;
 use humhub\modules\authKeycloak\Module;
 use Yii;
@@ -124,7 +125,7 @@ class ConfigureForm extends Model
         $this->apiPassword = $settings->get('apiPassword', $this->apiPassword);
         $this->groupsSyncMode = $settings->get('groupsSyncMode', $this->groupsSyncMode);
 
-        $this->redirectUri = Url::to(['/user/auth/external', 'authclient' => 'Keycloak'], true);
+        $this->redirectUri = Url::to(['/user/auth/external', 'authclient' => Keycloak::DEFAULT_NAME], true);
     }
 
     /**
@@ -175,6 +176,7 @@ class ConfigureForm extends Model
             'baseUrl' => 'Depending on your configuration: https://idp-domain.tdl or https://idp-domain.tdl/auth',
             'title' => Yii::t('AuthKeycloakModule.base', 'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.'),
             'autoLogin' => Yii::t('AuthKeycloakModule.base', 'Possible only if anonymous registration is allowed in the admin users settings'),
+            'hideRegistrationUsernameField' => Yii::t('AuthKeycloakModule.base', 'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)'),
             'apiUsername' => Yii::t('AuthKeycloakModule.base', 'This admin user must be in the {master} realm and have permission to manage users of the realm belonging to the client for this Humhub', ['master' => '“master”']),
             'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.'),
         ];

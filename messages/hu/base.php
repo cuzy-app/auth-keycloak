@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Engedélyezze ezt a hitelesítési klienst',
   'Hide username field in registration form' => 'Felhasználónév mező elrejtése a regisztrációs űrlapon',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'A Humhub és a Keycloak közötti szinkronizálás valós időben történik. A Keycloak és a Humhub szinkronizálása naponta egyszer történik. A Keycloak alcsoportok nincsenek szinkronizálva.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Ha a Keycloak által küldött felhasználónév a felhasználó e-mail-címe, akkor azt egy, a vezeték- és utónévből automatikusan generált felhasználónév váltja fel (CamelCase formátumban).',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Ha egyéni címet ad meg, az nem lesz lefordítva a felhasználó nyelvére, hacsak nincs egyéni fordítási fájlja a védett/konfigurációs mappában. Hagyja üresen az alapértelmezett cím beállításához.',
   'Keycloak API admin password' => 'Keycloak API rendszergazdai jelszó',
   'Keycloak API admin username' => 'Keycloak API adminisztrátori felhasználónév',

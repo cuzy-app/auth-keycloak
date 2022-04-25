@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Pèmèt kliyan otorizasyon sa a',
   'Hide username field in registration form' => 'Kache jaden non itilizatè nan fòm enskripsyon an',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Humhub ak Keycloak senkronizasyon fèt an tan reyèl. Keycloak ak Humhub senkronizasyon fè yon fwa pa jou. Sougwoup Keycloak yo pa senkronize.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Si non itilizatè Keycloak voye a se imel itilizatè a, li ranplase pa yon non itilizatè oto-pwodwi apati non ak siyati (CamelCase fòma)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Si ou mete yon tit koutim, li pa pral tradui nan lang itilizatè a sof si ou gen yon dosye tradiksyon koutim nan folder nan pwoteje/config. Kite vid pou mete tit default.',
   'Keycloak API admin password' => 'Keycloak API admin modpas',
   'Keycloak API admin username' => 'Non itilizatè admin API Keycloak',

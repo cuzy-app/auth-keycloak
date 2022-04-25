@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Ota tämä todennusohjelma käyttöön',
   'Hide username field in registration form' => 'Piilota käyttäjätunnuskenttä rekisteröintilomakkeessa',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Humhub ja Keycloak synkronointi tapahtuu reaaliajassa. Keycloak to Humhub synkronointi tehdään kerran päivässä. Keycoak-alaryhmiä ei synkronoida.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Jos Keycloakin lähettämä käyttäjätunnus on käyttäjän sähköposti, se korvataan etu- ja sukunimestä automaattisesti luodulla käyttäjätunnuksella (CamelCase-muotoiltu)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Jos asetat mukautetun otsikon, sitä ei käännetä käyttäjän kielelle, ellei suojatussa/konfiguraatiokansiossa ole mukautettua käännöstiedostoa. Jätä tyhjäksi asettaaksesi oletusotsikon.',
   'Keycloak API admin password' => 'Keycloak API -järjestelmänvalvojan salasana',
   'Keycloak API admin username' => 'Keycloak API -järjestelmänvalvojan käyttäjätunnus',

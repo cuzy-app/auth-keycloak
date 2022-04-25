@@ -13,6 +13,7 @@ return array (
   'Enable this auth client' => 'Ενεργοποιήστε αυτόν τον πελάτη εξουσιοδότησης',
   'Hide username field in registration form' => 'Απόκρυψη πεδίου ονόματος χρήστη στη φόρμα εγγραφής',
   'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => 'Ο συγχρονισμός Humhub σε Keycloak γίνεται σε πραγματικό χρόνο. Ο συγχρονισμός Keycloak στο Humhub πραγματοποιείται μία φορά την ημέρα. Οι υποομάδες Keycloak δεν συγχρονίζονται.',
+  'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Εάν το όνομα χρήστη που αποστέλλεται από το Keycloak είναι το email του χρήστη, αντικαθίσταται από ένα όνομα χρήστη που δημιουργείται αυτόματα από το όνομα και το επίθετο (μορφοποίηση CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Εάν ορίσετε έναν προσαρμοσμένο τίτλο, δεν θα μεταφραστεί στη γλώσσα του χρήστη, εκτός εάν έχετε ένα προσαρμοσμένο αρχείο μετάφρασης στον φάκελο προστατευμένη/διαμόρφωση. Αφήστε κενό για να ορίσετε τον προεπιλεγμένο τίτλο.',
   'Keycloak API admin password' => 'Κωδικός πρόσβασης διαχειριστή Keycloak API',
   'Keycloak API admin username' => 'Όνομα χρήστη διαχειριστή Keycloak API',
