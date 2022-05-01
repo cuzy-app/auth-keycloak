@@ -325,6 +325,29 @@ class KeycloakApi extends Component
     }
 
     /**
+     * @param User $user
+     * @param string $newPassword
+     * @return bool|string string is the error message if present
+     */
+    public function resetUserPassword(User $user, string $newPassword)
+    {
+        if (
+            !$this->isConnected()
+            || ($userAuth = static::getUserAuth($user->id)) === null
+        ) {
+            return null;
+        }
+        // Update password
+        $result = $this->api->resetUserPassword([
+            'id' => $userAuth->source_id,
+            'value' => $newPassword,
+        ]);
+        return $this->hasError($result, 'Error saving user\'s new password on Keycloak for user ID: ' . $user->id, true, 'Invalid password') ?
+            $result['error_description'] ?? false :
+            true;
+    }
+
+    /**
      * @param int $userId
      * @return bool|null
      */

@@ -7,6 +7,7 @@ A new button "Keycloak" (can be renamed) will appear on the login page.
 ## Features
 
 - Auto login
+- Possibility to add a page in account settings allowing users to change their Keycloak password
 - Users' groups and email synchronization between Keycloak and Humhub in both directions (1):
   - Humhub to Keycloak sync is done in real time
   - Keycloak to Humhub sync is done once a day

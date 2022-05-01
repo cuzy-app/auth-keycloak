@@ -54,6 +54,7 @@ use humhub\modules\ui\view\components\View;
             <?= $form->field($model, 'removeKeycloakSessionsAfterLogout')->checkbox() ?>
             <?= $form->field($model, 'updateHumhubEmailFromBrokerEmail')->checkbox() ?>
             <?= $form->field($model, 'updatedBrokerEmailFromHumhubEmail')->checkbox() ?>
+            <?= $form->field($model, 'addChangePasswordFormToAccount')->checkbox() ?>
             <?= $form->field($model, 'groupsSyncMode')->dropDownList($model->groupsSyncModeItems()) ?>
             <?= $form->endCollapsibleFields(); ?>
 

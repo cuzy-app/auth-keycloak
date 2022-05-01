@@ -1,8 +1,9 @@
 Changelog
 =========
 
-1.0.3 (April 25, 2022)
+1.1.0 (May 2, 2022)
 --------------------
+- Enh: Possibility to add a page in account settings allowing users to change their Keycloak password
 - Enh: If the username sent by Keycloak is the user's email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)
 - Fix: On the registration form, if the username field is hidden (in the module's settings) but has an error (e.g. already been taken), it is still displayed.
 

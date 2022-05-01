@@ -83,6 +83,10 @@ class ConfigureForm extends Model
     /**
      * @var bool
      */
+    public $addChangePasswordFormToAccount = false;
+    /**
+     * @var bool
+     */
     public $updatedBrokerEmailFromHumhubEmail = false;
     /**
      * @var string
@@ -121,6 +125,7 @@ class ConfigureForm extends Model
         $this->removeKeycloakSessionsAfterLogout = (bool)$settings->get('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
         $this->updateHumhubEmailFromBrokerEmail = (bool)$settings->get('updateHumhubEmailFromBrokerEmail', $this->updateHumhubEmailFromBrokerEmail);
         $this->updatedBrokerEmailFromHumhubEmail = (bool)$settings->get('updatedBrokerEmailFromHumhubEmail', $this->updatedBrokerEmailFromHumhubEmail);
+        $this->addChangePasswordFormToAccount = (bool)$settings->get('addChangePasswordFormToAccount', $this->addChangePasswordFormToAccount);
         $this->apiUsername = $settings->get('apiUsername', $this->apiUsername);
         $this->apiPassword = $settings->get('apiPassword', $this->apiPassword);
         $this->groupsSyncMode = $settings->get('groupsSyncMode', $this->groupsSyncMode);
@@ -136,7 +141,7 @@ class ConfigureForm extends Model
         return [
             [['clientId', 'clientSecret', 'baseUrl', 'usernameMapper'], 'required'],
             [['clientId', 'clientSecret', 'baseUrl', 'usernameMapper', 'title', 'realm', 'apiUsername', 'apiPassword'], 'string'],
-            [['enabled', 'autoLogin', 'hideRegistrationUsernameField', 'removeKeycloakSessionsAfterLogout', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail'], 'boolean'],
+            [['enabled', 'autoLogin', 'hideRegistrationUsernameField', 'removeKeycloakSessionsAfterLogout', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount'], 'boolean'],
             [['groupsSyncMode'], 'safe'],
         ];
     }
@@ -159,6 +164,7 @@ class ConfigureForm extends Model
             'removeKeycloakSessionsAfterLogout' => Yii::t('AuthKeycloakModule.base', 'Remove user\'s Keycloak sessions after logout'),
             'updateHumhubEmailFromBrokerEmail' => Yii::t('AuthKeycloakModule.base', 'Update user\'s email on Humhub when changed on Keycloak'),
             'updatedBrokerEmailFromHumhubEmail' => Yii::t('AuthKeycloakModule.base', 'Update user\'s email on Keycloak when changed on Humhub'),
+            'addChangePasswordFormToAccount' => Yii::t('AuthKeycloakModule.base', 'Add a page in account settings allowing users to change their Keycloak password'),
             'apiUsername' => Yii::t('AuthKeycloakModule.base', 'Keycloak API admin username'),
             'apiPassword' => Yii::t('AuthKeycloakModule.base', 'Keycloak API admin password'),
             'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'Synchronize groups and their members'),
@@ -228,10 +234,12 @@ class ConfigureForm extends Model
         if (!$this->hasApiParams()) {
             $this->removeKeycloakSessionsAfterLogout = false;
             $this->updatedBrokerEmailFromHumhubEmail = false;
+            $this->addChangePasswordFormToAccount = false;
         }
         $module->settings->set('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
         $module->settings->set('updatedBrokerEmailFromHumhubEmail', $this->updatedBrokerEmailFromHumhubEmail);
         $module->settings->set('updateHumhubEmailFromBrokerEmail', $this->updateHumhubEmailFromBrokerEmail);
+        $module->settings->set('addChangePasswordFormToAccount', $this->addChangePasswordFormToAccount);
 
         // Add groups sync to jobs
         Yii::$app->queue->push(new GroupsFullSync(['firstSync' => true]));

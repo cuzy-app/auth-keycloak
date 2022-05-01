@@ -16,6 +16,7 @@ use humhub\modules\user\models\forms\Registration;
 use humhub\modules\user\models\Group;
 use humhub\modules\user\models\GroupUser;
 use humhub\modules\user\models\User;
+use humhub\modules\user\widgets\AccountProfileMenu;
 use yii\web\User as UserComponent;
 
 /** @noinspection MissedFieldInspection */
@@ -108,6 +109,11 @@ return [
             'class' => Auth::class,
             'event' => Auth::EVENT_AFTER_UPDATE,
             'callback' => [Events::class, 'onAuthAfterUpdate']
+        ],
+        [
+            'class' => AccountProfileMenu::class,
+            'event' => AccountProfileMenu::EVENT_INIT,
+            'callback' => [Events::class, 'onAccountProfileMenuInit']
         ],
     ],
 ];

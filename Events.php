@@ -14,12 +14,15 @@ use humhub\modules\authKeycloak\components\KeycloakApi;
 use humhub\modules\authKeycloak\jobs\GroupsFullSync;
 use humhub\modules\authKeycloak\jobs\GroupsUserSync;
 use humhub\modules\authKeycloak\models\ConfigureForm;
+use humhub\modules\membersMap\Module;
+use humhub\modules\ui\menu\MenuLink;
 use humhub\modules\user\authclient\Collection;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\forms\Registration;
 use humhub\modules\user\models\Group;
 use humhub\modules\user\models\GroupUser;
 use humhub\modules\user\models\User;
+use humhub\modules\user\widgets\AccountProfileMenu;
 use Throwable;
 use Yii;
 use yii\base\ActionEvent;
@@ -337,7 +340,7 @@ class Events
         }
     }
 
-    
+
     /**
      * @param $event
      * @return void
@@ -364,5 +367,40 @@ class Events
         ) {
             Yii::$app->queue->push(new GroupsUserSync(['userId' => $auth->user_id]));
         }
+    }
+
+    /**
+     * @param Event $event
+     * @return void
+     */
+    public static function onAccountProfileMenuInit(Event $event)
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+        if (
+            Yii::$app->user->isGuest
+            || !$settings->get('addChangePasswordFormToAccount')
+        ) {
+            return;
+        }
+
+        $keycloakApi = new KeycloakApi();
+        if (
+            !$keycloakApi->isConnected()
+            || KeycloakApi::getUserAuth(Yii::$app->user->id) === null
+        ) {
+            return;
+        }
+
+        /** @var AccountProfileMenu $menu */
+        $menu = $event->sender;
+
+        $menu->addEntry(new MenuLink([
+            'label' => Yii::t('AuthKeycloakModule.base', 'Change password on {keycloakRealmDisplayName}', ['keycloakRealmDisplayName' => $keycloakApi->realm['displayName']]),
+            'url' => ['/auth-keycloak/user/change-password'],
+            'sortOrder' => 410,
+            'isActive' => MenuLink::isActiveState('auth-keycloak', 'user', 'change-password'),
+        ]));
     }
 }
