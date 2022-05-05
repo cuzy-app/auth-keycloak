@@ -1,10 +1,11 @@
 Changelog
 =========
 
-1.1.0 (May 2, 2022)
+1.1.0 (May 5, 2022)
 --------------------
 - Enh: Possibility to add a page in account settings allowing users to change their Keycloak password
 - Enh: If the username sent by Keycloak is the user's email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)
+- Enh: If a user is invited by email to a space, he is now redirected to the space at the end of the registration process. If legal module is enabled, needs https://github.com/humhub-contrib/legal/pull/49/files
 - Fix: On the registration form, if the username field is hidden (in the module's settings) but has an error (e.g. already been taken), it is still displayed.
 
 
@@ -55,7 +56,7 @@ If updating from a previous version:
 
 0.2.1 (May, 21, 2021)
 --------------------
-- Fix: if invited (to a space or via admin -> users), do not hide username field as registration is not done with SSO
+- Fix: if invited (to a space or via admin -> users), do not hide username field as registration if not done with SSO
 
 
 0.2 (April, 8, 2021)

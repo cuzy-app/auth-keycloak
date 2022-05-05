@@ -10,7 +10,9 @@ namespace humhub\modules\authKeycloak\authclient;
 
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\Module;
+use humhub\modules\space\models\Space;
 use humhub\modules\user\models\Auth;
+use humhub\modules\user\models\Invite;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\base\InvalidConfigException;
@@ -61,9 +63,15 @@ class Keycloak extends OAuth2
     public function redirectToBroker()
     {
         Yii::$app->session->set('loginRememberMe', true);
-
         // Try to set a better return URL after login
         $urlToRedirect = Url::current([], true);
+        if ($token = Yii::$app->request->get('token')) {
+            $invite = Invite::findOne(['token' => $token]);
+            $space = Space::findOne($invite->space_invite_id);
+            if ($space !== null) {
+                $urlToRedirect = $space->getUrl(true);
+            }
+        }
         if (!$this->redirectUrlIsValid($urlToRedirect)) {
             $urlToRedirect = Yii::$app->request->referrer;
         }
@@ -72,7 +80,7 @@ class Keycloak extends OAuth2
         }
 
         // Redirect to broker
-        // The `return` will prevent logging user if URL doesn't exists
+        // The `return` will prevent logging user if URL doesn't exist
         return Yii::$app->getResponse()->redirect($this->buildAuthUrl());
     }
 
