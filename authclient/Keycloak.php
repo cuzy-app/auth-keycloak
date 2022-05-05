@@ -67,9 +67,11 @@ class Keycloak extends OAuth2
         $urlToRedirect = Url::current([], true);
         if ($token = Yii::$app->request->get('token')) {
             $invite = Invite::findOne(['token' => $token]);
-            $space = Space::findOne($invite->space_invite_id);
-            if ($space !== null) {
-                $urlToRedirect = $space->getUrl(true);
+            if ($invite !== null) {
+                $space = Space::findOne($invite->space_invite_id);
+                if ($space !== null) {
+                    $urlToRedirect = $space->getUrl(true);
+                }
             }
         }
         if (!$this->redirectUrlIsValid($urlToRedirect)) {
