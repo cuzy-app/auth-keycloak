@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Unreleased (awaiting https://github.com/MohammadWaleed/keycloak-admin-client/pull/90)
+--------------------
+- Fix: Removing Keycloak session optimization on Humhub logout
+
+
 1.1.0 (May 5, 2022)
 --------------------
 - Enh: Possibility to add a page in account settings allowing users to change their Keycloak password

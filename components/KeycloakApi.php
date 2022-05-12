@@ -357,55 +357,30 @@ class KeycloakApi extends Component
             !$this->isConnected()
             || ($userAuth = static::getUserAuth($userId)) === null
         ) {
-            return null;
-        }
-
-        $keycloakApi = new static();
-        if (!$keycloakApi->isConnected()) {
             return false;
         }
-        $api = $keycloakApi->api;
 
-        $config = new ConfigureForm();
-
-        // Search for the client used with this Humhub
-        $clients = $api->getClients();
-        if ($this->hasError($clients, 'Error getting clients')) {
+        $result = $this->api->getUserSessions(['id' => $userAuth->source_id]);
+        if ($this->hasError($result, 'Error retrieving user\'s sessions from Keycloak (user ID: ' . $userId . ')')) {
             return false;
         }
-        foreach ($clients as $clientDefinition) {
-            if (
-                !isset($clientDefinition['clientId'], $clientDefinition['id'])
-                || $clientDefinition['clientId'] !== $config->clientId
-            ) {
-                continue;
-            }
+        if (!is_array($result)) {
+            Yii::error('Error retrieving user\'s sessions from Keycloak for user ID: ' . $userId . ' (result is not an array)', 'auth-keycloak');
+            return false;
+        }
 
-            // Get id of the client (different from clientId)
-            $idOfClient = $clientDefinition['id'];
-
-            // Get user sessions
-            $clientSessions = $api->getClientSessions([
-                'id' => $idOfClient,
-            ]);
-            if ($this->hasError($clientSessions, 'Error getting client sessions for client ID ' . $idOfClient)) {
-                return false;
-            }
-            foreach ($clientSessions as $session) {
-                if (
-                    isset($session['id'])
-                    && $userAuth->source_id === $session['userId']
-                ) {
-                    // revoke session
-                    $result = $api->revokeUserSession([
-                        'session' => $session['id'],
-                    ]);
-                    if ($this->hasError($result, 'Error revoking user\'s session on Keycloak for user ID: ' . $userId)) {
-                        return false;
-                    }
+        foreach ($result as $session) {
+            if (isset($session['id'])) {
+                // revoke session
+                $result = $this->api->revokeUserSession([
+                    'session' => $session['id'],
+                ]);
+                if ($this->hasError($result, 'Error revoking user\'s session on Keycloak for user ID: ' . $userId)) {
+                    return false;
                 }
             }
         }
+
         return true;
     }
 
