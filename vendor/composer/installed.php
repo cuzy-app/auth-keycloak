@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '8209d2b7ad7b6c23758453e1c25427eed58b307b',
+    'reference' => '5c21a80302ff5847ca3a951cf85543503d0fa441',
     'name' => 'cuzy-app/humhub-modules-auth-keycloak',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '8209d2b7ad7b6c23758453e1c25427eed58b307b',
+      'reference' => '5c21a80302ff5847ca3a951cf85543503d0fa441',
     ),
     'guzzlehttp/command' => 
     array (
@@ -31,12 +31,12 @@
     ),
     'guzzlehttp/guzzle' => 
     array (
-      'pretty_version' => '7.4.2',
-      'version' => '7.4.2.0',
+      'pretty_version' => '7.4.3',
+      'version' => '7.4.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ac1ec1cd9b5624694c3a40be801d94137afb12b4',
+      'reference' => '74a8602c6faec9ef74b7a9391ac82c5e65b1cdab',
     ),
     'guzzlehttp/guzzle-services' => 
     array (
@@ -76,12 +76,12 @@
     ),
     'mohammad-waleed/keycloak-admin-client' => 
     array (
-      'pretty_version' => 'v0.30.0',
-      'version' => '0.30.0.0',
+      'pretty_version' => 'v0.31.0',
+      'version' => '0.31.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '861abc6ab8daecb0a49cc332ff778deb56532156',
+      'reference' => '00408c43c914ac9add0766509699713066751d5c',
     ),
     'psr/http-client' => 
     array (
@@ -142,12 +142,12 @@
     ),
     'symfony/deprecation-contracts' => 
     array (
-      'pretty_version' => 'v2.5.0',
-      'version' => '2.5.0.0',
+      'pretty_version' => 'v2.5.1',
+      'version' => '2.5.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6f981ee24cf69ee7ce9736146d1c57c2780598a8',
+      'reference' => 'e8b495ea28c1d97b5e0c121748d6f9b53d075c66',
     ),
     'symfony/polyfill-php80' => 
     array (

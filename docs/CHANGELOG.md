@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Unreleased (awaiting https://github.com/MohammadWaleed/keycloak-admin-client/pull/90)
+1.1.1 (May 5, 2022)
 --------------------
 - Fix: Removing Keycloak session optimization on Humhub logout
 

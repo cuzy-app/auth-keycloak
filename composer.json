@@ -5,6 +5,6 @@
   "type": "library",
   "require": {
     "php": ">=7.3.0",
-    "mohammad-waleed/keycloak-admin-client": "^0.30.0"
+    "mohammad-waleed/keycloak-admin-client": "^0.31.0"
   }
 }
