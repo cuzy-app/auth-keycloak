@@ -157,6 +157,13 @@ class Events
 
         $config = new ConfigureForm();
         if (
+            array_key_exists('username', $changedAttributes)
+            && $config->enabled
+            && $config->updatedBrokerUsernameFromHumhubUsername
+        ) {
+            (new KeycloakApi())->updateUserUsername($user);
+        }
+        if (
             array_key_exists('email', $changedAttributes)
             && $config->enabled
             && $config->updatedBrokerEmailFromHumhubEmail

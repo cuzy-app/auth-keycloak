@@ -125,15 +125,30 @@ class Keycloak extends OAuth2
         /** @var Module $module */
         $module = Yii::$app->getModule('auth-keycloak');
         $settings = $module->settings;
+        $updateHumhubEmailFromBrokerEmail = (bool)$settings->get('updateHumhubEmailFromBrokerEmail');
+        $updateHumhubUsernameFromBrokerUsername = (bool)$settings->get('updateHumhubUsernameFromBrokerUsername');
 
         // Update Humhub user's email
-        if ($settings->get('updateHumhubEmailFromBrokerEmail')) {
+        if ($updateHumhubEmailFromBrokerEmail || $updateHumhubUsernameFromBrokerUsername) {
             $userAttributes = $this->normalizeUserAttributes($this->initUserAttributes());
 
             $userAuth = Auth::findOne(['source' => static::DEFAULT_NAME, 'source_id' => $userAttributes['id']]);
-            if ($userAuth !== null && $userAuth->user->email !== $userAttributes['email']) {
-                $userAuth->user->email = $userAttributes['email'];
-                $userAuth->user->save();
+            if ($userAuth !== null) {
+                if (
+                    $updateHumhubEmailFromBrokerEmail
+                    && $userAuth->user->email !== $userAttributes['email']
+                ) {
+                    $userAuth->user->email = $userAttributes['email'];
+                    $userAuth->user->save();
+                }
+                if (
+                    $updateHumhubUsernameFromBrokerUsername
+                    && isset($userAttributes['username'])
+                    && $userAuth->user->username !== $userAttributes['username']
+                ) {
+                    $userAuth->user->username = $userAttributes['username'];
+                    $userAuth->user->save();
+                }
             }
         }
 

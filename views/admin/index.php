@@ -52,6 +52,8 @@ use humhub\modules\ui\view\components\View;
             <?= $form->field($model, 'apiUsername') ?>
             <?= $form->field($model, 'apiPassword')->textInput(['type' => 'password']) ?>
             <?= $form->field($model, 'removeKeycloakSessionsAfterLogout')->checkbox() ?>
+            <?= $form->field($model, 'updateHumhubUsernameFromBrokerUsername')->checkbox() ?>
+            <?= $form->field($model, 'updatedBrokerUsernameFromHumhubUsername')->checkbox() ?>
             <?= $form->field($model, 'updateHumhubEmailFromBrokerEmail')->checkbox() ?>
             <?= $form->field($model, 'updatedBrokerEmailFromHumhubEmail')->checkbox() ?>
             <?= $form->field($model, 'addChangePasswordFormToAccount')->checkbox() ?>

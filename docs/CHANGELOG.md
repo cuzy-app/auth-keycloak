@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Unreleased
+--------------------
+- Enh: possibility to sync username from Humhub to Keycloak, and reverse
+
+
 1.1.1 (May 30, 2022)
 --------------------
 - Fix: Removing Keycloak session optimization on Humhub logout

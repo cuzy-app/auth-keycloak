@@ -305,6 +305,35 @@ class KeycloakApi extends Component
      * @param User $user
      * @return bool|null
      */
+    public function updateUserUsername(User $user)
+    {
+        if (
+            !$this->isConnected()
+            || ($userAuth = static::getUserAuth($user->id)) === null
+        ) {
+            return null;
+        }
+
+        // Do not update username if Keycloak username is the email
+        if (
+            isset($this->realm['registrationEmailAsUsername'])
+            && $this->realm['registrationEmailAsUsername']
+        ) {
+            return null;
+        }
+
+        // Update username
+        $result = $this->api->updateUser([
+            'id' => $userAuth->source_id,
+            'username' => $user->username,
+        ]);
+        return !$this->hasError($result, 'Error saving user\'s new username on Keycloak for user ID: ' . $user->id);
+    }
+
+    /**
+     * @param User $user
+     * @return bool|null
+     */
     public function updateUserEmail(User $user)
     {
         if (
