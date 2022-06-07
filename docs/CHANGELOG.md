@@ -3,7 +3,8 @@ Changelog
 
 Unreleased
 --------------------
-- Enh: possibility to sync username from Humhub to Keycloak, and reverse
+- Enh: Possibility to sync username from Humhub to Keycloak, and reverse
+- Enh: Some texts in the module's settings
 
 
 1.1.1 (May 30, 2022)
