@@ -408,6 +408,7 @@ class Events
             'url' => ['/auth-keycloak/user/change-password'],
             'sortOrder' => 410,
             'isActive' => MenuLink::isActiveState('auth-keycloak', 'user', 'change-password'),
+            'isVisible' => true,
         ]));
     }
 }
