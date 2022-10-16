@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Unreleased
+1.1.3 (October 16, 2022)
 --------------------
 - Fix: Don't try to sync groups if API username and password are not defined in the settings
 
