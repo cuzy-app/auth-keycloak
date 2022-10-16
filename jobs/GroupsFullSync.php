@@ -1,6 +1,6 @@
 <?php
 /**
- * * Keycloak Sign-In
+ * Keycloak Sign-In
  * @link https://github.com/cuzy-app/humhub-modules-auth-keycloak
  * @license https://github.com/cuzy-app/humhub-modules-auth-keycloak/blob/master/docs/LICENCE.md
  * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
@@ -81,7 +81,12 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
     public function run()
     {
         $config = new ConfigureForm();
-        if (!$config->enabled) {
+        if (
+            !$config->enabled
+            || !$config->apiUsername
+            || !$config->apiPassword
+            || $config->groupsSyncMode === ConfigureForm::GROUP_SYNC_MODE_NONE
+        ) {
             return;
         }
         $this->keycloakApi = new KeycloakApi();

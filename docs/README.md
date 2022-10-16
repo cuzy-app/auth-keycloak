@@ -27,8 +27,15 @@ For users' groups and email synchronization: on Keycloak, users attributes must 
 
 ## Configuration
 
-Go to module's configuration at: `Administration -> Modules -> Keycloak Auth -> Settings`. 
+Go to module's configuration at: `Administration -> Modules -> Keycloak Auth -> Configure`. 
 And follow the instructions.
+
+
+## Pricing
+
+This module is free, but is the result of a lot of work for the design and maintenance over time.
+
+If it's useful to you, please consider [making a donation](https://www.cuzy.app/checkout/donate/) or [participating in the code](https://github.com/cuzy-app/humhub-modules-auth-keycloak). Thanks!
 
 
 ## Repository

@@ -1,6 +1,6 @@
 <?php
 /**
- * * Keycloak Sign-In
+ * Keycloak Sign-In
  * @link https://github.com/cuzy-app/humhub-modules-auth-keycloak
  * @license https://github.com/cuzy-app/humhub-modules-auth-keycloak/blob/master/docs/LICENCE.md
  * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
@@ -260,7 +260,14 @@ class ConfigureForm extends Model
         $module->settings->set('addChangePasswordFormToAccount', $this->addChangePasswordFormToAccount);
 
         // Add groups sync to jobs
-        Yii::$app->queue->push(new GroupsFullSync(['firstSync' => true]));
+        if (
+            $this->enabled
+            && $this->apiUsername
+            && $this->apiPassword
+            && $this->groupsSyncMode !== static::GROUP_SYNC_MODE_NONE
+        ) {
+            Yii::$app->queue->push(new GroupsFullSync(['firstSync' => true]));
+        }
 
         return true;
     }

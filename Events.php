@@ -1,6 +1,6 @@
 <?php
 /**
- * * Keycloak Sign-In
+ * Keycloak Sign-In
  * @link https://github.com/cuzy-app/humhub-modules-auth-keycloak
  * @license https://github.com/cuzy-app/humhub-modules-auth-keycloak/blob/master/docs/LICENCE.md
  * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
@@ -35,6 +35,7 @@ class Events
 {
     /**
      * @param Event $event
+     * @return void
      */
     public static function onAuthClientCollectionInit($event)
     {
@@ -140,7 +141,7 @@ class Events
 
 
     /**
-     * If user email has changed in Humhub, update it on the broker (IdP)
+     * If user email or username has changed in Humhub, update it on the broker (IdP)
      * @param AfterSaveEvent $event
      */
     public static function onModelUserAfterUpdate($event)
@@ -322,6 +323,16 @@ class Events
         $controller = $event->sender;
         $controller->stdout("Auth Keycloak module: Adding to jobs Keycloak groups synchronization with the API ");
 
+        $config = new ConfigureForm();
+        if (
+            !$config->enabled
+            || !$config->apiUsername
+            || !$config->apiPassword
+            || $config->groupsSyncMode === ConfigureForm::GROUP_SYNC_MODE_NONE
+        ) {
+            return;
+        }
+
         Yii::$app->queue->push(new GroupsFullSync());
     }
 
@@ -343,7 +354,15 @@ class Events
         $auth = $event->sender;
 
         if ($auth->source === Keycloak::DEFAULT_NAME) {
-            Yii::$app->queue->push(new GroupsUserSync(['userId' => $auth->user_id]));
+            $config = new ConfigureForm();
+            if (
+                $config->enabled
+                && $config->apiUsername
+                && $config->apiPassword
+                && $config->syncKeycloakGroupsToHumhub()
+            ) {
+                Yii::$app->queue->push(new GroupsUserSync(['userId' => $auth->user_id]));
+            }
         }
     }
 
@@ -372,7 +391,15 @@ class Events
             $auth->source === Keycloak::DEFAULT_NAME
             && array_key_exists('source', $changedAttributes)
         ) {
-            Yii::$app->queue->push(new GroupsUserSync(['userId' => $auth->user_id]));
+            $config = new ConfigureForm();
+            if (
+                $config->enabled
+                && $config->apiUsername
+                && $config->apiPassword
+                && $config->syncKeycloakGroupsToHumhub()
+            ) {
+                Yii::$app->queue->push(new GroupsUserSync(['userId' => $auth->user_id]));
+            }
         }
     }
 
