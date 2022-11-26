@@ -319,6 +319,10 @@ class Events
      */
     public static function onCronDailyRun($event)
     {
+        if (!Yii::$app->getModule('auth-keycloak')) {
+            return;
+        }
+
         /** @var CronController $controller */
         $controller = $event->sender;
         $controller->stdout("Auth Keycloak module: Adding to jobs Keycloak groups synchronization with the API ");

@@ -11,16 +11,21 @@ namespace humhub\modules\authKeycloak\authclient;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\Module;
 use humhub\modules\space\models\Space;
+use humhub\modules\user\authclient\AuthClientHelpers;
+use humhub\modules\user\authclient\interfaces\PrimaryClient;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\Invite;
+use humhub\modules\user\models\User;
 use Yii;
 use yii\authclient\OAuth2;
-use yii\base\InvalidConfigException;
 use yii\helpers\BaseInflector;
 use yii\helpers\Url;
 
-
-class Keycloak extends OAuth2
+/**
+ * With PrimaryClient, the user will have the `auth_mode` field in the `user` table set to 'Keycloak'.
+ * This will avoid showing the "Change Password" tab when logged in with Keycloak
+ */
+class Keycloak extends OAuth2 implements PrimaryClient
 {
     public const DEFAULT_NAME = 'Keycloak';
 
@@ -38,6 +43,11 @@ class Keycloak extends OAuth2
      * @inheritdoc
      */
     public $apiBaseUrl;
+
+    /**
+     * @var bool
+     */
+    protected $_userSynced = false;
 
     /**
      * @inheritdoc
@@ -115,56 +125,30 @@ class Keycloak extends OAuth2
         return Url::to(['/user/auth/external', 'authclient' => static::DEFAULT_NAME], true);
     }
 
-    /**
-     * @inheritdoc
-     * Update Humhub's user email if emails is different on Keycloak
-     * @throws InvalidConfigException
-     */
-    public function getUserAttributes()
-    {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('auth-keycloak');
-        $settings = $module->settings;
-        $updateHumhubEmailFromBrokerEmail = (bool)$settings->get('updateHumhubEmailFromBrokerEmail');
-        $updateHumhubUsernameFromBrokerUsername = (bool)$settings->get('updateHumhubUsernameFromBrokerUsername');
-
-        // Update Humhub user's email
-        if ($updateHumhubEmailFromBrokerEmail || $updateHumhubUsernameFromBrokerUsername) {
-            $userAttributes = $this->normalizeUserAttributes($this->initUserAttributes());
-
-            $userAuth = Auth::findOne(['source' => static::DEFAULT_NAME, 'source_id' => $userAttributes['id']]);
-            if ($userAuth !== null) {
-                if (
-                    $updateHumhubEmailFromBrokerEmail
-                    && $userAuth->user->email !== $userAttributes['email']
-                ) {
-                    $userAuth->user->email = $userAttributes['email'];
-                    $userAuth->user->save();
-                }
-                if (
-                    $updateHumhubUsernameFromBrokerUsername
-                    && isset($userAttributes['username'])
-                    && $userAuth->user->username !== $userAttributes['username']
-                ) {
-                    $userAuth->user->username = $userAttributes['username'];
-                    $userAuth->user->save();
-                }
-            }
-        }
-
-        return parent::getUserAttributes();
-    }
-
     protected function initUserAttributes()
     {
         return $this->api('userinfo');
     }
 
-    protected function defaultName()
+    /**
+     * @inheritdoc
+     */
+    public function getId()
     {
-        return static::DEFAULT_NAME;
+        return self::DEFAULT_NAME;
     }
 
+    /**
+     * @inheritdoc
+     */
+    protected function defaultName()
+    {
+        return self::DEFAULT_NAME;
+    }
+
+    /**
+     * @inheridoc
+     */
     protected function defaultTitle()
     {
         /** @var Module $module */
@@ -217,5 +201,85 @@ class Keycloak extends OAuth2
             );
         }
         return $attributes;
+    }
+
+    /**
+     * Called among others by `user/controllers/AuthController::authSuccess()`
+     * @inheridoc
+     */
+    public function getUserAttributes()
+    {
+        // Avoid looping getUserAttributes()
+        if (!$this->_userSynced) {
+            $this->_userSynced = true;
+            $this->syncUserAttributes();
+        }
+
+        return parent::getUserAttributes();
+    }
+
+
+    /**
+     * @inheridoc
+     */
+    public function getUser()
+    {
+        $userAttributes = $this->getUserAttributes();
+
+        $userAuth = Auth::findOne(['source' => static::DEFAULT_NAME, 'source_id' => $userAttributes['id']]);
+
+        if ($userAuth !== null && $userAuth->user !== null) {
+            return $userAuth->user;
+        }
+
+        $userByEmail = User::findOne(['email' => $userAttributes['email']]);
+        if ($userByEmail !== null) {
+            return $userByEmail;
+        }
+
+        $userByUsername = User::findOne(['username' => $userAttributes['username']]);
+        if ($userByUsername !== null) {
+            return $userByUsername;
+        }
+
+        return null;
+    }
+
+    /**
+     * @inheridoc
+     */
+    public function syncUserAttributes()
+    {
+        $user = $this->getUser();
+        if ($user === null) {
+            return;
+        }
+
+        $userAttributes = $this->getUserAttributes();
+
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        $settings = $module->settings;
+        $updateHumhubEmailFromBrokerEmail = (bool)$settings->get('updateHumhubEmailFromBrokerEmail');
+        $updateHumhubUsernameFromBrokerUsername = (bool)$settings->get('updateHumhubUsernameFromBrokerUsername');
+
+        if (
+            $updateHumhubEmailFromBrokerEmail
+            && $user->email !== $userAttributes['email']
+        ) {
+            $user->email = $userAttributes['email'];
+            $user->save();
+        }
+
+        if (
+            $updateHumhubUsernameFromBrokerUsername
+            && isset($userAttributes['username'])
+            && $user->username !== $userAttributes['username']
+        ) {
+            $user->username = $userAttributes['username'];
+            $user->save();
+        }
+
+        AuthClientHelpers::storeAuthClientForUser($this, $user);
     }
 }

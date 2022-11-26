@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1.4 (November 26, 2022)
+--------------------
+- Enh: `User::auth_mode` is set to `Keycloak` after login. Avoids showing the "Change Password" tab in the user account when logged in with Keycloak
+- Chg: Minimum Humhub version to 1.12
+
 1.1.3 (October 16, 2022)
 --------------------
 - Fix: Don't try to sync groups if API username and password are not defined in the settings
