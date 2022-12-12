@@ -75,6 +75,10 @@ class ConfigureForm extends Model
     /**
      * @var bool
      */
+    public $hideAdminUserEditPassword = false;
+    /**
+     * @var bool
+     */
     public $removeKeycloakSessionsAfterLogout = false;
     /**
      * @var bool
@@ -118,7 +122,7 @@ class ConfigureForm extends Model
         return [
             [['clientId', 'clientSecret', 'realm', 'baseUrl', 'usernameMapper'], 'required'],
             [['clientId', 'clientSecret', 'baseUrl', 'usernameMapper', 'title', 'realm', 'apiUsername', 'apiPassword'], 'string'],
-            [['enabled', 'autoLogin', 'hideRegistrationUsernameField', 'removeKeycloakSessionsAfterLogout', 'updateHumhubUsernameFromBrokerUsername', 'updatedBrokerUsernameFromHumhubUsername', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount'], 'boolean'],
+            [['enabled', 'autoLogin', 'hideRegistrationUsernameField', 'hideAdminUserEditPassword', 'removeKeycloakSessionsAfterLogout', 'updateHumhubUsernameFromBrokerUsername', 'updatedBrokerUsernameFromHumhubUsername', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount'], 'boolean'],
             [['groupsSyncMode'], 'safe'],
         ];
     }
@@ -143,6 +147,7 @@ class ConfigureForm extends Model
         $this->title = $settings->get('title', Yii::t('AuthKeycloakModule.base', static::DEFAULT_TITLE));
         $this->autoLogin = (bool)$settings->get('autoLogin', $this->autoLogin);
         $this->hideRegistrationUsernameField = (bool)$settings->get('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
+        $this->hideAdminUserEditPassword = (bool)$settings->get('hideAdminUserEditPassword', $this->hideAdminUserEditPassword);
         $this->removeKeycloakSessionsAfterLogout = (bool)$settings->get('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
         $this->updateHumhubUsernameFromBrokerUsername = (bool)$settings->get('updateHumhubUsernameFromBrokerUsername', $this->updateHumhubUsernameFromBrokerUsername);
         $this->updatedBrokerUsernameFromHumhubUsername = (bool)$settings->get('updatedBrokerUsernameFromHumhubUsername', $this->updatedBrokerUsernameFromHumhubUsername);
@@ -171,6 +176,7 @@ class ConfigureForm extends Model
             'title' => Yii::t('AuthKeycloakModule.base', 'Title of the button (if autoLogin is disabled)'),
             'autoLogin' => Yii::t('AuthKeycloakModule.base', 'Automatic login'),
             'hideRegistrationUsernameField' => Yii::t('AuthKeycloakModule.base', 'Hide username field in registration form'),
+            'hideAdminUserEditPassword' => Yii::t('AuthKeycloakModule.base', 'In admin, hide password fields in edit user form'),
             'removeKeycloakSessionsAfterLogout' => Yii::t('AuthKeycloakModule.base', 'Remove user\'s Keycloak sessions after logout'),
             'updateHumhubUsernameFromBrokerUsername' => Yii::t('AuthKeycloakModule.base', 'Update user\'s username on Humhub when changed on Keycloak'),
             'updatedBrokerUsernameFromHumhubUsername' => Yii::t('AuthKeycloakModule.base', 'Update user\'s username on Keycloak when changed on Humhub'),
@@ -197,6 +203,7 @@ class ConfigureForm extends Model
             'title' => Yii::t('AuthKeycloakModule.base', 'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.'),
             'autoLogin' => Yii::t('AuthKeycloakModule.base', 'Possible only if {newUsersCanRegister} is allowed in Administration -> Users -> Settings.', ['newUsersCanRegister' => '“' . Yii::t('AdminModule.user', 'New users can register') . '”']) . '<br>' . Yii::t('AuthKeycloakModule.base', 'If enabled, you should also enable {removeKeycloakSessionsAfterLogoutAttrLabel}, otherwise users cannot logout.', ['removeKeycloakSessionsAfterLogoutAttrLabel' => '“' . $this->attributeLabels()['removeKeycloakSessionsAfterLogout'] . '”']),
             'hideRegistrationUsernameField' => Yii::t('AuthKeycloakModule.base', 'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)'),
+            'hideAdminUserEditPassword' => Yii::t('AuthKeycloakModule.base', 'For administrators allowed to manage users'),
             'apiUsername' => Yii::t('AuthKeycloakModule.base', 'This admin user must be in the {master} realm and have permission to manage users of the realm belonging to the client for this Humhub', ['master' => '“master”']),
             'updatedBrokerUsernameFromHumhubUsername' => Yii::t('AuthKeycloakModule.base', 'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.'),
             'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.'),
@@ -241,6 +248,7 @@ class ConfigureForm extends Model
         $module->settings->set('title', $this->title);
         $module->settings->set('autoLogin', $this->autoLogin);
         $module->settings->set('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
+        $module->settings->set('hideAdminUserEditPassword', $this->hideAdminUserEditPassword);
         $module->settings->set('apiUsername', $this->apiUsername);
         $module->settings->set('apiPassword', $this->apiPassword);
         $module->settings->set('groupsSyncMode', $this->groupsSyncMode);

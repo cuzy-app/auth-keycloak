@@ -7,12 +7,12 @@
  */
 
 use humhub\commands\CronController;
+use humhub\compat\HForm;
 use humhub\modules\authKeycloak\Events;
 use humhub\modules\user\authclient\Collection;
 use humhub\modules\user\controllers\AuthController;
 use humhub\modules\user\controllers\RegistrationController;
 use humhub\modules\user\models\Auth;
-use humhub\modules\user\models\forms\Registration;
 use humhub\modules\user\models\Group;
 use humhub\modules\user\models\GroupUser;
 use humhub\modules\user\models\User;
@@ -36,9 +36,9 @@ return [
             'callback' => [Events::class, 'onUserRegistrationControllerBeforeAction']
         ],
         [
-            'class' => Registration::class,
-            'event' => Registration::EVENT_BEFORE_RENDER,
-            'callback' => [Events::class, 'onUserRegistrationFormBeforeRender']
+            'class' => HForm::class,
+            'event' => HForm::EVENT_BEFORE_RENDER,
+            'callback' => [Events::class, 'onHFormBeforeRender']
         ],
         [
             'class' => User::class,

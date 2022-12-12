@@ -9,6 +9,8 @@
 namespace humhub\modules\authKeycloak;
 
 use humhub\commands\CronController;
+use humhub\compat\HForm;
+use humhub\modules\admin\models\forms\UserEditForm;
 use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\components\KeycloakApi;
 use humhub\modules\authKeycloak\jobs\GroupsFullSync;
@@ -112,30 +114,56 @@ class Events
 
     /**
      * Registration form: hide username field
+     * Admin User edit form: hide password changing
      * @param Event $event
      */
-    public static function onUserRegistrationFormBeforeRender($event)
+    public static function onHFormBeforeRender($event)
     {
         if (
             Yii::$app->request->isConsoleRequest
-            || Yii::$app->controller->module->id === 'admin'
-            || Yii::$app->request->get('token') // If invited
             || !Yii::$app->authClientCollection->hasClient(Keycloak::DEFAULT_NAME)
         ) {
             return;
         }
 
-        $config = new ConfigureForm();
-        /** @var Registration $hform */
-        $hform = $event->sender;
-        $errors = $hform->getErrors();
+        // Registration form: hide username field
         if (
-            $config->enabled
-            && $config->hideRegistrationUsernameField
-            && !isset($errors['username'])
+            $event->sender instanceof Registration
+            && Yii::$app->controller->module->id !== 'admin'
+            && !Yii::$app->request->get('token') // If invited
         ) {
-            unset($hform->definition['elements']['User']['title']);
-            $hform->definition['elements']['User']['elements']['username']['type'] = 'hidden';
+            $config = new ConfigureForm();
+            /** @var Registration $hform */
+            $hform = $event->sender;
+            $errors = $hform->getErrors();
+            if (
+                $config->enabled
+                && $config->hideRegistrationUsernameField
+                && !isset($errors['username'])
+            ) {
+                unset($hform->definition['elements']['User']['title']);
+                $hform->definition['elements']['User']['elements']['username']['type'] = 'hidden';
+            }
+            return;
+        }
+
+        // Admin User edit form: hide password changing
+        if (
+            Yii::$app->controller->module->id === 'admin'
+            && Yii::$app->controller->id === 'user'
+            && Yii::$app->controller->action->id === 'edit'
+            && !empty($event->sender->models['User'])
+            && $event->sender->models['User'] instanceof UserEditForm
+        ) {
+            $config = new ConfigureForm();
+            if (
+                $config->enabled
+                && $config->hideAdminUserEditPassword
+            ) {
+                /** @var HForm $hform */
+                $hform = $event->sender;
+                unset($hform->definition['elements']['Password']);
+            }
         }
     }
 

@@ -46,6 +46,7 @@ use humhub\modules\ui\view\components\View;
             <?= $form->field($model, 'title') ?>
             <?= $form->field($model, 'autoLogin')->checkbox() ?>
             <?= $form->field($model, 'hideRegistrationUsernameField')->checkbox() ?>
+            <?= $form->field($model, 'hideAdminUserEditPassword')->checkbox() ?>
             <?= $form->endCollapsibleFields(); ?>
 
             <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings requiring an admin user for the API (optional)')) ?>

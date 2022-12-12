@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.1.5 (December 12, 2022)
+--------------------
+- Enh: Added new setting checkbox: "In admin, hide password fields in edit user form"
+
 1.1.4 (November 26, 2022)
 --------------------
 - Enh: `User::auth_mode` is set to `Keycloak` after login. Avoids showing the "Change Password" tab in the user account when logged in with Keycloak
