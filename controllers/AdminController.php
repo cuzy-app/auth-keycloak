@@ -9,6 +9,7 @@
 namespace humhub\modules\authKeycloak\controllers;
 
 use humhub\modules\admin\components\Controller;
+use humhub\modules\authKeycloak\components\KeycloakApi;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use Yii;
 
@@ -30,6 +31,12 @@ class AdminController extends Controller
             $this->view->saved();
         }
 
-        return $this->render('index', ['model' => $model]);
+        $keycloakApi = new KeycloakApi();
+        $apiAuthentificationSuccess = $keycloakApi->isConnected();
+
+        return $this->render('index', [
+            'model' => $model,
+            'apiAuthentificationSuccess' => $apiAuthentificationSuccess,
+        ]);
     }
 }

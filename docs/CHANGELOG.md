@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Unreleased
+--------------------
+- Fix: Account edition page crashed if the authentification to Keycloak API failed
+- Enh: Added a message in the module settings to inform if the authentification to Keycloak API succeeded or not
+
 1.1.5 (December 12, 2022)
 --------------------
 - Enh: Added new setting checkbox: "In admin, hide password fields in edit user form"

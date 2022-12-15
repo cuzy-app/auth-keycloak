@@ -4,10 +4,13 @@
 
 /* @var $model ConfigureForm */
 
+/* @var $apiAuthentificationSuccess bool */
+
 use humhub\libs\Html;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\ui\form\widgets\ActiveForm;
 use humhub\modules\ui\view\components\View;
+use yii\bootstrap\Alert;
 
 ?>
 <div class="container-fluid">
@@ -50,6 +53,16 @@ use humhub\modules\ui\view\components\View;
             <?= $form->endCollapsibleFields(); ?>
 
             <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings requiring an admin user for the API (optional)')) ?>
+
+            <?php if ($model->apiUsername) : ?>
+                <?= Alert::widget([
+                    'options' => ['class' => 'alert-' . ($apiAuthentificationSuccess ? 'success' : 'danger')],
+                    'body' => $apiAuthentificationSuccess ?
+                        Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API succeeded!') :
+                        Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API failed!')
+                ]) ?>
+            <?php endif; ?>
+
             <?= $form->field($model, 'apiUsername') ?>
             <?= $form->field($model, 'apiPassword')->textInput(['type' => 'password']) ?>
             <?= $form->field($model, 'removeKeycloakSessionsAfterLogout')->checkbox() ?>

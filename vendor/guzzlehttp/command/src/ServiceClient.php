@@ -1,4 +1,5 @@
 <?php
+
 namespace GuzzleHttp\Command;
 
 use GuzzleHttp\ClientInterface as HttpClient;
@@ -20,7 +21,7 @@ class ServiceClient implements ServiceClientInterface
 
     /** @var HandlerStack */
     private $handlerStack;
-    
+
     /** @var callable */
     private $commandToRequestTransformer;
 
@@ -45,11 +46,12 @@ class ServiceClient implements ServiceClientInterface
      *     be used to add command-level middleware to the service client.
      */
     public function __construct(
-        HttpClient $httpClient,
-        callable $commandToRequestTransformer,
-        callable $responseToResultTransformer,
+        HttpClient   $httpClient,
+        callable     $commandToRequestTransformer,
+        callable     $responseToResultTransformer,
         HandlerStack $commandHandlerStack = null
-    ) {
+    )
+    {
         $this->httpClient = $httpClient;
         $this->commandToRequestTransformer = $commandToRequestTransformer;
         $this->responseToResultTransformer = $responseToResultTransformer;
@@ -71,6 +73,7 @@ class ServiceClient implements ServiceClientInterface
     {
         return new Command($name, $params, clone $this->handlerStack);
     }
+
 
     public function execute(CommandInterface $command)
     {
@@ -207,9 +210,10 @@ class ServiceClient implements ServiceClientInterface
      */
     private function transformResponseToResult(
         ResponseInterface $response,
-        RequestInterface $request,
-        CommandInterface $command
-    ) {
+        RequestInterface  $request,
+        CommandInterface  $command
+    )
+    {
         $transform = $this->responseToResultTransformer;
 
         return $transform($response, $request, $command);
