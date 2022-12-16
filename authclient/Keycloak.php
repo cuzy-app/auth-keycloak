@@ -50,6 +50,11 @@ class Keycloak extends OAuth2 implements PrimaryClient
     protected $_userSynced = false;
 
     /**
+     * @inheridoc
+     */
+    public $scope = 'openid';
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -125,6 +130,9 @@ class Keycloak extends OAuth2 implements PrimaryClient
         return Url::to(['/user/auth/external', 'authclient' => static::DEFAULT_NAME], true);
     }
 
+    /**
+     * @inheridoc
+     */
     protected function initUserAttributes()
     {
         return $this->api('userinfo');

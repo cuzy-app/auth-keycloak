@@ -22,14 +22,34 @@ use yii\bootstrap\Alert;
             <div class="alert alert-info">
                 <div><?= Yii::t('AuthKeycloakModule.base', 'On Keycloak, create a client for Humhub and configure it:') ?></div>
                 <ul>
-                    <li><?= Yii::t('AuthKeycloakModule.base', '{Settings} tab -> {AccessType}: choose {confidential}. Save settings.', ['Settings' => '“Settings”', 'AccessType' => '“Access Type”', 'confidential' => '“confidential”',]) ?></li>
+                    <li><?= Yii::t('AuthKeycloakModule.base', '{Settings} tab -> {ClientAuthenticationOn} (for Humhub version <20: {AccessTypeValue}).', [
+                            'ClientAuthenticationOn' => '“Client authentication”: “On”',
+                            'Settings' => '“Settings”',
+                            'AccessTypeValue' => '“Access Type”: “confidential”',
+                        ]) ?></li>
+                    <li><?= Yii::t('AuthKeycloakModule.base', '{Settings} tab -> {ValidRedirectURIsValue}.', [
+                            'Settings' => '“Settings”',
+                            'ValidRedirectURIsValue' => '“Valid redirect URIs”: ' . Html::tag('code', $model->redirectUri),
+                        ]) ?></li>
                     <li><?= Yii::t('AuthKeycloakModule.base', '{Credentials} tab: copy the secret key', ['Credentials' => '“Credentials”']) ?></li>
-                    <li><?= Yii::t('AuthKeycloakModule.base', '{Mappers} tab:', ['Mappers' => '“Mappers”']) ?></li>
+                    <li><?= Yii::t('AuthKeycloakModule.base', '{ClientScope} tab -> click on the first {scopeName} (for Humhub version <20: {Mappers} tab):', [
+                            'ClientScope' => '“Client scopes”',
+                            'scopeName' => 'scope',
+                            'Mappers' => '“Mappers”',
+                        ]) ?></li>
                     <ul>
-                        <li><?= Yii::t('AuthKeycloakModule.base', 'Button {AddBuiltin} and check theses attributes:', ['AddBuiltin' => '“Add builtin”']) ?>
+                        <li><?= Yii::t('AuthKeycloakModule.base', 'Button {AddMapper} (for Humhub version <20: {AddBuiltin}) and add theses attributes:', [
+                                'AddMapper' => '“Add mapper -> From predefined mappers”',
+                                'AddBuiltin' => '“Add builtin”',
+                            ]) ?>
                             “family name”, “email”, “given name”, “username”
                         </li>
-                        <li><?= Yii::t('AuthKeycloakModule.base', 'Edit {usernameAttribute} and in {TokenClaimName}, replace {preferredUsernameAttribute} with {idAttribute}', ['usernameAttribute' => '“username”', 'TokenClaimName' => '“Token Claim Name”', 'preferredUsernameAttribute' => '“preferred_username”', 'idAttribute' => '“id”']) ?></li>
+                        <li><?= Yii::t('AuthKeycloakModule.base', 'Edit {usernameAttribute} and in {TokenClaimName}, replace {preferredUsernameAttribute} with {idAttribute}', [
+                                'usernameAttribute' => '“username”',
+                                'TokenClaimName' => '“Token Claim Name”',
+                                'preferredUsernameAttribute' => '“preferred_username”',
+                                'idAttribute' => '“id”',
+                            ]) ?></li>
                     </ul>
                 </ul>
             </div>

@@ -1,8 +1,10 @@
 Changelog
 =========
 
-Unreleased
+1.2.0 (December 16, 2022)
 --------------------
+- Fix: Added compatibility with Keycloak version 20+
+- Enh: In the module settings, updated procedure to configure Keycloak client for Keycloak version >= 20
 - Fix: Account edition page crashed if the authentification to Keycloak API failed
 - Enh: Added a message in the module settings to inform if the authentification to Keycloak API succeeded or not
 
