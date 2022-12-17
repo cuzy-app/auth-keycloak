@@ -9,6 +9,7 @@
 namespace humhub\modules\authKeycloak\components;
 
 use GuzzleHttp\Command\Exception\CommandClientException;
+use GuzzleHttp\Command\Exception\CommandException;
 use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
@@ -301,7 +302,7 @@ class KeycloakApi extends Component
 
         try {
             $this->realm = $this->api->getRealm();
-        } catch (CommandClientException $ex) {
+        } catch (CommandClientException|CommandException $ex) {
             return;
         }
     }
