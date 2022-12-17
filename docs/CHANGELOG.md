@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Unreleased
+--------------------
+- Enh: Added error log if API connection fails
+
 1.2.0 (December 16, 2022)
 --------------------
 - Fix: Added compatibility with Keycloak version 20+

@@ -10,6 +10,7 @@ use humhub\libs\Html;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\ui\form\widgets\ActiveForm;
 use humhub\modules\ui\view\components\View;
+use humhub\widgets\Button;
 use yii\bootstrap\Alert;
 
 ?>
@@ -79,7 +80,7 @@ use yii\bootstrap\Alert;
                     'options' => ['class' => 'alert-' . ($apiAuthentificationSuccess ? 'success' : 'danger')],
                     'body' => $apiAuthentificationSuccess ?
                         Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API succeeded!') :
-                        Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API failed!')
+                        Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API failed!') . ' ' . Button::info(Yii::t('AuthKeycloakModule.base', 'View error log'))->link(['/admin/logging'])
                 ]) ?>
             <?php endif; ?>
 

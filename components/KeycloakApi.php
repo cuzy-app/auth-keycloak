@@ -302,7 +302,8 @@ class KeycloakApi extends Component
 
         try {
             $this->realm = $this->api->getRealm();
-        } catch (CommandClientException|CommandException $ex) {
+        } catch (CommandClientException|CommandException $e) {
+            Yii::error('Error trying to connect to Keycloak API: ' . $e, 'auth-keycloak');
             return;
         }
     }
