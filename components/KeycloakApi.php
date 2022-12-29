@@ -13,6 +13,7 @@ use GuzzleHttp\Command\Exception\CommandException;
 use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
+use humhub\modules\authKeycloak\Module;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
 use Keycloak\Admin\KeycloakClient;
@@ -290,11 +291,18 @@ class KeycloakApi extends Component
             require Yii::getAlias('@auth-keycloak/vendor/autoload.php');
         }
 
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+
         $this->api = KeycloakClient::factory([
             'realm' => 'master', // The admin user must be in master realm
+            'client_id' => $config->clientId,
+            'client_secret' => $config->clientSecret,
             'username' => $config->apiUsername,
             'password' => $config->apiPassword,
             'baseUri' => $config->baseUrl . '/',
+            'scope' => 'openid',
+            'verify' => $module->apiVerifySsl,
         ]);
         if ($config->realm !== 'master') {
             $this->api->setRealmName($config->realm);

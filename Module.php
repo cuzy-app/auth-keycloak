@@ -24,6 +24,11 @@ class Module extends BaseModule
     public $resourcesPath = 'resources';
 
     /**
+     * @var bool When connecting to Keycloak API, check if SSL certificate is valid
+     */
+    public $apiVerifySsl = true;
+
+    /**
      * @inheritdoc
      */
     public function getConfigUrl()

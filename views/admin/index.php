@@ -80,7 +80,7 @@ use yii\bootstrap\Alert;
                     'options' => ['class' => 'alert-' . ($apiAuthentificationSuccess ? 'success' : 'danger')],
                     'body' => $apiAuthentificationSuccess ?
                         Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API succeeded!') :
-                        Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API failed!') . ' ' . Button::info(Yii::t('AuthKeycloakModule.base', 'View error log'))->link(['/admin/logging'])
+                        Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API failed!') . ' ' . Button::info(Yii::t('AuthKeycloakModule.base', 'View error log'))->link(['/admin/logging', 'levels[]' => 1])
                 ]) ?>
             <?php endif; ?>
 

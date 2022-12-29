@@ -1,9 +1,12 @@
 Changelog
 =========
 
-Unreleased
+1.2.1 (Unreleased)
 --------------------
 - Enh: Added error log if API connection fails
+- Chg: Connection to the API is now done with the "openid" scope, which solves connection issues on some Keycloak instances
+- Enh: Added $apiVerifySsl boolean attribute in the Module class: when connecting to Keycloak API, check if SSL certificate is valid
+- Enh: [keycloak-admin-client library](https://github.com/MohammadWaleed/keycloak-admin-client) updated to the latest version (0.34.0)
 
 1.2.0 (December 16, 2022)
 --------------------

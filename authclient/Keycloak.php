@@ -240,14 +240,18 @@ class Keycloak extends OAuth2 implements PrimaryClient
             return $userAuth->user;
         }
 
-        $userByEmail = User::findOne(['email' => $userAttributes['email']]);
-        if ($userByEmail !== null) {
-            return $userByEmail;
+        if (array_key_exists('email', $userAttributes)) {
+            $userByEmail = User::findOne(['email' => $userAttributes['email']]);
+            if ($userByEmail !== null) {
+                return $userByEmail;
+            }
         }
 
-        $userByUsername = User::findOne(['username' => $userAttributes['username']]);
-        if ($userByUsername !== null) {
-            return $userByUsername;
+        if (array_key_exists('username', $userAttributes)) {
+            $userByUsername = User::findOne(['username' => $userAttributes['username']]);
+            if ($userByUsername !== null) {
+                return $userByUsername;
+            }
         }
 
         return null;

@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '5c21a80302ff5847ca3a951cf85543503d0fa441',
+    'reference' => 'b5db57be6fcaac4c40533303e03c47da15e1fe67',
     'name' => 'cuzy-app/humhub-modules-auth-keycloak',
   ),
   'versions' => 
@@ -41,7 +41,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '5c21a80302ff5847ca3a951cf85543503d0fa441',
+      'reference' => 'b5db57be6fcaac4c40533303e03c47da15e1fe67',
     ),
     'guzzlehttp/command' => 
     array (
@@ -54,12 +54,12 @@ private static $installed = array (
     ),
     'guzzlehttp/guzzle' => 
     array (
-      'pretty_version' => '7.4.3',
-      'version' => '7.4.3.0',
+      'pretty_version' => '7.5.0',
+      'version' => '7.5.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '74a8602c6faec9ef74b7a9391ac82c5e65b1cdab',
+      'reference' => 'b50a2a1251152e43f6a37f0fa053e730a67d25ba',
     ),
     'guzzlehttp/guzzle-services' => 
     array (
@@ -72,21 +72,21 @@ private static $installed = array (
     ),
     'guzzlehttp/promises' => 
     array (
-      'pretty_version' => '1.5.1',
-      'version' => '1.5.1.0',
+      'pretty_version' => '1.5.2',
+      'version' => '1.5.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'fe752aedc9fd8fcca3fe7ad05d419d32998a06da',
+      'reference' => 'b94b2807d85443f9719887892882d0329d1e2598',
     ),
     'guzzlehttp/psr7' => 
     array (
-      'pretty_version' => '2.2.1',
-      'version' => '2.2.1.0',
+      'pretty_version' => '2.4.3',
+      'version' => '2.4.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c94a94f120803a18554c1805ef2e539f8285f9a2',
+      'reference' => '67c26b443f348a51926030c83481b85718457d3d',
     ),
     'guzzlehttp/uri-template' => 
     array (
@@ -99,12 +99,12 @@ private static $installed = array (
     ),
     'mohammad-waleed/keycloak-admin-client' => 
     array (
-      'pretty_version' => 'v0.31.0',
-      'version' => '0.31.0.0',
+      'pretty_version' => 'v0.34.0',
+      'version' => '0.34.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '00408c43c914ac9add0766509699713066751d5c',
+      'reference' => 'dc745ddfaeb62162113af72c19ac50817dfc8b70',
     ),
     'psr/http-client' => 
     array (
@@ -165,8 +165,8 @@ private static $installed = array (
     ),
     'symfony/deprecation-contracts' => 
     array (
-      'pretty_version' => 'v2.5.1',
-      'version' => '2.5.1.0',
+      'pretty_version' => 'v2.5.2',
+      'version' => '2.5.2.0',
       'aliases' => 
       array (
       ),
@@ -174,12 +174,12 @@ private static $installed = array (
     ),
     'symfony/polyfill-php80' => 
     array (
-      'pretty_version' => 'v1.25.0',
-      'version' => '1.25.0.0',
+      'pretty_version' => 'v1.27.0',
+      'version' => '1.27.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '4407588e0d3f1f52efb65fbe92babe41f37fe50c',
+      'reference' => '7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936',
     ),
   ),
 );

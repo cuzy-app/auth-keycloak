@@ -2334,7 +2334,7 @@ return array(
         ),
 
         'createChildGroup' => array(
-            'uri'         => 'admin/realms/{realm}/groups/{id}/children',
+            'uri'         => 'admin/realms/{realm}/groups/{groupId}/children',
             'description' => 'Set or create child.',
             'httpMethod'  => 'POST',
             'parameters'  => array(
@@ -2344,7 +2344,7 @@ return array(
                     'type'        => 'string',
                     'required'    => true,
                 ),
-                'id' => array(
+                'groupId' => array(
                     'location'    => 'uri',
                     'description' => 'Group id',
                     'type'        => 'string',
@@ -5197,6 +5197,26 @@ return array(
             )
         ),
 
+        'getUserConsents' => array(
+            'uri'         => 'admin/realms/{realm}/users/{id}/consents',
+            'description' => 'Get the consents granted by a user',
+            'httpMethod'  => 'GET',
+            'parameters'  => array(
+                'realm' => array(
+                    'location'    => 'uri',
+                    'description' => 'The Realm name',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'id' => array(
+                    'location' => 'uri',
+                    'description' => 'User id',
+                    'type' => 'string',
+                    'required' => true
+                )
+            )
+        ),
+
         'updateUser' => array(
             'uri' => 'admin/realms/{realm}/users/{id}',
             'description' => 'Update a user (Username must be unique)',
@@ -5352,6 +5372,26 @@ return array(
             )
         ),
 
+        'getUserCredentials' => array(
+            'uri' => 'admin/realms/{realm}/users/{id}/credentials',
+            'description' => 'Get credentials associated with the user',
+            'httpMethod' => 'GET',
+            'parameters' => array(
+                'realm' => array(
+                    'location' => 'uri',
+                    'description' => 'The Realm name',
+                    'type' => 'string',
+                    'required' => true,
+                ),
+                'id' => array(
+                    'location' => 'uri',
+                    'description' => 'User id',
+                    'type' => 'string',
+                    'required' => true
+                )
+            )
+        ),
+
         'addUserToGroup' => array(
             'uri' => 'admin/realms/{realm}/users/{id}/groups/{groupId}',
             'description' => 'Assign a specific user to a specific group',
@@ -5449,6 +5489,74 @@ return array(
                 )
             )
         ),
-
+        'getSocialLogins' => array(
+            'uri'         => 'admin/realms/{realm}/users/{id}/federated-identity',
+            'description' => 'Get social logins associated with the user',
+            'httpMethod'  => 'GET',
+            'parameters'  => array(
+                'realm' => array(
+                    'location'    => 'uri',
+                    'description' => 'The Realm name',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'id' => array(
+                    'location'    => 'uri',
+                    'description' => 'User id',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+            )
+        ),
+        'removeSocialLogin' => array(
+            'uri'         => 'admin/realms/{realm}/users/{id}/federated-identity/{providerId}',
+            'description' => 'Remove social login associated with the user',
+            'httpMethod'  => 'DELETE',
+            'parameters'  => array(
+                'realm' => array(
+                    'location'    => 'uri',
+                    'description' => 'The Realm name',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'id' => array(
+                    'location'    => 'uri',
+                    'description' => 'User id',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+                'providerId' => array(
+                    'location'    => 'uri',
+                    'description' => 'The Provider ID',
+                    'type'        => 'string',
+                    'required'    => true,
+                ),
+            )
+        ),
+        'addSocialLogin' => array(
+            'uri'         => 'admin/realms/{realm}/users/{id}/federated-identity/{providerId}',
+            'description' => 'Add social login associated with the user',
+            'httpMethod'  => 'POST',
+            'parameters'  => array(
+                    'realm' => array(
+                        'location'    => 'uri',
+                        'description' => 'The Realm name',
+                        'type'        => 'string',
+                        'required'    => true,
+                    ),
+                    'id' => array(
+                        'location'    => 'uri',
+                        'description' => 'User id',
+                        'type'        => 'string',
+                        'required'    => true,
+                    ),
+                    'providerId' => array(
+                        'location'    => 'uri',
+                        'description' => 'The Provider ID',
+                        'type'        => 'string',
+                        'required'    => true,
+                    ),
+                ) + $FederatedIdentityRepresentation,
+        ),
     ) //End of Operations Array
 );//End of return array
