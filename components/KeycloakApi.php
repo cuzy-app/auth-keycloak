@@ -295,7 +295,7 @@ class KeycloakApi extends Component
         $module = Yii::$app->getModule('auth-keycloak');
 
         $this->api = KeycloakClient::factory([
-            'realm' => 'master', // The admin user must be in master realm
+            'realm' => $config->realm,
             'client_id' => $config->clientId,
             'client_secret' => $config->clientSecret,
             'username' => $config->apiUsername,

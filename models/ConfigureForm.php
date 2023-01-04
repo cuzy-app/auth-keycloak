@@ -13,6 +13,7 @@ use humhub\modules\authKeycloak\jobs\GroupsFullSync;
 use humhub\modules\authKeycloak\Module;
 use Yii;
 use yii\base\Model;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
@@ -204,7 +205,13 @@ class ConfigureForm extends Model
             'autoLogin' => Yii::t('AuthKeycloakModule.base', 'Possible only if {newUsersCanRegister} is allowed in Administration -> Users -> Settings.', ['newUsersCanRegister' => '“' . Yii::t('AdminModule.user', 'New users can register') . '”']) . '<br>' . Yii::t('AuthKeycloakModule.base', 'If enabled, you should also enable {removeKeycloakSessionsAfterLogoutAttrLabel}, otherwise users cannot logout.', ['removeKeycloakSessionsAfterLogoutAttrLabel' => '“' . $this->attributeLabels()['removeKeycloakSessionsAfterLogout'] . '”']),
             'hideRegistrationUsernameField' => Yii::t('AuthKeycloakModule.base', 'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)'),
             'hideAdminUserEditPassword' => Yii::t('AuthKeycloakModule.base', 'For administrators allowed to manage users'),
-            'apiUsername' => Yii::t('AuthKeycloakModule.base', 'This admin user must be in the {master} realm and have permission to manage users of the realm belonging to the client for this Humhub', ['master' => '“master”']),
+            'apiUsername' => Yii::t('AuthKeycloakModule.base', 'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}', [
+                'RealmName' => '“' . Yii::t('AuthKeycloakModule.base', 'Realm name') . '”',
+                'masterRealmName' => '“master”',
+                'adminRoleName' => '“admin”',
+                'realmManagementClientRole' => '“realm-management”',
+                'MoreInformationHere' => Html::a(Yii::t('AuthKeycloakModule.base', 'More informations here.'), 'https://stackoverflow.com/a/65054444', ['target' => '_blank']),
+            ]),
             'updatedBrokerUsernameFromHumhubUsername' => Yii::t('AuthKeycloakModule.base', 'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.'),
             'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.'),
         ];

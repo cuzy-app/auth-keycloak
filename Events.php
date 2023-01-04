@@ -463,7 +463,7 @@ class Events
         $menu = $event->sender;
 
         $menu->addEntry(new MenuLink([
-            'label' => Yii::t('AuthKeycloakModule.base', 'Change password on {keycloakRealmDisplayName}', ['keycloakRealmDisplayName' => $keycloakApi->realm['displayName']]),
+            'label' => Yii::t('AuthKeycloakModule.base', 'Change password on {keycloakRealmDisplayName}', ['keycloakRealmDisplayName' => $keycloakApi->realm['displayName'] ?? '']),
             'url' => ['/auth-keycloak/user/change-password'],
             'sortOrder' => 410,
             'isActive' => MenuLink::isActiveState('auth-keycloak', 'user', 'change-password'),
