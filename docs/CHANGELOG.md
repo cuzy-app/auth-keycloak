@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.1 (Unreleased)
+1.2.1 (December 29, 2022)
 --------------------
 - Enh: Added error log if API connection fails
 - Chg: Connection to the API is now done with the "openid" scope, which solves connection issues on some Keycloak instances
