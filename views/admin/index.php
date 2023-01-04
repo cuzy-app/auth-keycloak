@@ -23,7 +23,7 @@ use yii\bootstrap\Alert;
             <div class="alert alert-info">
                 <div><?= Yii::t('AuthKeycloakModule.base', 'On Keycloak, create a client for Humhub and configure it:') ?></div>
                 <ul>
-                    <li><?= Yii::t('AuthKeycloakModule.base', '{Settings} tab -> {ClientAuthenticationOn} (for Humhub version <20: {AccessTypeValue}).', [
+                    <li><?= Yii::t('AuthKeycloakModule.base', '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).', [
                             'ClientAuthenticationOn' => '“Client authentication”: “On”',
                             'Settings' => '“Settings”',
                             'AccessTypeValue' => '“Access Type”: “confidential”',
@@ -33,13 +33,13 @@ use yii\bootstrap\Alert;
                             'ValidRedirectURIsValue' => '“Valid redirect URIs”: ' . Html::tag('code', $model->redirectUri),
                         ]) ?></li>
                     <li><?= Yii::t('AuthKeycloakModule.base', '{Credentials} tab: copy the secret key', ['Credentials' => '“Credentials”']) ?></li>
-                    <li><?= Yii::t('AuthKeycloakModule.base', '{ClientScope} tab -> click on the first {scopeName} (for Humhub version <20: {Mappers} tab):', [
+                    <li><?= Yii::t('AuthKeycloakModule.base', '{ClientScope} tab -> click on the first {scopeName} (for Keycloak version <20: {Mappers} tab):', [
                             'ClientScope' => '“Client scopes”',
                             'scopeName' => 'scope',
                             'Mappers' => '“Mappers”',
                         ]) ?></li>
                     <ul>
-                        <li><?= Yii::t('AuthKeycloakModule.base', 'Button {AddMapper} (for Humhub version <20: {AddBuiltin}) and add theses attributes:', [
+                        <li><?= Yii::t('AuthKeycloakModule.base', 'Button {AddMapper} (for Keycloak version <20: {AddBuiltin}) and add theses attributes:', [
                                 'AddMapper' => '“Add mapper -> From predefined mappers”',
                                 'AddBuiltin' => '“Add builtin”',
                             ]) ?>
