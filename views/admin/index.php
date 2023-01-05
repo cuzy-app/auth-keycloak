@@ -59,10 +59,10 @@ use yii\bootstrap\Alert;
             <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]) ?>
 
             <?= $form->field($model, 'enabled')->checkbox() ?>
+            <?= $form->field($model, 'baseUrl') ?>
+            <?= $form->field($model, 'realm') ?>
             <?= $form->field($model, 'clientId') ?>
             <?= $form->field($model, 'clientSecret')->textInput(['type' => 'password']) ?>
-            <?= $form->field($model, 'realm') ?>
-            <?= $form->field($model, 'baseUrl') ?>
             <?= $form->field($model, 'redirectUri')->textInput(['readonly' => true]) ?>
             <?= $form->field($model, 'usernameMapper') ?>
 
