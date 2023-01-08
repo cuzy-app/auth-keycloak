@@ -21,8 +21,9 @@ A new button "Keycloak" (can be renamed) will appear on the login page.
 
 ## Requirements
 
-For auto login: on Humhub, anonymous registration must be allowed
-For users' groups and email synchronization: on Keycloak, users attributes must be writable (it can be tested by changing the email address of a user on Keycloak administration).
+- [PHP `allow_url_fopen`](https://www.php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen) must be enabled 
+- For auto login: on Humhub, anonymous registration must be allowed
+- For users' groups and email synchronization: on Keycloak, users attributes must be writable (it can be tested by changing the email address of a user on Keycloak administration).
 
 
 ## Configuration
