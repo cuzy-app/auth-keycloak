@@ -19,6 +19,7 @@ use humhub\modules\user\models\User;
 use Keycloak\Admin\KeycloakClient;
 use Yii;
 use yii\base\Component;
+use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
 
 
@@ -142,16 +143,54 @@ class KeycloakApi extends Component
     }
 
     /**
+     * @param string $email
+     * @param bool $updateAuthTable
+     * @return string|null
+     */
+    public function getUserId(string $email, $updateAuthTable = true)
+    {
+        if (!$this->isConnected()) {
+            return null;
+        }
+        $result = $this->api->getUsers(['email' => $email]);
+        if ($this->hasError($result, 'Error retrieving user from Keycloak (email: ' . $email . ')')) {
+            return null;
+        }
+        if (!is_array($result)) {
+            Yii::error('Error retrieving user from Keycloak for user email: ' . $email . ' (result is not an array)', 'auth-keycloak');
+            return null;
+        }
+        $userId = $result[0]['id'] ?? null;
+        if ($updateAuthTable && $userId !== null) {
+            $keycloak = new Keycloak();
+            try {
+                $keycloak->storeAuthClientForUser(User::findOne(['email' => $email]), $userId);
+            } catch (StaleObjectException|\Throwable $e) {
+            }
+        }
+        return $userId;
+    }
+
+    /**
      * User Keycloak authentification
      * @param $userId
      * @return Auth|null
      */
     public static function getUserAuth($userId)
     {
-        return Auth::find()
+        $auth = Auth::find()
             ->where(['source' => Keycloak::DEFAULT_NAME, 'user_id' => $userId])
             ->orderBy(['id' => SORT_DESC]) // get the latest if it has multiple
             ->one();
+
+        if ($auth === null) {
+            $user = User::findOne(['id' => $userId, 'auth_mode' => Keycloak::DEFAULT_NAME]);
+            if ($user !== null) {
+//                $this->
+            }
+        }
+
+        return $auth;
     }
 
     /**

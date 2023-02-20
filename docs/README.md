@@ -1,6 +1,7 @@
 # Keycloak Sign-In
 
 Using this module, users can directly log in or register with [Keycloak](https://www.keycloak.org/) credentials at this HumHub installation. 
+
 A new button "Keycloak" (can be renamed) will appear on the login page.
 
 

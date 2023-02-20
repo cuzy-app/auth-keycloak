@@ -18,6 +18,7 @@ use humhub\modules\user\models\Invite;
 use humhub\modules\user\models\User;
 use Yii;
 use yii\authclient\OAuth2;
+use yii\db\StaleObjectException;
 use yii\helpers\BaseInflector;
 use yii\helpers\Url;
 
@@ -259,6 +260,8 @@ class Keycloak extends OAuth2 implements PrimaryClient
 
     /**
      * @inheridoc
+     * @throws StaleObjectException
+     * @throws \Throwable
      */
     public function syncUserAttributes()
     {
@@ -268,6 +271,8 @@ class Keycloak extends OAuth2 implements PrimaryClient
         }
 
         $userAttributes = $this->getUserAttributes();
+
+        $this->storeAuthClientForUser($user, $userAttributes['id'] ?? null);
 
         /** @var Module $module */
         $module = Yii::$app->getModule('auth-keycloak');
@@ -291,7 +296,37 @@ class Keycloak extends OAuth2 implements PrimaryClient
             $user->username = $userAttributes['username'];
             $user->save();
         }
+    }
 
+    /**
+     * @param User $user
+     * @param string|null $sourceId
+     * @return void
+     * @throws StaleObjectException
+     * @throws \Throwable
+     */
+    public function storeAuthClientForUser(User $user, $sourceId)
+    {
         AuthClientHelpers::storeAuthClientForUser($this, $user);
+
+        // Force saving source ID in user_auth as AuthClientHelpers::storeAuthClientForUser doesn't do it, and we need it for Keycloak API calls (to retrieve the user)
+        if ($sourceId) {
+            $auth = Auth::findOne(['source' => $this->getId(), 'source_id' => $sourceId]);
+
+            // Make sure authClient is not double assigned
+            if ($auth !== null && $auth->user_id !== $user->id) {
+                $auth->delete();
+                $auth = null;
+            }
+
+            if ($auth === null) {
+                $auth = new Auth([
+                    'user_id' => $user->id,
+                    'source' => $this->getId(),
+                    'source_id' => (string)$sourceId,
+                ]);
+                $auth->save();
+            }
+        }
     }
 }
