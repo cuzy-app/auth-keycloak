@@ -11,6 +11,7 @@ namespace humhub\modules\authKeycloak\components;
 use GuzzleHttp\Command\Exception\CommandClientException;
 use GuzzleHttp\Command\Exception\CommandException;
 use humhub\modules\authKeycloak\authclient\Keycloak;
+use humhub\modules\authKeycloak\authclient\KeycloakHelpers;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\authKeycloak\Module;
@@ -125,7 +126,7 @@ class KeycloakApi extends Component
     {
         if (
             !$this->isConnected()
-            || ($userAuth = static::getUserAuth($userId)) === null
+            || ($userAuth = $this->getUserAuth($userId)) === null
         ) {
             return [];
         }
@@ -147,7 +148,7 @@ class KeycloakApi extends Component
      * @param bool $updateAuthTable
      * @return string|null
      */
-    public function getUserId(string $email, $updateAuthTable = true)
+    public function getUserId(string $email)
     {
         if (!$this->isConnected()) {
             return null;
@@ -160,15 +161,7 @@ class KeycloakApi extends Component
             Yii::error('Error retrieving user from Keycloak for user email: ' . $email . ' (result is not an array)', 'auth-keycloak');
             return null;
         }
-        $userId = $result[0]['id'] ?? null;
-        if ($updateAuthTable && $userId !== null) {
-            $keycloak = new Keycloak();
-            try {
-                $keycloak->storeAuthClientForUser(User::findOne(['email' => $email]), $userId);
-            } catch (StaleObjectException|\Throwable $e) {
-            }
-        }
-        return $userId;
+        return $result[0]['id'] ?? null;
     }
 
     /**
@@ -176,7 +169,7 @@ class KeycloakApi extends Component
      * @param $userId
      * @return Auth|null
      */
-    public static function getUserAuth($userId)
+    public function getUserAuth($userId)
     {
         $auth = Auth::find()
             ->where(['source' => Keycloak::DEFAULT_NAME, 'user_id' => $userId])
@@ -186,7 +179,13 @@ class KeycloakApi extends Component
         if ($auth === null) {
             $user = User::findOne(['id' => $userId, 'auth_mode' => Keycloak::DEFAULT_NAME]);
             if ($user !== null) {
-//                $this->
+                $keycloakUserId = $this->getUserId($user->email);
+                if ($keycloakUserId !== null) {
+                    try {
+                        $auth = KeycloakHelpers::storeAndGetAuthSourceId(User::findOne(['email' => $user->email]), $keycloakUserId);
+                    } catch (StaleObjectException|\Throwable $e) {
+                    }
+                }
             }
         }
 
@@ -203,7 +202,7 @@ class KeycloakApi extends Component
     {
         if (
             !$this->isConnected()
-            || ($userAuth = static::getUserAuth($userId)) === null
+            || ($userAuth = $this->getUserAuth($userId)) === null
         ) {
             return false;
         }
@@ -298,7 +297,7 @@ class KeycloakApi extends Component
     {
         if (
             !$this->isConnected()
-            || ($userAuth = static::getUserAuth($userId)) === null
+            || ($userAuth = $this->getUserAuth($userId)) === null
             || ($groupKeycloak = GroupKeycloak::getKeycloakGroup($groupId)) === null
         ) {
             return false;
@@ -363,7 +362,7 @@ class KeycloakApi extends Component
     {
         if (
             !$this->isConnected()
-            || ($userAuth = static::getUserAuth($user->id)) === null
+            || ($userAuth = $this->getUserAuth($user->id)) === null
         ) {
             return null;
         }
@@ -392,7 +391,7 @@ class KeycloakApi extends Component
     {
         if (
             !$this->isConnected()
-            || ($userAuth = static::getUserAuth($user->id)) === null
+            || ($userAuth = $this->getUserAuth($user->id)) === null
         ) {
             return null;
         }
@@ -416,7 +415,7 @@ class KeycloakApi extends Component
     {
         if (
             !$this->isConnected()
-            || ($userAuth = static::getUserAuth($user->id)) === null
+            || ($userAuth = $this->getUserAuth($user->id)) === null
         ) {
             return null;
         }
@@ -438,7 +437,7 @@ class KeycloakApi extends Component
     {
         if (
             !$this->isConnected()
-            || ($userAuth = static::getUserAuth($userId)) === null
+            || ($userAuth = $this->getUserAuth($userId)) === null
         ) {
             return false;
         }

@@ -454,7 +454,7 @@ class Events
         $keycloakApi = new KeycloakApi();
         if (
             !$keycloakApi->isConnected()
-            || KeycloakApi::getUserAuth(Yii::$app->user->id) === null
+            || $keycloakApi->getUserAuth(Yii::$app->user->id) === null
         ) {
             return;
         }
