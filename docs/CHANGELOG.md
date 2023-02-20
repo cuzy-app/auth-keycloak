@@ -5,7 +5,7 @@ Changelog
 --------------------
 - Fix: For some users, the corresponding user ID on Keycloak was not saved in `user_auth` table, which prevents group sync from working.
 
-1.2.2 (January 4, 2022)
+1.2.2 (January 4, 2023)
 --------------------
 - Chg: If the realm is not "master" and the Keycloak API is configured, you need to move the admin user from the "master" to the realm where the client is configured. See hints of the "Keycloak API admin username" field.
 - Fix #7: Naming issue in translations (thanks @francoisauclair911)
