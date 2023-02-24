@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Unreleased
+--------------------
+- Fix: Don't add to group a user that is not active
+
 1.2.3 (February 20, 2023)
 --------------------
 - Fix: For some users, the corresponding user ID on Keycloak was not saved in `user_auth` table, which prevents group sync from working.

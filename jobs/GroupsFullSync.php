@@ -15,6 +15,7 @@ use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\queue\ActiveJob;
 use humhub\modules\user\models\Auth;
+use humhub\modules\user\models\User;
 use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -215,9 +216,11 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
     protected function initUsersKeycloakIdToHumhubId()
     {
         $auths = Auth::find()
-            ->orderBy(['id' => SORT_ASC]) // Get the latest if it has multiple
-            ->where(['source' => Keycloak::DEFAULT_NAME])
-            ->indexBy('user_id') // Remove duplicated
+            ->joinWith('user')
+            ->andWhere(['user.status' => User::STATUS_ENABLED])
+            ->andWhere(['user_auth.source' => Keycloak::DEFAULT_NAME])
+            ->orderBy(['user_auth.id' => SORT_ASC]) // Get the latest if it has multiple
+            ->indexBy('user_id') // Removes duplicated
             ->all();
         $this->usersKeycloakIdToHumhubId = ArrayHelper::map($auths, 'source_id', 'user_id');
     }
@@ -280,10 +283,10 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
     {
         foreach ($this->keycloakGroupsMembers as $keycloakGroupId => $keycloakUserIds) {
             foreach ($keycloakUserIds as $keycloakUserId) {
-                $humhubUserId = $this->usersKeycloakIdToHumhubId[$keycloakUserId];
+                $humhubUserId = $this->getHumhubUserId($keycloakUserId);
                 $humhubGroup = $this->humhubGroupsByKeycloakId[$keycloakGroupId];
                 $humhubGroupMembers = $this->humhubGroupsMembers[$humhubGroup->id];
-                if (!in_array($humhubUserId, $humhubGroupMembers)) {
+                if ($humhubUserId !== null && !in_array($humhubUserId, $humhubGroupMembers)) {
                     $humhubGroup->addUser($humhubUserId);
                     $this->humhubGroupsMembers[$humhubGroup->id][] = $humhubUserId;
                 }

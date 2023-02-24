@@ -13,6 +13,7 @@ use humhub\modules\authKeycloak\components\KeycloakApi;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\queue\ActiveJob;
+use humhub\modules\user\models\User;
 use Throwable;
 use yii\base\InvalidConfigException;
 use yii\queue\RetryableJobInterface;
@@ -49,7 +50,8 @@ class GroupsUserSync extends ActiveJob implements RetryableJobInterface
      */
     public function run()
     {
-        if (!$this->userId) {
+        $user = User::find()->active()->andWhere(['id' => $this->userId])->one();
+        if ($user === null) {
             return;
         }
 
@@ -71,12 +73,12 @@ class GroupsUserSync extends ActiveJob implements RetryableJobInterface
             ->all();
 
         // Add Humhub user to Humhub groups
-        foreach ($this->keycloakApi->getUserGroups($this->userId) as $keycloakGroupId) {
+        foreach ($this->keycloakApi->getUserGroups($user->id) as $keycloakGroupId) {
             if (!array_key_exists($keycloakGroupId, $this->humhubGroupsByKeycloakId)) {
                 continue;
             }
             $humhubGroup = $this->humhubGroupsByKeycloakId[$keycloakGroupId];
-            $humhubGroup->addUser($this->userId);
+            $humhubGroup->addUser($user);
         }
     }
 
