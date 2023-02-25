@@ -1,9 +1,10 @@
 Changelog
 =========
 
-Unreleased
+1.2.4 (February 25, 2023)
 --------------------
 - Fix: Don't add to group a user that is not active
+- Fix: PHP 8.1 warning in the module settings if empty values
 
 1.2.3 (February 20, 2023)
 --------------------

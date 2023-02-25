@@ -3,7 +3,7 @@
     "name": "Keycloak Sign-In",
     "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
     "keywords": ["auth", "keycloak"],
-    "version": "1.2.3",
+    "version": "1.2.4",
     "humhub": {
         "minVersion": "1.12"
     },

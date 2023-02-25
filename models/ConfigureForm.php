@@ -244,11 +244,11 @@ class ConfigureForm extends Model
         $module = Yii::$app->getModule('auth-keycloak');
 
         $module->settings->set('enabled', $this->enabled);
-        $module->settings->set('clientId', trim($this->clientId));
-        $module->settings->set('clientSecret', trim($this->clientSecret));
-        $module->settings->set('realm', trim($this->realm));
-        $module->settings->set('baseUrl', rtrim(trim($this->baseUrl), '/'));
-        $module->settings->set('usernameMapper', trim($this->usernameMapper));
+        $module->settings->set('clientId', trim((string)$this->clientId));
+        $module->settings->set('clientSecret', trim((string)$this->clientSecret));
+        $module->settings->set('realm', trim((string)$this->realm));
+        $module->settings->set('baseUrl', rtrim(trim((string)$this->baseUrl), '/'));
+        $module->settings->set('usernameMapper', trim((string)$this->usernameMapper));
         if (!$this->title) {
             $this->title = static::DEFAULT_TITLE;
         }
