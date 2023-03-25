@@ -18,7 +18,7 @@ use humhub\modules\user\models\User;
 class KeycloakHelpers
 {
     /**
-     * Force saving source ID in user_auth as AuthClientHelpers::storeAuthClientForUser doesn't do it, and we need it for Keycloak API calls (to retrieve the user)
+     * Force saving source ID in user_auth as AuthClientUserService->add() doesn't do it, and we need it for Keycloak API calls (to retrieve the user)
      * @param User $user
      * @param $sourceId
      * @return Auth|null

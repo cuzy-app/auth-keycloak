@@ -31,6 +31,7 @@ use yii\base\ActionEvent;
 use yii\base\Event;
 use yii\base\InvalidConfigException;
 use yii\db\AfterSaveEvent;
+use yii\helpers\Console;
 use yii\web\Response;
 
 class Events
@@ -353,7 +354,7 @@ class Events
 
         /** @var CronController $controller */
         $controller = $event->sender;
-        $controller->stdout("Auth Keycloak module: Adding to jobs Keycloak groups synchronization with the API ");
+        $controller->stdout("Auth Keycloak module: adding to jobs Keycloak groups synchronization with the API...");
 
         $config = new ConfigureForm();
         if (
@@ -366,6 +367,8 @@ class Events
         }
 
         Yii::$app->queue->push(new GroupsFullSync());
+
+        $controller->stdout('done.' . PHP_EOL, Console::FG_GREEN);
     }
 
 

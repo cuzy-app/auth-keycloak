@@ -11,16 +11,17 @@ namespace humhub\modules\authKeycloak\authclient;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\Module;
 use humhub\modules\space\models\Space;
-use humhub\modules\user\authclient\AuthClientHelpers;
 use humhub\modules\user\authclient\interfaces\PrimaryClient;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\Invite;
 use humhub\modules\user\models\User;
+use humhub\modules\user\services\AuthClientUserService;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\db\StaleObjectException;
 use yii\helpers\BaseInflector;
 use yii\helpers\Url;
+use yii\web\Response;
 
 /**
  * With PrimaryClient, the user will have the `auth_mode` field in the `user` table set to 'Keycloak'.
@@ -69,6 +70,11 @@ class Keycloak extends OAuth2 implements PrimaryClient
         parent::init();
     }
 
+    /**
+     * @param $request
+     * @param $accessToken
+     * @return void
+     */
     public function applyAccessTokenToRequest($request, $accessToken)
     {
         $data = $request->getData();
@@ -76,6 +82,9 @@ class Keycloak extends OAuth2 implements PrimaryClient
         $request->setHeaders($data);
     }
 
+    /**
+     * @return Response
+     */
     public function redirectToBroker()
     {
         Yii::$app->session->set('loginRememberMe', true);
@@ -121,14 +130,6 @@ class Keycloak extends OAuth2 implements PrimaryClient
             strpos($url, Url::to(['/user/account'], true)) === 0
             || strpos($url, Url::to(['/user/people'], true)) === 0
             || strpos($url, Url::to(['/user/profile'], true)) === 0;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getReturnUrl()
-    {
-        return Url::to(['/user/auth/external', 'authclient' => static::DEFAULT_NAME], true);
     }
 
     /**
@@ -272,7 +273,7 @@ class Keycloak extends OAuth2 implements PrimaryClient
 
         $userAttributes = $this->getUserAttributes();
 
-        AuthClientHelpers::storeAuthClientForUser($this, $user);
+        (new AuthClientUserService($user))->add($this);
         KeycloakHelpers::storeAndGetAuthSourceId($user, $userAttributes['id'] ?? null);
 
         /** @var Module $module */
