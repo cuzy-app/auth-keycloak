@@ -1,9 +1,8 @@
 Changelog
 =========
 
-1.2.5 (March 25, 2023)
+Unreleased
 --------------------
-- Enh: Sync Keycloak user's attributes (groups, etc.) to Humhub on login
 - Enh: Compatibility with this new feature: Invitation by link: when registering within an SSO, the email should only be requested on the service provider (https://github.com/humhub/humhub/issues/6164)
 
 1.2.4 (February 25, 2023)
