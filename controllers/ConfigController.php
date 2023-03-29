@@ -16,7 +16,7 @@ use Yii;
 /**
  * Module configuation
  */
-class AdminController extends Controller
+class ConfigController extends Controller
 {
     /**
      * Render admin only page

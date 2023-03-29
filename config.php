@@ -31,6 +31,11 @@ return [
             'callback' => [Events::class, 'onUserAuthControllerBeforeAction']
         ],
         [
+            'class' => AuthController::class,
+            'event' => AuthController::EVENT_AFTER_LOGIN,
+            'callback' => [Events::class, 'onAfterLogin']
+        ],
+        [
             'class' => RegistrationController::class,
             'event' => RegistrationController::EVENT_BEFORE_ACTION,
             'callback' => [Events::class, 'onUserRegistrationControllerBeforeAction']

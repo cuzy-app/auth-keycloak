@@ -15,10 +15,13 @@ use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\components\KeycloakApi;
 use humhub\modules\authKeycloak\jobs\GroupsFullSync;
 use humhub\modules\authKeycloak\jobs\GroupsUserSync;
+use humhub\modules\authKeycloak\jobs\UpdateUserEmail;
+use humhub\modules\authKeycloak\jobs\UpdateUserUsername;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\membersMap\Module;
 use humhub\modules\ui\menu\MenuLink;
 use humhub\modules\user\authclient\Collection;
+use humhub\modules\user\events\UserEvent;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\forms\Registration;
 use humhub\modules\user\models\Group;
@@ -83,6 +86,32 @@ class Events
         }
     }
 
+    /**
+     * Sync user attributes with Keycloak
+     * @param $event UserEvent
+     */
+    public static function onAfterLogin($event)
+    {
+        if (empty($event->user)) {
+            return;
+        }
+        $user = $event->user;
+
+        $config = new ConfigureForm();
+        if (!$config->enabled || !$config->hasApiParams()) {
+            return;
+        }
+
+        if ($config->updatedBrokerUsernameFromHumhubUsername) {
+            Yii::$app->queue->push(new UpdateUserUsername(['userId' => $user->id]));
+        }
+        if ($config->updatedBrokerEmailFromHumhubEmail) {
+            Yii::$app->queue->push(new UpdateUserEmail(['userId' => $user->id]));
+        }
+        if ($config->syncKeycloakGroupsToHumhub()) {
+            Yii::$app->queue->push(new GroupsUserSync(['userId' => $user->id]));
+        }
+    }
 
     /**
      * Adds auto login possibility
@@ -186,19 +215,20 @@ class Events
         $changedAttributes = $event->changedAttributes;
 
         $config = new ConfigureForm();
+        if (!$config->enabled || !$config->hasApiParams()) {
+            return;
+        }
         if (
             array_key_exists('username', $changedAttributes)
-            && $config->enabled
             && $config->updatedBrokerUsernameFromHumhubUsername
         ) {
-            (new KeycloakApi())->updateUserUsername($user);
+            Yii::$app->queue->push(new UpdateUserUsername(['userId' => $user->id]));
         }
         if (
             array_key_exists('email', $changedAttributes)
-            && $config->enabled
             && $config->updatedBrokerEmailFromHumhubEmail
         ) {
-            (new KeycloakApi())->updateUserEmail($user);
+            Yii::$app->queue->push(new UpdateUserEmail(['userId' => $user->id]));
         }
     }
 
@@ -359,8 +389,7 @@ class Events
         $config = new ConfigureForm();
         if (
             !$config->enabled
-            || !$config->apiUsername
-            || !$config->apiPassword
+            || !$config->hasApiParams()
             || $config->groupsSyncMode === ConfigureForm::GROUP_SYNC_MODE_NONE
         ) {
             return;
@@ -392,8 +421,7 @@ class Events
             $config = new ConfigureForm();
             if (
                 $config->enabled
-                && $config->apiUsername
-                && $config->apiPassword
+                && $config->hasApiParams()
                 && $config->syncKeycloakGroupsToHumhub()
             ) {
                 Yii::$app->queue->push(new GroupsUserSync(['userId' => $auth->user_id]));
@@ -429,8 +457,7 @@ class Events
             $config = new ConfigureForm();
             if (
                 $config->enabled
-                && $config->apiUsername
-                && $config->apiPassword
+                && $config->hasApiParams()
                 && $config->syncKeycloakGroupsToHumhub()
             ) {
                 Yii::$app->queue->push(new GroupsUserSync(['userId' => $auth->user_id]));

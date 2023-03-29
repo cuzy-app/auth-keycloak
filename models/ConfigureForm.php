@@ -277,8 +277,7 @@ class ConfigureForm extends Model
         // Add groups sync to jobs
         if (
             $this->enabled
-            && $this->apiUsername
-            && $this->apiPassword
+            && $this->hasApiParams()
             && $this->groupsSyncMode !== static::GROUP_SYNC_MODE_NONE
         ) {
             Yii::$app->queue->push(new GroupsFullSync(['firstSync' => true]));
