@@ -7,7 +7,6 @@ A new button "Keycloak" (can be renamed) will appear on the login page.
 
 ## Features
 
-- Auto login
 - Possibility to add a page in account settings allowing users to change their Keycloak password
 - Users' groups and email synchronization between Keycloak and Humhub in both directions (1):
   - Humhub to Keycloak sync is done in real time
@@ -23,7 +22,6 @@ A new button "Keycloak" (can be renamed) will appear on the login page.
 ## Requirements
 
 - [PHP `allow_url_fopen`](https://www.php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen) must be enabled 
-- For auto login: on Humhub, anonymous registration must be allowed
 - For users' groups and email synchronization: on Keycloak, users attributes must be writable (it can be tested by changing the email address of a user on Keycloak administration).
 
 

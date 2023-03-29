@@ -68,10 +68,6 @@ class ConfigureForm extends Model
     /**
      * @var bool
      */
-    public $autoLogin = false;
-    /**
-     * @var bool
-     */
     public $hideRegistrationUsernameField = false;
     /**
      * @var bool
@@ -123,7 +119,7 @@ class ConfigureForm extends Model
         return [
             [['clientId', 'clientSecret', 'realm', 'baseUrl', 'usernameMapper'], 'required'],
             [['clientId', 'clientSecret', 'baseUrl', 'usernameMapper', 'title', 'realm', 'apiUsername', 'apiPassword'], 'string'],
-            [['enabled', 'autoLogin', 'hideRegistrationUsernameField', 'hideAdminUserEditPassword', 'removeKeycloakSessionsAfterLogout', 'updateHumhubUsernameFromBrokerUsername', 'updatedBrokerUsernameFromHumhubUsername', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount'], 'boolean'],
+            [['enabled', 'hideRegistrationUsernameField', 'hideAdminUserEditPassword', 'removeKeycloakSessionsAfterLogout', 'updateHumhubUsernameFromBrokerUsername', 'updatedBrokerUsernameFromHumhubUsername', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount'], 'boolean'],
             [['groupsSyncMode'], 'safe'],
         ];
     }
@@ -146,7 +142,6 @@ class ConfigureForm extends Model
         $this->baseUrl = $settings->get('baseUrl');
         $this->usernameMapper = $settings->get('usernameMapper', $this->usernameMapper);
         $this->title = $settings->get('title', Yii::t('AuthKeycloakModule.base', static::DEFAULT_TITLE));
-        $this->autoLogin = (bool)$settings->get('autoLogin', $this->autoLogin);
         $this->hideRegistrationUsernameField = (bool)$settings->get('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
         $this->hideAdminUserEditPassword = (bool)$settings->get('hideAdminUserEditPassword', $this->hideAdminUserEditPassword);
         $this->removeKeycloakSessionsAfterLogout = (bool)$settings->get('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
@@ -174,8 +169,7 @@ class ConfigureForm extends Model
             'realm' => Yii::t('AuthKeycloakModule.base', 'Realm name'),
             'baseUrl' => Yii::t('AuthKeycloakModule.base', 'Base URL'),
             'usernameMapper' => Yii::t('AuthKeycloakModule.base', 'Keycloak attribute to use to get username on account creation'),
-            'title' => Yii::t('AuthKeycloakModule.base', 'Title of the button (if autoLogin is disabled)'),
-            'autoLogin' => Yii::t('AuthKeycloakModule.base', 'Automatic login'),
+            'title' => Yii::t('AuthKeycloakModule.base', 'Title of the button'),
             'hideRegistrationUsernameField' => Yii::t('AuthKeycloakModule.base', 'Hide username field in registration form'),
             'hideAdminUserEditPassword' => Yii::t('AuthKeycloakModule.base', 'In admin, hide password fields in edit user form'),
             'removeKeycloakSessionsAfterLogout' => Yii::t('AuthKeycloakModule.base', 'Remove user\'s Keycloak sessions after logout'),
@@ -202,7 +196,6 @@ class ConfigureForm extends Model
             'baseUrl' => 'Depending on your configuration: https://idp-domain.tdl or https://idp-domain.tdl/auth',
             'usernameMapper' => Yii::t('AuthKeycloakModule.base', '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name'),
             'title' => Yii::t('AuthKeycloakModule.base', 'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.'),
-            'autoLogin' => Yii::t('AuthKeycloakModule.base', 'Possible only if {newUsersCanRegister} is allowed in Administration -> Users -> Settings.', ['newUsersCanRegister' => '“' . Yii::t('AdminModule.user', 'New users can register') . '”']) . '<br>' . Yii::t('AuthKeycloakModule.base', 'If enabled, you should also enable {removeKeycloakSessionsAfterLogoutAttrLabel}, otherwise users cannot logout.', ['removeKeycloakSessionsAfterLogoutAttrLabel' => '“' . $this->attributeLabels()['removeKeycloakSessionsAfterLogout'] . '”']),
             'hideRegistrationUsernameField' => Yii::t('AuthKeycloakModule.base', 'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)'),
             'hideAdminUserEditPassword' => Yii::t('AuthKeycloakModule.base', 'For administrators allowed to manage users'),
             'apiUsername' => Yii::t('AuthKeycloakModule.base', 'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}', [
@@ -253,7 +246,6 @@ class ConfigureForm extends Model
             $this->title = static::DEFAULT_TITLE;
         }
         $module->settings->set('title', $this->title);
-        $module->settings->set('autoLogin', $this->autoLogin);
         $module->settings->set('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
         $module->settings->set('hideAdminUserEditPassword', $this->hideAdminUserEditPassword);
         $module->settings->set('apiUsername', $this->apiUsername);

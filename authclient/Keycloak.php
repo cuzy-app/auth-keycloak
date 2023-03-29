@@ -10,18 +10,14 @@ namespace humhub\modules\authKeycloak\authclient;
 
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\Module;
-use humhub\modules\space\models\Space;
 use humhub\modules\user\authclient\interfaces\PrimaryClient;
 use humhub\modules\user\models\Auth;
-use humhub\modules\user\models\Invite;
 use humhub\modules\user\models\User;
 use humhub\modules\user\services\AuthClientUserService;
 use Yii;
 use yii\authclient\OAuth2;
 use yii\db\StaleObjectException;
 use yii\helpers\BaseInflector;
-use yii\helpers\Url;
-use yii\web\Response;
 
 /**
  * With PrimaryClient, the user will have the `auth_mode` field in the `user` table set to 'Keycloak'.
@@ -80,56 +76,6 @@ class Keycloak extends OAuth2 implements PrimaryClient
         $data = $request->getData();
         $data['Authorization'] = 'Bearer ' . $accessToken->getToken();
         $request->setHeaders($data);
-    }
-
-    /**
-     * @return Response
-     */
-    public function redirectToBroker()
-    {
-        Yii::$app->session->set('loginRememberMe', true);
-        // Try to set a better return URL after login
-        $urlToRedirect = Url::current([], true);
-        if ($token = Yii::$app->request->get('token')) {
-            $invite = Invite::findOne(['token' => $token]);
-            if ($invite !== null) {
-                $space = Space::findOne($invite->space_invite_id);
-                if ($space !== null) {
-                    $urlToRedirect = $space->getUrl(true);
-                }
-            }
-        }
-        if (!$this->redirectUrlIsValid($urlToRedirect)) {
-            $urlToRedirect = Yii::$app->request->referrer;
-        }
-        if ($this->redirectUrlIsValid($urlToRedirect)) {
-            Yii::$app->user->setReturnUrl($urlToRedirect);
-        }
-
-        // Redirect to broker
-        // The `return` will prevent logging user if URL doesn't exist
-        return Yii::$app->getResponse()->redirect($this->buildAuthUrl());
-    }
-
-    /**
-     * @param string|null $url
-     * @return bool
-     */
-    protected function redirectUrlIsValid(?string $url)
-    {
-        // URL is another website
-        if (strpos($url, Url::base(true)) !== 0) {
-            return false;
-        }
-        // URL is not for the user module
-        if (strpos($url, Url::to(['/user'], true)) !== 0) {
-            return true;
-        }
-        // URL is for the user module: URL is valid only for these controllers
-        return
-            strpos($url, Url::to(['/user/account'], true)) === 0
-            || strpos($url, Url::to(['/user/people'], true)) === 0
-            || strpos($url, Url::to(['/user/profile'], true)) === 0;
     }
 
     /**

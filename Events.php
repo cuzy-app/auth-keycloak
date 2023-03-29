@@ -30,12 +30,9 @@ use humhub\modules\user\models\User;
 use humhub\modules\user\widgets\AccountProfileMenu;
 use Throwable;
 use Yii;
-use yii\base\ActionEvent;
 use yii\base\Event;
-use yii\base\InvalidConfigException;
 use yii\db\AfterSaveEvent;
 use yii\helpers\Console;
-use yii\web\Response;
 
 class Events
 {
@@ -55,34 +52,6 @@ class Events
                 'clientId' => $config->clientId,
                 'clientSecret' => $config->clientSecret,
             ]);
-        }
-    }
-
-
-    /**
-     * Adds auto login possibility
-     * @param ActionEvent $event
-     * @return void|\yii\console\Response|Response
-     * @throws InvalidConfigException
-     */
-    public static function onUserAuthControllerBeforeAction(ActionEvent $event)
-    {
-        if (
-            !Yii::$app->user->isGuest
-            || Yii::$app->request->isConsoleRequest
-            || $event->action->id !== 'login'
-            || !Yii::$app->authClientCollection->hasClient(Keycloak::DEFAULT_NAME)
-            || !Yii::$app->getModule('user')->settings->get('auth.anonymousRegistration') // if anonymous registration is not allowed and someone try to create an account, do not redirect to broker to avoid looping redirections
-        ) {
-            return;
-        }
-
-        $config = new ConfigureForm();
-        if ($config->enabled && $config->autoLogin) {
-            $event->isValid = false;
-            /** @var Keycloak $authClient */
-            $authClient = Yii::$app->authClientCollection->getClient(Keycloak::DEFAULT_NAME);
-            return $authClient->redirectToBroker();
         }
     }
 
@@ -110,34 +79,6 @@ class Events
         }
         if ($config->syncKeycloakGroupsToHumhub()) {
             Yii::$app->queue->push(new GroupsUserSync(['userId' => $user->id]));
-        }
-    }
-
-    /**
-     * Adds auto login possibility
-     * @param ActionEvent $event
-     * @return void|\yii\console\Response|Response
-     * @throws InvalidConfigException
-     */
-    public static function onUserRegistrationControllerBeforeAction(ActionEvent $event)
-    {
-        // user/registration    user/auth/login
-        if (
-            !Yii::$app->user->isGuest
-            || Yii::$app->request->isConsoleRequest
-            || $event->action->id !== 'index'
-            || !Yii::$app->request->get('token') // If not invited
-            || !Yii::$app->authClientCollection->hasClient(Keycloak::DEFAULT_NAME)
-        ) {
-            return;
-        }
-
-        $config = new ConfigureForm();
-        if ($config->enabled && $config->autoLogin) {
-            $event->isValid = false;
-            /** @var Keycloak $authClient */
-            $authClient = Yii::$app->authClientCollection->getClient(Keycloak::DEFAULT_NAME);
-            return $authClient->redirectToBroker();
         }
     }
 

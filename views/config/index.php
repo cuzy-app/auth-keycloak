@@ -68,7 +68,6 @@ use yii\bootstrap\Alert;
 
             <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings (optional)')) ?>
             <?= $form->field($model, 'title') ?>
-            <?= $form->field($model, 'autoLogin')->checkbox() ?>
             <?= $form->field($model, 'hideRegistrationUsernameField')->checkbox() ?>
             <?= $form->field($model, 'hideAdminUserEditPassword')->checkbox() ?>
             <?= $form->endCollapsibleFields(); ?>
