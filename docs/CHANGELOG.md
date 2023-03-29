@@ -3,10 +3,10 @@ Changelog
 
 1.3.0 (March 29, 2023)
 --------------------
-- Enh: Compatibility with this new feature: Invitation by link: when registering within an SSO, the email should only be requested on the service provider (https://github.com/humhub/humhub/issues/6164)
-- Enh: Sync Keycloak user's attributes (groups, email and username) to Humhub on login
-- Enh: Username and email update to Keycloak is now done by cron job
 - Chg: Removed auto-login feature
+- Enh: Sync Keycloak user's attributes (groups, email and username) to Humhub on login (in addition to syncing on Humhub change)
+- Enh: Compatibility with this new feature: Invitation by link: when registering within an SSO, the email should only be requested on the service provider (https://github.com/humhub/humhub/issues/6164)
+- Enh: Username and email sync to Keycloak is now done by cron job
 
 1.2.4 (February 25, 2023)
 --------------------
