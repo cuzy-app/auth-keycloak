@@ -182,7 +182,7 @@ class Keycloak extends OAuth2 implements PrimaryClient
     {
         $userAttributes = $this->getUserAttributes();
 
-        $userAuth = Auth::findOne(['source' => static::DEFAULT_NAME, 'source_id' => $userAttributes['id']]);
+        $userAuth = Auth::findOne(['source' => self::DEFAULT_NAME, 'source_id' => $userAttributes['id']]);
 
         if ($userAuth !== null && $userAuth->user !== null) {
             return $userAuth->user;

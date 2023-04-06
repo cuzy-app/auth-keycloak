@@ -477,18 +477,18 @@ class KeycloakApi extends Component
         }
         $first = 0;
         $memberIds = [];
-        while (!isset($currentMembers) || count($currentMembers) === static::MAX_USERS_RESULT) {
+        while (!isset($currentMembers) || count($currentMembers) === self::MAX_USERS_RESULT) {
             $currentMembers = $this->api->getGroupMembers([
                 'id' => $groupId,
                 'first' => $first,
-                'max' => static::MAX_USERS_RESULT,
+                'max' => self::MAX_USERS_RESULT,
             ]);
             $currentMemberIds = array_map(static function ($member) {
                 return $member['id'] ?? null;
             }, $currentMembers);
             $currentMemberIds = array_filter($currentMemberIds);
             $memberIds = array_merge($memberIds, $currentMemberIds);
-            $first += static::MAX_USERS_RESULT;
+            $first += self::MAX_USERS_RESULT;
         }
 
         return $memberIds;

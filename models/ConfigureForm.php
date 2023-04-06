@@ -141,7 +141,7 @@ class ConfigureForm extends Model
         $this->realm = $settings->get('realm', $this->realm);
         $this->baseUrl = $settings->get('baseUrl');
         $this->usernameMapper = $settings->get('usernameMapper', $this->usernameMapper);
-        $this->title = $settings->get('title', Yii::t('AuthKeycloakModule.base', static::DEFAULT_TITLE));
+        $this->title = $settings->get('title', Yii::t('AuthKeycloakModule.base', self::DEFAULT_TITLE));
         $this->hideRegistrationUsernameField = (bool)$settings->get('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
         $this->hideAdminUserEditPassword = (bool)$settings->get('hideAdminUserEditPassword', $this->hideAdminUserEditPassword);
         $this->removeKeycloakSessionsAfterLogout = (bool)$settings->get('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
@@ -243,7 +243,7 @@ class ConfigureForm extends Model
         $module->settings->set('baseUrl', rtrim(trim((string)$this->baseUrl), '/'));
         $module->settings->set('usernameMapper', trim((string)$this->usernameMapper));
         if (!$this->title) {
-            $this->title = static::DEFAULT_TITLE;
+            $this->title = self::DEFAULT_TITLE;
         }
         $module->settings->set('title', $this->title);
         $module->settings->set('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
@@ -270,7 +270,7 @@ class ConfigureForm extends Model
         if (
             $this->enabled
             && $this->hasApiParams()
-            && $this->groupsSyncMode !== static::GROUP_SYNC_MODE_NONE
+            && $this->groupsSyncMode !== self::GROUP_SYNC_MODE_NONE
         ) {
             Yii::$app->queue->push(new GroupsFullSync(['firstSync' => true]));
         }

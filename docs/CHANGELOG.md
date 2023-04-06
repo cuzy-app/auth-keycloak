@@ -1,13 +1,14 @@
 Changelog
 =========
 
-1.3.0 (March 29, 2023)
+1.3.0 (April 6, 2023)
 --------------------
 - Chg: Minimum Humhub version is now 1.14.0
 - Chg: Removed auto-login feature
 - Enh: Sync Keycloak user's attributes (groups, email and username) to Humhub on login (in addition to syncing on Humhub change)
 - Enh: Compatibility with this new feature: Invitation by link: when registering within an SSO, the email should only be requested on the service provider (https://github.com/humhub/humhub/issues/6164)
 - Enh: Username and email sync to Keycloak is now done by cron job
+- Fix: Updated translations
 
 1.2.4 (February 25, 2023)
 --------------------
