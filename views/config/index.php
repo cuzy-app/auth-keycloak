@@ -8,16 +8,20 @@
 
 use humhub\libs\Html;
 use humhub\modules\authKeycloak\models\ConfigureForm;
+use humhub\modules\authKeycloak\Module;
 use humhub\modules\ui\form\widgets\ActiveForm;
 use humhub\modules\ui\view\components\View;
 use humhub\widgets\Button;
 use yii\bootstrap\Alert;
 
+/** @var Module $module */
+$module = Yii::$app->getModule('auth-keycloak');
 ?>
 <div class="container-fluid">
     <div class="panel panel-default">
         <div class="panel-heading">
             <?= Yii::t('AuthKeycloakModule.base', '<strong>Keycloak</strong> Sign-In configuration') ?>
+            <div class="help-block"><?= $module->getDescription() ?></div>
         </div>
 
         <div class="panel-body">

@@ -23,7 +23,7 @@ class ConfigureForm extends Model
 {
     public const DEFAULT_TITLE = 'Connect with Keycloak';
 
-    public const GROUP_SYNC_MODE_NONE = null;
+    public const GROUP_SYNC_MODE_NONE = '';
     public const GROUP_SYNC_MODE_HH_TO_KC = 'hh2kc';
     public const GROUP_SYNC_MODE_KC_TO_HH = 'kc2hh';
     public const GROUP_SYNC_MODE_FULL = 'full';
@@ -269,8 +269,8 @@ class ConfigureForm extends Model
         // Add groups sync to jobs
         if (
             $this->enabled
-            && $this->hasApiParams()
             && $this->groupsSyncMode !== self::GROUP_SYNC_MODE_NONE
+            && $this->hasApiParams()
         ) {
             Yii::$app->queue->push(new GroupsFullSync(['firstSync' => true]));
         }

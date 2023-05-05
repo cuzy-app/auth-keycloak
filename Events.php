@@ -330,8 +330,8 @@ class Events
         $config = new ConfigureForm();
         if (
             !$config->enabled
-            || !$config->hasApiParams()
             || $config->groupsSyncMode === ConfigureForm::GROUP_SYNC_MODE_NONE
+            || !$config->hasApiParams()
         ) {
             return;
         }
