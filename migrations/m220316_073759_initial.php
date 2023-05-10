@@ -1,6 +1,7 @@
 <?php
 
 use humhub\modules\authKeycloak\Module;
+use humhub\modules\user\models\Group;
 use yii\db\Migration;
 
 /**
@@ -13,7 +14,10 @@ class m220316_073759_initial extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%group}}', 'keycloak_id', $this->string(36)->after('id'));
+        $tableSchema = Yii::$app->getDb()->getSchema()->getTableSchema(Group::tableName(), true);
+        if (!in_array('keycloak_id', $tableSchema->columnNames, true)) {
+            $this->addColumn('{{%group}}', 'keycloak_id', $this->string(36)->after('id'));
+        }
 
         // Migration to version 0.5.0
         /** @var Module $module */
