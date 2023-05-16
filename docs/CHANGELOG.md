@@ -4,6 +4,8 @@ Changelog
 1.3.1 (May 10, 2023)
 --------------------
 - Fix: On module install and uninstall, check if `keycloak_id` exists or not in the `group` table in case of previous improper install or uninstall
+- Chg: Removed instructions about client scopes and mappers (useless with recent Keycloak versions)
+- Chg: Default username mapper changed from `preferred_username` to `sub` (for new Keycloak installations)
 
 1.3.0 (April 6, 2023)
 --------------------

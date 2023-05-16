@@ -60,7 +60,7 @@ class ConfigureForm extends Model
     /**
      * @var string
      */
-    public $usernameMapper = 'preferred_username';
+    public $usernameMapper = 'sub';
     /**
      * @var string
      */

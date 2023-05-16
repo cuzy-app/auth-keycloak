@@ -54,25 +54,6 @@ $module = Yii::$app->getModule('auth-keycloak');
                             'ValidRedirectURIsValue' => '“Valid redirect URIs”: ' . Html::tag('code', $model->redirectUri),
                         ]) ?></li>
                     <li><?= Yii::t('AuthKeycloakModule.base', '{Credentials} tab: copy the secret key', ['Credentials' => '“Credentials”']) ?></li>
-                    <li><?= Yii::t('AuthKeycloakModule.base', '{ClientScope} tab -> click on the first {scopeName} (for Keycloak version <20: {Mappers} tab):', [
-                            'ClientScope' => '“Client scopes”',
-                            'scopeName' => 'scope',
-                            'Mappers' => '“Mappers”',
-                        ]) ?></li>
-                    <ul>
-                        <li><?= Yii::t('AuthKeycloakModule.base', 'Button {AddMapper} (for Keycloak version <20: {AddBuiltin}) and add theses attributes:', [
-                                'AddMapper' => '“Add mapper -> From predefined mappers”',
-                                'AddBuiltin' => '“Add builtin”',
-                            ]) ?>
-                            “family name”, “email”, “given name”, “username”
-                        </li>
-                        <li><?= Yii::t('AuthKeycloakModule.base', 'Edit {usernameAttribute} and in {TokenClaimName}, replace {preferredUsernameAttribute} with {idAttribute}', [
-                                'usernameAttribute' => '“username”',
-                                'TokenClaimName' => '“Token Claim Name”',
-                                'preferredUsernameAttribute' => '“preferred_username”',
-                                'idAttribute' => '“id”',
-                            ]) ?></li>
-                    </ul>
                 </ul>
             </div>
             <br>
