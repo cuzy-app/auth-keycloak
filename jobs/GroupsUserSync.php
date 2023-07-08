@@ -15,6 +15,7 @@ use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\queue\ActiveJob;
 use humhub\modules\user\models\User;
 use Throwable;
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\queue\RetryableJobInterface;
 
@@ -95,6 +96,8 @@ class GroupsUserSync extends ActiveJob implements RetryableJobInterface
      */
     public function canRetry($attempt, $error)
     {
+        $errorMessage = $error ? $error->getMessage() : '';
+        Yii::error('Error with Groups user sync job: ' . $errorMessage, 'auth-keycloak');
         return false;
     }
 }

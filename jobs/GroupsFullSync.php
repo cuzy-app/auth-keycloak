@@ -406,6 +406,8 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
      */
     public function canRetry($attempt, $error)
     {
+        $errorMessage = $error ? $error->getMessage() : '';
+        Yii::error('Error with Groups full sync job: ' . $errorMessage, 'auth-keycloak');
         return false;
     }
 
