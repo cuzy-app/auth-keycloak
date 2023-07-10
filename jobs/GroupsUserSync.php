@@ -15,12 +15,10 @@ use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\queue\ActiveJob;
 use humhub\modules\user\models\User;
 use Throwable;
-use Yii;
 use yii\base\InvalidConfigException;
-use yii\queue\RetryableJobInterface;
 
 
-class GroupsUserSync extends ActiveJob implements RetryableJobInterface
+class GroupsUserSync extends ActiveJob
 {
     /**
      * @var int
@@ -41,7 +39,7 @@ class GroupsUserSync extends ActiveJob implements RetryableJobInterface
      * @inhertidoc
      * @var int maximum 1 hour
      */
-    private $maxExecutionTime = 60 * 60;
+    private $maxExecutionTime = 60 * 5;
 
     /**
      * @inheritdoc
@@ -81,23 +79,5 @@ class GroupsUserSync extends ActiveJob implements RetryableJobInterface
             $humhubGroup = $this->humhubGroupsByKeycloakId[$keycloakGroupId];
             $humhubGroup->addUser($user);
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTtr()
-    {
-        return $this->maxExecutionTime;
-    }
-
-    /**
-     * @inheritDoc for RetryableJobInterface
-     */
-    public function canRetry($attempt, $error)
-    {
-        $errorMessage = $error ? $error->getMessage() : '';
-        Yii::error('Error with Groups user sync job: ' . $errorMessage, 'auth-keycloak');
-        return false;
     }
 }
