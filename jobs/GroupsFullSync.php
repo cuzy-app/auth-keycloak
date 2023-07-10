@@ -14,6 +14,7 @@ use humhub\modules\authKeycloak\components\KeycloakApi;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\queue\ActiveJob;
+use humhub\modules\queue\interfaces\ExclusiveJobInterface;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
 use Throwable;
@@ -24,7 +25,7 @@ use yii\helpers\ArrayHelper;
 use yii\queue\RetryableJobInterface;
 
 
-class GroupsFullSync extends ActiveJob implements RetryableJobInterface
+class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, RetryableJobInterface
 {
     /**
      * On first sync, Humhub groups and members are added to Keycloak
@@ -411,4 +412,11 @@ class GroupsFullSync extends ActiveJob implements RetryableJobInterface
         return false;
     }
 
+    /**
+     * @inerhitdoc
+     */
+    public function getExclusiveJobId()
+    {
+        return 'auth-keycloak.' . static::class;
+    }
 }
