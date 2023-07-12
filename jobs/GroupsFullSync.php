@@ -17,6 +17,7 @@ use humhub\modules\queue\ActiveJob;
 use humhub\modules\queue\interfaces\ExclusiveJobInterface;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
+use ReflectionClass;
 use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -414,9 +415,10 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
 
     /**
      * @inerhitdoc
+     * Must not exceed to 50 chars
      */
     public function getExclusiveJobId()
     {
-        return 'auth-keycloak.' . static::class;
+        return 'auth-keycloak.' . (new ReflectionClass($this))->getShortName();
     }
 }
