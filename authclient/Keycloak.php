@@ -15,6 +15,7 @@ use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
 use humhub\modules\user\services\AuthClientUserService;
 use Yii;
+use yii\authclient\InvalidResponseException;
 use yii\authclient\OAuth2;
 use yii\db\StaleObjectException;
 use yii\helpers\BaseInflector;
@@ -83,7 +84,11 @@ class Keycloak extends OAuth2 implements PrimaryClient
      */
     protected function initUserAttributes()
     {
-        return $this->api('userinfo');
+        try {
+            return $this->api('userinfo');
+        } catch (InvalidResponseException|\Exception $e) {
+            return [];
+        }
     }
 
     /**
@@ -182,10 +187,11 @@ class Keycloak extends OAuth2 implements PrimaryClient
     {
         $userAttributes = $this->getUserAttributes();
 
-        $userAuth = Auth::findOne(['source' => self::DEFAULT_NAME, 'source_id' => $userAttributes['id']]);
-
-        if ($userAuth !== null && $userAuth->user !== null) {
-            return $userAuth->user;
+        if (array_key_exists('id', $userAttributes)) {
+            $userAuth = Auth::findOne(['source' => self::DEFAULT_NAME, 'source_id' => $userAttributes['id']]);
+            if ($userAuth !== null && $userAuth->user !== null) {
+                return $userAuth->user;
+            }
         }
 
         if (array_key_exists('email', $userAttributes)) {

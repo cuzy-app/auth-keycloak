@@ -196,7 +196,7 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
      */
     protected function addHumhubGroupsToKeycloak()
     {
-        foreach (GroupKeycloak::find()->all() as $humhubGroup) {
+        foreach (GroupKeycloak::find()->each() as $humhubGroup) {
             // Check if Keycloak group exists
             if (
                 $humhubGroup->keycloak_id === null
