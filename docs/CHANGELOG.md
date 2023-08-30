@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Unreleased
+--------------------
+- Fix: PDOException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'search.update.xxxxxxxxxxxxx' for key 'queue_exclusive.PRIMARY' i
+
 1.3.1 (May 10, 2023)
 --------------------
 - Fix: On module install and uninstall, check if `keycloak_id` exists or not in the `group` table in case of previous improper install or uninstall
@@ -89,8 +93,8 @@ Changelog
 - Chg: Minimum Humhub version is now 1.9
 
 If updating from a previous version:
- - If, on your previous version, you have "Attribute to match user tables with `email` or `id`" defined to `email`, as this version now uses only `id` attribute, you might have some users that cannot login anymore to Humhub if their email is different on Humhub and Keycloak. You should update their email on Keycloak to match.
- - If updating without the marketplace, proceed to database migration: "Administration" -> "Information" -> "Database"
+- If, on your previous version, you have "Attribute to match user tables with `email` or `id`" defined to `email`, as this version now uses only `id` attribute, you might have some users that cannot login anymore to Humhub if their email is different on Humhub and Keycloak. You should update their email on Keycloak to match.
+- If updating without the marketplace, proceed to database migration: "Administration" -> "Information" -> "Database"
 
 0.4.2 (March 14, 2022)
 --------------------

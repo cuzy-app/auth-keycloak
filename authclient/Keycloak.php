@@ -14,6 +14,7 @@ use humhub\modules\user\authclient\interfaces\PrimaryClient;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
 use humhub\modules\user\services\AuthClientUserService;
+use PDOException;
 use Yii;
 use yii\authclient\InvalidResponseException;
 use yii\authclient\OAuth2;
@@ -225,7 +226,10 @@ class Keycloak extends OAuth2 implements PrimaryClient
 
         $userAttributes = $this->getUserAttributes();
 
-        (new AuthClientUserService($user))->add($this);
+        try {
+            (new AuthClientUserService($user))->add($this);
+        } catch (PDOException $e) {
+        }
         KeycloakHelpers::storeAndGetAuthSourceId($user, $userAttributes['id'] ?? null);
 
         /** @var Module $module */
