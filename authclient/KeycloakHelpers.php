@@ -30,7 +30,7 @@ class KeycloakHelpers
         if ($sourceId) {
             $auth = Auth::findOne(['source' => Keycloak::DEFAULT_NAME, 'source_id' => $sourceId]);
 
-            // Make sure authClient is not double assigned
+            // Make sure authClient is not doubly assigned
             if ($auth !== null && $auth->user_id !== $user->id) {
                 $auth->delete();
                 $auth = null;
