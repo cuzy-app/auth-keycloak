@@ -58,7 +58,7 @@ $module = Yii::$app->getModule('auth-keycloak');
             </div>
             <br>
 
-            <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]) ?>
+            <?php $form = ActiveForm::begin(['acknowledge' => true]) ?>
 
             <?= $form->field($model, 'enabled')->checkbox() ?>
             <?= $form->field($model, 'baseUrl') ?>
