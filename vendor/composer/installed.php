@@ -1,162 +1,203 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => 'dev-master',
-    'version' => 'dev-master',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'name' => 'cuzy-app/humhub-modules-auth-keycloak',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'da244a7f1a34c764c88afca82cc45d5ef8f7f050',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
     ),
-    'reference' => 'b5db57be6fcaac4c40533303e03c47da15e1fe67',
-    'name' => 'cuzy-app/humhub-modules-auth-keycloak',
-  ),
-  'versions' => 
-  array (
-    'cuzy-app/humhub-modules-auth-keycloak' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b5db57be6fcaac4c40533303e03c47da15e1fe67',
+    'versions' => array(
+        'brick/math' => array(
+            'pretty_version' => '0.9.3',
+            'version' => '0.9.3.0',
+            'reference' => 'ca57d18f028f84f777b2168cd1911b0dee2343ae',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../brick/math',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'cuzy-app/humhub-modules-auth-keycloak' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'da244a7f1a34c764c88afca82cc45d5ef8f7f050',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'fgrosse/phpasn1' => array(
+            'pretty_version' => 'v2.5.0',
+            'version' => '2.5.0.0',
+            'reference' => '42060ed45344789fb9f21f9f1864fc47b9e3507b',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../fgrosse/phpasn1',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/command' => array(
+            'pretty_version' => '1.3.1',
+            'version' => '1.3.1.0',
+            'reference' => '0eebc653784f4902b3272e826fe8e88743d14e77',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/command',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/guzzle' => array(
+            'pretty_version' => '7.8.1',
+            'version' => '7.8.1.0',
+            'reference' => '41042bc7ab002487b876a0683fc8dce04ddce104',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/guzzle',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/guzzle-services' => array(
+            'pretty_version' => '1.4.1',
+            'version' => '1.4.1.0',
+            'reference' => 'bcab7c0d61672b606510a6fe5af3039d04968c0f',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/guzzle-services',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/promises' => array(
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'reference' => 'bbff78d96034045e58e13dedd6ad91b5d1253223',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/promises',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/psr7' => array(
+            'pretty_version' => '2.6.2',
+            'version' => '2.6.2.0',
+            'reference' => '45b30f99ac27b5ca93cb4831afe16285f57b8221',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/psr7',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'guzzlehttp/uri-template' => array(
+            'pretty_version' => 'v1.0.3',
+            'version' => '1.0.3.0',
+            'reference' => 'ecea8feef63bd4fef1f037ecb288386999ecc11c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../guzzlehttp/uri-template',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'mohammad-waleed/keycloak-admin-client' => array(
+            'pretty_version' => 'v0.34.0',
+            'version' => '0.34.0.0',
+            'reference' => 'dc745ddfaeb62162113af72c19ac50817dfc8b70',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mohammad-waleed/keycloak-admin-client',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/http-client' => array(
+            'pretty_version' => '1.0.3',
+            'version' => '1.0.3.0',
+            'reference' => 'bb5906edc1c324c9a05aa0873d40117941e5fa90',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/http-client',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/http-client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
+        'psr/http-factory' => array(
+            'pretty_version' => '1.0.2',
+            'version' => '1.0.2.0',
+            'reference' => 'e616d01114759c4c489f93b099585439f795fe35',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/http-factory',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/http-factory-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
+        'psr/http-message' => array(
+            'pretty_version' => '2.0',
+            'version' => '2.0.0.0',
+            'reference' => '402d35bcb92c70c026d1a6a9883f06b2ead23d71',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/http-message',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/http-message-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '1.0',
+            ),
+        ),
+        'ralouphie/getallheaders' => array(
+            'pretty_version' => '3.0.3',
+            'version' => '3.0.3.0',
+            'reference' => '120b605dfeb996808c31b6477290a714d356e822',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ralouphie/getallheaders',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'spomky-labs/base64url' => array(
+            'pretty_version' => 'v2.0.4',
+            'version' => '2.0.4.0',
+            'reference' => '7752ce931ec285da4ed1f4c5aa27e45e097be61d',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spomky-labs/base64url',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/deprecation-contracts' => array(
+            'pretty_version' => 'v3.0.2',
+            'version' => '3.0.2.0',
+            'reference' => '26954b3d62a6c5fd0ea8a2a00c0353a14978d05c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/deprecation-contracts',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-php80' => array(
+            'pretty_version' => 'v1.28.0',
+            'version' => '1.28.0.0',
+            'reference' => '6caa57379c4aec19c0a12a38b59b26487dcfe4b5',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-php80',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'web-token/jwt-core' => array(
+            'pretty_version' => 'v2.2.11',
+            'version' => '2.2.11.0',
+            'reference' => '53beb6f6c1eec4fa93c1c3e5d9e5701e71fa1678',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../web-token/jwt-core',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'web-token/jwt-key-mgmt' => array(
+            'pretty_version' => 'v2.2.11',
+            'version' => '2.2.11.0',
+            'reference' => '0b116379515700d237b4e5de86879078ccb09d8a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../web-token/jwt-key-mgmt',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
     ),
-    'guzzlehttp/command' => 
-    array (
-      'pretty_version' => '1.2.2',
-      'version' => '1.2.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '7883359e0ecab8a8f7c43aad2fc36360a35d21e8',
-    ),
-    'guzzlehttp/guzzle' => 
-    array (
-      'pretty_version' => '7.5.0',
-      'version' => '7.5.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b50a2a1251152e43f6a37f0fa053e730a67d25ba',
-    ),
-    'guzzlehttp/guzzle-services' => 
-    array (
-      'pretty_version' => '1.3.2',
-      'version' => '1.3.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '4989d902dd4e0411b320e851c46f3c94d652d891',
-    ),
-    'guzzlehttp/promises' => 
-    array (
-      'pretty_version' => '1.5.2',
-      'version' => '1.5.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b94b2807d85443f9719887892882d0329d1e2598',
-    ),
-    'guzzlehttp/psr7' => 
-    array (
-      'pretty_version' => '2.4.3',
-      'version' => '2.4.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '67c26b443f348a51926030c83481b85718457d3d',
-    ),
-    'guzzlehttp/uri-template' => 
-    array (
-      'pretty_version' => 'v1.0.1',
-      'version' => '1.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b945d74a55a25a949158444f09ec0d3c120d69e2',
-    ),
-    'mohammad-waleed/keycloak-admin-client' => 
-    array (
-      'pretty_version' => 'v0.34.0',
-      'version' => '0.34.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'dc745ddfaeb62162113af72c19ac50817dfc8b70',
-    ),
-    'psr/http-client' => 
-    array (
-      'pretty_version' => '1.0.1',
-      'version' => '1.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2dfb5f6c5eff0e91e20e913f8c5452ed95b86621',
-    ),
-    'psr/http-client-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
-    'psr/http-factory' => 
-    array (
-      'pretty_version' => '1.0.1',
-      'version' => '1.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '12ac7fcd07e5b077433f5f2bee95b3a771bf61be',
-    ),
-    'psr/http-factory-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
-    'psr/http-message' => 
-    array (
-      'pretty_version' => '1.0.1',
-      'version' => '1.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'f6561bf28d520154e4b0ec72be95418abe6d9363',
-    ),
-    'psr/http-message-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
-    'ralouphie/getallheaders' => 
-    array (
-      'pretty_version' => '3.0.3',
-      'version' => '3.0.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '120b605dfeb996808c31b6477290a714d356e822',
-    ),
-    'symfony/deprecation-contracts' => 
-    array (
-      'pretty_version' => 'v2.5.2',
-      'version' => '2.5.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'e8b495ea28c1d97b5e0c121748d6f9b53d075c66',
-    ),
-    'symfony/polyfill-php80' => 
-    array (
-      'pretty_version' => 'v1.27.0',
-      'version' => '1.27.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936',
-    ),
-  ),
 );

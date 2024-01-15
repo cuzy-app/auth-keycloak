@@ -8,7 +8,6 @@ class ComposerStaticInite82de9f2d22f6e313ef7cfd0f57c6bff
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -28,6 +27,11 @@ class ComposerStaticInite82de9f2d22f6e313ef7cfd0f57c6bff
         array (
             'Keycloak\\' => 9,
         ),
+        'J' => 
+        array (
+            'Jose\\Component\\KeyManagement\\' => 29,
+            'Jose\\Component\\Core\\' => 20,
+        ),
         'G' => 
         array (
             'GuzzleHttp\\UriTemplate\\' => 23,
@@ -36,6 +40,15 @@ class ComposerStaticInite82de9f2d22f6e313ef7cfd0f57c6bff
             'GuzzleHttp\\Command\\Guzzle\\' => 26,
             'GuzzleHttp\\Command\\' => 19,
             'GuzzleHttp\\' => 11,
+        ),
+        'F' => 
+        array (
+            'FG\\' => 3,
+        ),
+        'B' => 
+        array (
+            'Brick\\Math\\' => 11,
+            'Base64Url\\' => 10,
         ),
     );
 
@@ -56,6 +69,14 @@ class ComposerStaticInite82de9f2d22f6e313ef7cfd0f57c6bff
         'Keycloak\\' => 
         array (
             0 => __DIR__ . '/..' . '/mohammad-waleed/keycloak-admin-client/src',
+        ),
+        'Jose\\Component\\KeyManagement\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-key-mgmt',
+        ),
+        'Jose\\Component\\Core\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/web-token/jwt-core',
         ),
         'GuzzleHttp\\UriTemplate\\' => 
         array (
@@ -80,6 +101,18 @@ class ComposerStaticInite82de9f2d22f6e313ef7cfd0f57c6bff
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'FG\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fgrosse/phpasn1/lib',
+        ),
+        'Brick\\Math\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
+        'Base64Url\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spomky-labs/base64url/src',
         ),
     );
 
