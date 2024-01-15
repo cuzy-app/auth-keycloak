@@ -20,6 +20,7 @@ return [
     'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.' => '',
     'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => '',
     'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => '',
+    'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => '',
     'In admin, hide password fields in edit user form' => '',
     'Keycloak API admin password' => '',
     'Keycloak API admin username' => '',

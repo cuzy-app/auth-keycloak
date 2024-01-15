@@ -70,7 +70,7 @@ class BackChannelController extends Controller
             $this->sendError('Missing sid in logout token');
         }
 
-        // Search for an Keycloak authenticated user
+        // Search for a Keycloak authenticated user
         $auth = AuthKeycloak::findOne(['keycloak_sid' => $sid]);
         if (!$auth) {
             $this->sendError('User Auth not found for sid ' . $sid);

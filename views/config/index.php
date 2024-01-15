@@ -55,6 +55,15 @@ $module = Yii::$app->getModule('auth-keycloak');
                         ]) ?></li>
                     <li><?= Yii::t('AuthKeycloakModule.base', '{Credentials} tab: copy the secret key', ['Credentials' => '“Credentials”']) ?></li>
                 </ul>
+                <div><?= Yii::t('AuthKeycloakModule.base', 'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:', [
+                        'BackChannelLogout' => '"Back-Channel Logout"',
+                        'LogoutSettings' => '"Logout settings"',
+                    ]) ?></div>
+                <ul>
+                    <li>Backchannel logout URL: <?= Html::tag('code', $model->backChannelLogoutUrl) ?></li>
+                    <li>Backchannel logout session required: On</li>
+                    <li>Backchannel logout revoke offline sessions: On</li>
+                </ul>
             </div>
             <br>
 
