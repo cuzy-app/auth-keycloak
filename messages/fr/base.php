@@ -53,6 +53,6 @@ return array (
   'Your current password can be changed here.' => 'Votre mot de passe actuel peut être modifié ici.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (pour utiliser le nom d\'utilisateur Keycloak), `sub` (pour utiliser l\'ID Keycloak) ou un autre nom de demande de jeton personnalisé',
   '{Credentials} tab: copy the secret key' => 'Onglet {Credentials} : copiez la clé secrète',
-  '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Onglet {Settings} -> {ClientAuthenticationOn} (pour Humhub version <20 : {AccessTypeValue} ).',
+  '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Onglet {Settings} -> {ClientAuthenticationOn} (pour Keycloak version <20 : {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Onglet {Settings} -> {ValidRedirectURIsValue} .',
 );

@@ -14,7 +14,7 @@ A new button "Keycloak" (which can be renamed) will appear on the login page.
     - Keycloak to Humhub sync is done once a day
     - Keycloak subgroups are not synced
 
-(1) Allows removing user sessions automatically when signing out from Keycloak (via a websocket)
+(1) Allows removing user sessions automatically when signing out from Keycloak (via a websocket).
 
 (2) E.g., when a user on Humhub becomes member of a group the module will:
 1. check if a group with the same name exists on Keycloak
@@ -23,6 +23,7 @@ A new button "Keycloak" (which can be renamed) will appear on the login page.
 
 ## Requirements
 
+- PHP 8.0 or later
 - [PHP `allow_url_fopen`](https://www.php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen) must be enabled
 - For users' groups and email synchronization: on Keycloak, users attributes must be writable (it can be tested by changing the email address of a user on Keycloak administration).
 
