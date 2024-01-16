@@ -58,6 +58,10 @@ class ConfigureForm extends Model
      */
     public $redirectUri;
     /**
+     * @var string readonly
+     */
+    public $backChannelLogoutUrl;
+    /**
      * @var string
      */
     public $usernameMapper = 'sub';
@@ -155,6 +159,7 @@ class ConfigureForm extends Model
         $this->groupsSyncMode = $settings->get('groupsSyncMode', $this->groupsSyncMode);
 
         $this->redirectUri = Url::to(['/user/auth/external', 'authclient' => Keycloak::DEFAULT_NAME], true);
+        $this->backChannelLogoutUrl = Url::to(['/auth-keycloak/back-channel/logout'], true);
     }
 
     /**

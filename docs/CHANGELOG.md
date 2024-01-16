@@ -1,8 +1,11 @@
 Changelog
 =========
 
-Unreleased
+1.4.0 (Jan 16, 2024)
 --------------------
+- Chg: Require PHP 8.0 or later
+- Enh: OpenID Connect instead of Oauth 2 protocol
+- Enh: Added Back channel feature (see README and module configuration)
 - Fix: PDOException: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'search.update.xxxxxxxxxxxxx' for key 'queue_exclusive.PRIMARY' i
 
 1.3.1 (May 10, 2023)

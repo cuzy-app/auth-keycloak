@@ -1,20 +1,23 @@
 {
-    "id": "auth-keycloak",
-    "name": "Keycloak Sign-In",
-    "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
-    "keywords": ["auth", "keycloak"],
-    "version": "1.3.1",
-    "humhub": {
-        "minVersion": "1.14"
-    },
-    "homepage": "https://github.com/cuzy-app/humhub-modules-auth-keycloak",
-    "authors": [
-        {
-            "name": "Marc FARRE",
-            "homepage": "https://marc.fun",
-            "role": "Developer"
-        }
-    ],
-    "screenshots": [
-    ]
+  "id": "auth-keycloak",
+  "name": "Keycloak Sign-In",
+  "description": "Integrating Keycloak Sign-In (OpenID Connect)",
+  "keywords": [
+    "auth",
+    "keycloak"
+  ],
+  "version": "1.4.0",
+  "humhub": {
+    "minVersion": "1.15"
+  },
+  "homepage": "https://github.com/cuzy-app/humhub-modules-auth-keycloak",
+  "authors": [
+    {
+      "name": "Marc FARRE",
+      "homepage": "https://marc.fun",
+      "role": "Developer"
+    }
+  ],
+  "screenshots": [
+  ]
 }

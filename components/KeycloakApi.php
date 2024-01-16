@@ -11,7 +11,6 @@ namespace humhub\modules\authKeycloak\components;
 use GuzzleHttp\Command\Exception\CommandClientException;
 use GuzzleHttp\Command\Exception\CommandException;
 use humhub\modules\authKeycloak\authclient\Keycloak;
-use humhub\modules\authKeycloak\authclient\KeycloakHelpers;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\authKeycloak\Module;
@@ -20,7 +19,6 @@ use humhub\modules\user\models\User;
 use Keycloak\Admin\KeycloakClient;
 use Yii;
 use yii\base\Component;
-use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
 
 
@@ -144,6 +142,31 @@ class KeycloakApi extends Component
     }
 
     /**
+     * User Keycloak authentification
+     * @param $userId
+     * @return Auth|null
+     */
+    public function getUserAuth($userId)
+    {
+        $auth = Auth::find()
+            ->where(['source' => Keycloak::DEFAULT_NAME, 'user_id' => $userId])
+            ->orderBy(['id' => SORT_DESC]) // get the latest if it has multiple
+            ->one();
+
+        if ($auth === null) {
+            $user = User::findOne(['id' => $userId, 'auth_mode' => Keycloak::DEFAULT_NAME]);
+            if ($user !== null) {
+                $keycloakUserId = $this->getUserId($user->email);
+                if ($keycloakUserId !== null) {
+                    $auth = Auth::findOne(['source' => Keycloak::DEFAULT_NAME, 'source_id' => $keycloakUserId]);
+                }
+            }
+        }
+
+        return $auth;
+    }
+
+    /**
      * @param string $email
      * @param bool $updateAuthTable
      * @return string|null
@@ -162,34 +185,6 @@ class KeycloakApi extends Component
             return null;
         }
         return $result[0]['id'] ?? null;
-    }
-
-    /**
-     * User Keycloak authentification
-     * @param $userId
-     * @return Auth|null
-     */
-    public function getUserAuth($userId)
-    {
-        $auth = Auth::find()
-            ->where(['source' => Keycloak::DEFAULT_NAME, 'user_id' => $userId])
-            ->orderBy(['id' => SORT_DESC]) // get the latest if it has multiple
-            ->one();
-
-        if ($auth === null) {
-            $user = User::findOne(['id' => $userId, 'auth_mode' => Keycloak::DEFAULT_NAME]);
-            if ($user !== null) {
-                $keycloakUserId = $this->getUserId($user->email);
-                if ($keycloakUserId !== null) {
-                    try {
-                        $auth = KeycloakHelpers::storeAndGetAuthSourceId(User::findOne(['email' => $user->email]), $keycloakUserId);
-                    } catch (StaleObjectException|\Throwable $e) {
-                    }
-                }
-            }
-        }
-
-        return $auth;
     }
 
     /**
@@ -326,7 +321,7 @@ class KeycloakApi extends Component
         }
 
         if (!class_exists('Keycloak\Admin\KeycloakClient')) {
-            require Yii::getAlias('@auth-keycloak/vendor/autoload.php');
+            require_once Yii::getAlias('@auth-keycloak/vendor/autoload.php');
         }
 
         /** @var Module $module */
