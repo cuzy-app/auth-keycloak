@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.4.1 (Jan 18, 2024)
+--------------------
+- Fix: API communication error with Keycloak 23: `cURL error 25: Chunky upload is not supported by HTTP 1.0`
+- Chg: Updated library `mohammad-waleed/keycloak-admin-client` from 0.34 to 0.37
+
 1.4.0 (Jan 16, 2024)
 --------------------
 - Chg: Require PHP 8.0 or later
