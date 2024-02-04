@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Unreleased
+--------------------
+- Enh: Added the new `requirements.php` file (https://github.com/humhub/humhub/issues/6831)
+
 1.4.1 (Jan 18, 2024)
 --------------------
 - Fix: API communication error with Keycloak 23: `cURL error 25: Chunky upload is not supported by HTTP 1.0`
