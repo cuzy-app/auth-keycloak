@@ -259,8 +259,6 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
             isset($attributes['username'], $attributes['email'])
             && $attributes['username'] === $attributes['email']
         ) {
-            /* @var $userModule \humhub\modules\user\Module */
-            $userModule = Yii::$app->getModule('user');
             $attributes['username'] = BaseInflector::id2camel(
                 BaseInflector::slug(
                     $attributes['firstname'] . ' ' . $attributes['lastname']

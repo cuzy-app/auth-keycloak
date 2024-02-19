@@ -23,8 +23,10 @@ A new button "Keycloak" (which can be renamed) will appear on the login page.
 
 ## Requirements
 
-- PHP 8.0 or later
+- PHP 8.1 or later
 - [PHP `allow_url_fopen`](https://www.php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen) must be enabled
+- PHP extensions: `MBString`, `JSON` and `BCMath` or `GMP`
+- Depending on the algorithms you're using, other PHP extensions may be required (e.g. OpenSSL, Sodium). Full details: https://web-token.spomky-labs.com/introduction/pre-requisite
 - For users' groups and email synchronization: on Keycloak, users attributes must be writable (it can be tested by changing the email address of a user on Keycloak administration).
 
 ## Configuration

@@ -1,9 +1,11 @@
 Changelog
 =========
 
-Unreleased
+1.4.2 (Feb 19, 2024)
 --------------------
 - Enh: Added the new `requirements.php` file (https://github.com/humhub/humhub/issues/6831)
+- Chg: Require PHP 8.1 or later
+- Fix: Added PHP extensions requirements: `MBString`, `JSON` and `BCMath` or `GMP`
 
 1.4.1 (Jan 18, 2024)
 --------------------
