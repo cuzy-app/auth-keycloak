@@ -38,11 +38,11 @@ And follow the instructions.
 
 This module is free, but is the result of a lot of work for the design and maintenance over time.
 
-If it's useful to you, please consider [making a donation](https://www.cuzy.app/checkout/donate/) or [participating in the code](https://github.com/cuzy-app/humhub-modules-auth-keycloak). Thanks!
+If it's useful to you, please consider [making a donation](https://www.cuzy.app/checkout/donate/) or [participating in the code](https://github.com/cuzy-app/auth-keycloak). Thanks!
 
 ## Repository
 
-https://github.com/cuzy-app/humhub-modules-auth-keycloak
+https://github.com/cuzy-app/auth-keycloak
 
 ## Publisher
 
@@ -50,4 +50,4 @@ https://github.com/cuzy-app/humhub-modules-auth-keycloak
 
 ## Licence
 
-[GNU AGPL](https://github.com/cuzy-app/humhub-modules-auth-keycloak/blob/master/docs/LICENCE.md)
+[GNU AGPL](https://github.com/cuzy-app/auth-keycloak/blob/master/docs/LICENCE.md)

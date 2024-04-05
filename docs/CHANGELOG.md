@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Unreleased
+--------------------
+- Chg: Repository URL from https://github.com/cuzy-app/humhub-modules-auth-keycloak
+  to https://github.com/cuzy-app/auth-keycloak
+
 1.4.2 (Feb 19, 2024)
 --------------------
 - Enh: Added the new `requirements.php` file (https://github.com/humhub/humhub/issues/6831)

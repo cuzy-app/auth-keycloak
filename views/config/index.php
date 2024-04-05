@@ -45,7 +45,7 @@ $requirements = include $module->basePath . '/' . 'requirements.php';
             <a href="https://www.cuzy.app/checkout/donate/"
                target="_blank">making a donation</a>
             or
-            <a href="https://github.com/cuzy-app/humhub-modules-auth-keycloak"
+            <a href="https://github.com/cuzy-app/auth-keycloak"
                target="_blank">participating in the code</a>.
             Thanks!
         </div>

@@ -1,11 +1,7 @@
 <?php
 
 if (PHP_VERSION_ID < 80100) {
-    return 'Please upgrade to PHP Version 8.1 or later!';
-}
-
-if (PHP_VERSION_ID >= 90000) {
-    return 'This module is not compatible with PHP Version 9 and later!';
+    return 'Please upgrade to PHP version 8.1 or later!';
 }
 
 if (!ini_get('allow_url_fopen')) {

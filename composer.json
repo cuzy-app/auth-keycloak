@@ -1,10 +1,10 @@
 {
-  "name": "cuzy-app/humhub-modules-auth-keycloak",
+  "name": "cuzy-app/auth-keycloak",
   "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
   "minimum-stability": "stable",
   "type": "library",
   "require": {
-    "php": ">=8.0",
+    "php": ">=8.1",
     "mohammad-waleed/keycloak-admin-client": "^0.37.0",
     "web-token/jwt-key-mgmt": ">=1.0 <3.0"
   }

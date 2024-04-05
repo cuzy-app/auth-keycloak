@@ -10,7 +10,7 @@
   "humhub": {
     "minVersion": "1.15"
   },
-  "homepage": "https://github.com/cuzy-app/humhub-modules-auth-keycloak",
+  "homepage": "https://github.com/cuzy-app/auth-keycloak",
   "authors": [
     {
       "name": "Marc FARRE",
