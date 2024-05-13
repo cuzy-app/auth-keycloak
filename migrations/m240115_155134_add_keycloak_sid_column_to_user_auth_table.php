@@ -1,6 +1,6 @@
 <?php
 
-use yii\db\Migration;
+use humhub\components\Migration;
 
 /**
  * Handles adding columns to table `{{%user_auth}}`.
@@ -12,7 +12,7 @@ class m240115_155134_add_keycloak_sid_column_to_user_auth_table extends Migratio
      */
     public function safeUp()
     {
-        $this->addColumn('{{%user_auth}}', 'keycloak_sid', $this->string(36)->after('source_id'));
+        $this->safeAddColumn('{{%user_auth}}', 'keycloak_sid', $this->string(36)->after('source_id'));
     }
 
     /**
@@ -20,6 +20,8 @@ class m240115_155134_add_keycloak_sid_column_to_user_auth_table extends Migratio
      */
     public function safeDown()
     {
-        $this->dropColumn('{{%user_auth}}', 'keycloak_sid');
+        echo "m240115_155134_add_keycloak_sid_column_to_user_auth_table cannot be reverted.\n";
+
+        return false;
     }
 }

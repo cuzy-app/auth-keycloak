@@ -3,8 +3,7 @@ Changelog
 
 Unreleased
 --------------------
-- Chg: Repository URL from https://github.com/cuzy-app/humhub-modules-auth-keycloak
-  to https://github.com/cuzy-app/auth-keycloak
+- Chg: Repository URL from https://github.com/cuzy-app/humhub-modules-auth-keycloak to https://github.com/cuzy-app/auth-keycloak
 
 1.4.2 (Feb 19, 2024)
 --------------------

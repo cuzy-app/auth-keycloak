@@ -1,7 +1,7 @@
 <?php
 
+use humhub\components\Migration;
 use humhub\modules\user\models\Group;
-use yii\db\Migration;
 
 class uninstall extends Migration
 {
@@ -10,7 +10,7 @@ class uninstall extends Migration
     {
         $tableSchema = Yii::$app->getDb()->getSchema()->getTableSchema(Group::tableName(), true);
         if (in_array('keycloak_id', $tableSchema->columnNames, true)) {
-            $this->dropColumn('{{%group}}', 'keycloak_id');
+            $this->safeDropColumn('{{%group}}', 'keycloak_id');
         }
     }
 
