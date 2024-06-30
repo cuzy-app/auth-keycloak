@@ -29,9 +29,9 @@ use yii\queue\RetryableJobInterface;
 class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, RetryableJobInterface
 {
     /**
-     * On first sync, Humhub groups and members are added to Keycloak
-     * Then, changes on Humhub are sync on real time to Keycloak (in Events.php)
-     * But changes on Keycloak are sync by cron to Humhub (in this class)
+     * On first sync, HumHub groups and members are added to Keycloak
+     * Then, changes on HumHub are sync on real time to Keycloak (in Events.php)
+     * But changes on Keycloak are sync by cron to HumHub (in this class)
      * @var bool
      */
     public $firstSync = false;
@@ -48,12 +48,12 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
 
     /**
      * @var array Keycloak group ID => [Keycloak user ID]
-     * Contains only users that have an account on Humhub
+     * Contains only users that have an account on HumHub
      */
     protected $keycloakGroupsMembers = [];
 
     /**
-     * @var array Humhub group ID => [Humhub user ID]
+     * @var array HumHub group ID => [HumHub user ID]
      * Contains only users that have logged in with Keycloak
      */
     protected $humhubGroupsMembers = [];
@@ -129,6 +129,33 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getTtr()
+    {
+        return $this->maxExecutionTime;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function canRetry($attempt, $error)
+    {
+        $errorMessage = $error ? $error->getMessage() : '';
+        Yii::error('Error with Groups full sync job: ' . $errorMessage, 'auth-keycloak');
+        return false;
+    }
+
+    /**
+     * @inerhitdoc
+     * Must not exceed to 50 chars
+     */
+    public function getExclusiveJobId()
+    {
+        return 'auth-keycloak.' . (new ReflectionClass($this))->getShortName();
+    }
+
+    /**
      * @return bool
      */
     protected function initKeycloakGroupsNamesById()
@@ -172,12 +199,12 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
             ->indexBy('keycloak_id')
             ->all();
         foreach ($this->keycloakGroupsNamesById as $keycloakGroupId => $keycloakGroupName) {
-            // Check if Humhub group exists
+            // Check if HumHub group exists
             if (!array_key_exists($keycloakGroupId, $allHumhubGroupsByKeycloakId)) {
-                // Search for existing Humhub group with same name
+                // Search for existing HumHub group with same name
                 if (array_key_exists($keycloakGroupName, $groupsKeycloakByHumhubName)) {
                     $groupKeycloak = $groupsKeycloakByHumhubName[$keycloakGroupName];
-                } else { // Add missing group to Humhub
+                } else { // Add missing group to HumHub
                     $groupKeycloak = new GroupKeycloak();
                     $groupKeycloak->name = $keycloakGroupName;
                 }
@@ -191,7 +218,7 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     }
 
     /**
-     * Only on first sync, then sync from Humhub is done by events
+     * Only on first sync, then sync from HumHub is done by events
      * @return void
      */
     protected function addHumhubGroupsToKeycloak()
@@ -204,7 +231,7 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
             ) {
                 // Link to a same group name on Keycloak or create group on Keycloak
                 if ($this->keycloakApi->linkSameGroupNameOrCreateGroup($humhubGroup->id)) {
-                    // Update Humhub group with the new created Keycloak ID
+                    // Update HumHub group with the new created Keycloak ID
                     $humhubGroup = GroupKeycloak::findOne($humhubGroup->id);
                     $this->keycloakGroupsNamesById[$humhubGroup->keycloak_id] = $humhubGroup->name;
                 }
@@ -235,7 +262,7 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
         foreach ($this->keycloakGroupsNamesById as $keycloakGroupId => $keycloakGroupName) {
             $this->keycloakGroupsMembers[$keycloakGroupId] = [];
             foreach ($this->keycloakApi->getGroupMemberIds($keycloakGroupId) as $keycloakUserId) {
-                // If this user has an account on Humhub
+                // If this user has an account on HumHub
                 if ($this->getHumhubUserId($keycloakUserId) !== null) {
                     $this->keycloakGroupsMembers[$keycloakGroupId][] = $keycloakUserId;
                 }
@@ -297,7 +324,7 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     }
 
     /**
-     * Only on first sync, then sync from Humhub is done by events
+     * Only on first sync, then sync from HumHub is done by events
      * @return void
      */
     protected function addHumhubUsersToKeycloakGroups()
@@ -393,32 +420,5 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
                 $humhubGroup->save();
             }
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTtr()
-    {
-        return $this->maxExecutionTime;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function canRetry($attempt, $error)
-    {
-        $errorMessage = $error ? $error->getMessage() : '';
-        Yii::error('Error with Groups full sync job: ' . $errorMessage, 'auth-keycloak');
-        return false;
-    }
-
-    /**
-     * @inerhitdoc
-     * Must not exceed to 50 chars
-     */
-    public function getExclusiveJobId()
-    {
-        return 'auth-keycloak.' . (new ReflectionClass($this))->getShortName();
     }
 }

@@ -71,7 +71,7 @@ class GroupsUserSync extends ActiveJob
             ->indexBy('keycloak_id')
             ->all();
 
-        // Add Humhub user to Humhub groups
+        // Add HumHub user to HumHub groups
         foreach ($this->keycloakApi->getUserGroups($user->id) as $keycloakGroupId) {
             if (!array_key_exists($keycloakGroupId, $this->humhubGroupsByKeycloakId)) {
                 continue;

@@ -178,10 +178,10 @@ class ConfigureForm extends Model
             'hideRegistrationUsernameField' => Yii::t('AuthKeycloakModule.base', 'Hide username field in registration form'),
             'hideAdminUserEditPassword' => Yii::t('AuthKeycloakModule.base', 'In admin, hide password fields in edit user form'),
             'removeKeycloakSessionsAfterLogout' => Yii::t('AuthKeycloakModule.base', 'Remove user\'s Keycloak sessions after logout'),
-            'updateHumhubUsernameFromBrokerUsername' => Yii::t('AuthKeycloakModule.base', 'Update user\'s username on Humhub when changed on Keycloak'),
-            'updatedBrokerUsernameFromHumhubUsername' => Yii::t('AuthKeycloakModule.base', 'Update user\'s username on Keycloak when changed on Humhub'),
-            'updateHumhubEmailFromBrokerEmail' => Yii::t('AuthKeycloakModule.base', 'Update user\'s email on Humhub when changed on Keycloak'),
-            'updatedBrokerEmailFromHumhubEmail' => Yii::t('AuthKeycloakModule.base', 'Update user\'s email on Keycloak when changed on Humhub'),
+            'updateHumhubUsernameFromBrokerUsername' => Yii::t('AuthKeycloakModule.base', 'Update user\'s username on HumHub when changed on Keycloak'),
+            'updatedBrokerUsernameFromHumhubUsername' => Yii::t('AuthKeycloakModule.base', 'Update user\'s username on Keycloak when changed on HumHub'),
+            'updateHumhubEmailFromBrokerEmail' => Yii::t('AuthKeycloakModule.base', 'Update user\'s email on HumHub when changed on Keycloak'),
+            'updatedBrokerEmailFromHumhubEmail' => Yii::t('AuthKeycloakModule.base', 'Update user\'s email on Keycloak when changed on HumHub'),
             'addChangePasswordFormToAccount' => Yii::t('AuthKeycloakModule.base', 'Add a page in account settings allowing users to change their Keycloak password'),
             'apiUsername' => Yii::t('AuthKeycloakModule.base', 'Keycloak API admin username'),
             'apiPassword' => Yii::t('AuthKeycloakModule.base', 'Keycloak API admin password'),
@@ -211,7 +211,7 @@ class ConfigureForm extends Model
                 'MoreInformationHere' => Html::a(Yii::t('AuthKeycloakModule.base', 'More informations here.'), 'https://stackoverflow.com/a/65054444', ['target' => '_blank']),
             ]),
             'updatedBrokerUsernameFromHumhubUsername' => Yii::t('AuthKeycloakModule.base', 'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.'),
-            'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'Humhub to Keycloak sync is done in real time. Keycloak to Humhub sync is done once a day. Keycloak subgroups are not synced.'),
+            'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.'),
         ];
     }
 
@@ -222,14 +222,14 @@ class ConfigureForm extends Model
     {
         return [
             self::GROUP_SYNC_MODE_NONE => Yii::t('AuthKeycloakModule.base', 'No sync'),
-            self::GROUP_SYNC_MODE_HH_TO_KC => Yii::t('AuthKeycloakModule.base', 'Sync Humhub towards Keycloak'),
-            self::GROUP_SYNC_MODE_KC_TO_HH => Yii::t('AuthKeycloakModule.base', 'Sync Keycloak towards Humhub'),
+            self::GROUP_SYNC_MODE_HH_TO_KC => Yii::t('AuthKeycloakModule.base', 'Sync HumHub towards Keycloak'),
+            self::GROUP_SYNC_MODE_KC_TO_HH => Yii::t('AuthKeycloakModule.base', 'Sync Keycloak towards HumHub'),
             self::GROUP_SYNC_MODE_FULL => Yii::t('AuthKeycloakModule.base', 'Sync both ways'),
-            self::GROUP_SYNC_MODE_HH_TO_KC_NO_DEL => Yii::t('AuthKeycloakModule.base', 'Sync Humhub towards Keycloak (but no removal on Keycloak)'),
-            self::GROUP_SYNC_MODE_KC_TO_HH_NO_DEL => Yii::t('AuthKeycloakModule.base', 'Sync Keycloak towards Humhub (but no removal on Humhub)'),
+            self::GROUP_SYNC_MODE_HH_TO_KC_NO_DEL => Yii::t('AuthKeycloakModule.base', 'Sync HumHub towards Keycloak (but no removal on Keycloak)'),
+            self::GROUP_SYNC_MODE_KC_TO_HH_NO_DEL => Yii::t('AuthKeycloakModule.base', 'Sync Keycloak towards HumHub (but no removal on HumHub)'),
             self::GROUP_SYNC_MODE_FULL_NO_KC_DEL => Yii::t('AuthKeycloakModule.base', 'Sync both ways (but no removal on Keycloak)'),
-            self::GROUP_SYNC_MODE_FULL_NO_HH_DEL => Yii::t('AuthKeycloakModule.base', 'Sync both ways (but no removal on Humhub)'),
-            self::GROUP_SYNC_MODE_FULL_NO_DEL => Yii::t('AuthKeycloakModule.base', 'Sync both ways (but no removal on Keycloak or Humhub)'),
+            self::GROUP_SYNC_MODE_FULL_NO_HH_DEL => Yii::t('AuthKeycloakModule.base', 'Sync both ways (but no removal on HumHub)'),
+            self::GROUP_SYNC_MODE_FULL_NO_DEL => Yii::t('AuthKeycloakModule.base', 'Sync both ways (but no removal on Keycloak or HumHub)'),
         ];
     }
 

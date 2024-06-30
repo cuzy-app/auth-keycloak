@@ -52,7 +52,7 @@ class KeycloakApi extends Component
         }
         $result = $this->api->removeGroup(['id' => $groupKeycloakId]);
 
-        return !$this->hasError($result, 'Keycloak groups to Humhub groups users synchronization with the API failed');
+        return !$this->hasError($result, 'Keycloak groups to HumHub groups users synchronization with the API failed');
     }
 
     /**
@@ -61,38 +61,6 @@ class KeycloakApi extends Component
     public function isConnected()
     {
         return $this->api !== null && $this->realm !== null;
-    }
-
-    /**
-     * @param $response
-     * @param string|null $message
-     * @param bool $addErrorToLog
-     * @param string|null $errorToIgnoreForLog by default, 'User not found' as we do not check if the user exists to avoid an extra API request
-     * @return bool
-     */
-    protected function hasError($response, ?string $message = null, bool $addErrorToLog = true, ?string $errorToIgnoreForLog = 'User not found')
-    {
-        $errors = [];
-        if (!empty($response['error'])) {
-            $errors[] = $response['error'];
-        }
-        if (!empty($response['errorMessage'])) {
-            $errors[] = $response['errorMessage'];
-        }
-        if (!empty($response['error_description'])) {
-            $errors[] = $response['error_description'];
-        }
-        if (count($errors) > 0) {
-            $errorMessage = implode(' | ', $errors);
-            if ($addErrorToLog && strpos($errorMessage, $errorToIgnoreForLog) === false) {
-                Yii::error(
-                    'Auth Keycloak module error' . ($message ? ': ' . $message : '') . '. Error message: ' . $errorMessage,
-                    'auth-keycloak'
-                );
-            }
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -487,5 +455,37 @@ class KeycloakApi extends Component
         }
 
         return $memberIds;
+    }
+
+    /**
+     * @param $response
+     * @param string|null $message
+     * @param bool $addErrorToLog
+     * @param string|null $errorToIgnoreForLog by default, 'User not found' as we do not check if the user exists to avoid an extra API request
+     * @return bool
+     */
+    protected function hasError($response, ?string $message = null, bool $addErrorToLog = true, ?string $errorToIgnoreForLog = 'User not found')
+    {
+        $errors = [];
+        if (!empty($response['error'])) {
+            $errors[] = $response['error'];
+        }
+        if (!empty($response['errorMessage'])) {
+            $errors[] = $response['errorMessage'];
+        }
+        if (!empty($response['error_description'])) {
+            $errors[] = $response['error_description'];
+        }
+        if (count($errors) > 0) {
+            $errorMessage = implode(' | ', $errors);
+            if ($addErrorToLog && strpos($errorMessage, $errorToIgnoreForLog) === false) {
+                Yii::error(
+                    'Auth Keycloak module error' . ($message ? ': ' . $message : '') . '. Error message: ' . $errorMessage,
+                    'auth-keycloak'
+                );
+            }
+            return true;
+        }
+        return false;
     }
 }

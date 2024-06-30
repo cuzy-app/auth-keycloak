@@ -51,7 +51,7 @@ $requirements = include $module->basePath . '/' . 'requirements.php';
         </div>
 
         <div>
-            <div><?= Yii::t('AuthKeycloakModule.base', 'On Keycloak, create a client for Humhub and configure it:') ?></div>
+            <div><?= Yii::t('AuthKeycloakModule.base', 'On Keycloak, create a client for HumHub and configure it:') ?></div>
             <ul>
                 <li><?= Yii::t('AuthKeycloakModule.base', '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).', [
                         'ClientAuthenticationOn' => '“Client authentication”: “On”',

@@ -9,14 +9,14 @@ A new button "Keycloak" (which can be renamed) will appear on the login page.
 - OpenID Connect
 - Keycloak Back-channel logout (1)
 - Possibility to add a page in account settings allowing users to change their Keycloak password
-- Users' groups and email synchronization between Keycloak and Humhub in both directions (2):
-    - Humhub to Keycloak sync is done in real time
-    - Keycloak to Humhub sync is done once a day
+- Users' groups and email synchronization between Keycloak and HumHub in both directions (2):
+    - HumHub to Keycloak sync is done in real time
+    - Keycloak to HumHub sync is done once a day
     - Keycloak subgroups are not synced
 
 (1) Allows removing user sessions automatically when signing out from Keycloak (via a websocket).
 
-(2) E.g., when a user on Humhub becomes member of a group the module will:
+(2) E.g., when a user on HumHub becomes member of a group the module will:
 1. check if a group with the same name exists on Keycloak
 2. create the group on Keycloak if not exists
 3. add this group to the corresponding user on Keycloak
@@ -31,8 +31,7 @@ A new button "Keycloak" (which can be renamed) will appear on the login page.
 
 ## Configuration
 
-Go to module's configuration at: `Administration -> Modules -> Keycloak Auth -> Configure`.
-And follow the instructions.
+Go to module's configuration at: `Administration -> Modules -> Keycloak Auth -> Configure`. And follow the instructions.
 
 ## Pricing
 

@@ -140,7 +140,7 @@ class Events
 
 
     /**
-     * If user email or username has changed in Humhub, update it on the broker (IdP)
+     * If user email or username has changed in HumHub, update it on the broker (IdP)
      * @param AfterSaveEvent $event
      */
     public static function onModelUserAfterUpdate($event)

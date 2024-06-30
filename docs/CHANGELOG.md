@@ -31,9 +31,9 @@ Unreleased
 
 1.3.0 (April 6, 2023)
 --------------------
-- Chg: Minimum Humhub version is now 1.14.0
+- Chg: Minimum HumHub version is now 1.14.0
 - Chg: Removed auto-login feature
-- Enh: Sync Keycloak user's attributes (groups, email and username) to Humhub on login (in addition to syncing on Humhub change)
+- Enh: Sync Keycloak user's attributes (groups, email and username) to HumHub on login (in addition to syncing on HumHub change)
 - Enh: Compatibility with this new feature: Invitation by link: when registering within an SSO, the email should only be requested on the service provider (https://github.com/humhub/humhub/issues/6164)
 - Enh: Username and email sync to Keycloak is now done by cron job
 - Fix: Updated translations
@@ -73,7 +73,7 @@ Unreleased
 1.1.4 (November 26, 2022)
 --------------------
 - Enh: `User::auth_mode` is set to `Keycloak` after login. Avoids showing the "Change Password" tab in the user account when logged in with Keycloak
-- Chg: Minimum Humhub version to 1.12
+- Chg: Minimum HumHub version to 1.12
 
 1.1.3 (October 16, 2022)
 --------------------
@@ -81,12 +81,12 @@ Unreleased
 
 1.1.2 (June 29, 2022)
 --------------------
-- Enh: Possibility to sync username from Humhub to Keycloak, and reverse
+- Enh: Possibility to sync username from HumHub to Keycloak, and reverse
 - Enh: Some texts in the module's settings
 
 1.1.1 (May 30, 2022)
 --------------------
-- Fix: Removing Keycloak session optimization on Humhub logout
+- Fix: Removing Keycloak session optimization on HumHub logout
 
 1.1.0 (May 5, 2022)
 --------------------
@@ -108,10 +108,10 @@ Unreleased
 --------------------
 - Enh: Added groups synchronization (see README)
 - Cnh: Settings page refactoring
-- Chg: Minimum Humhub version is now 1.9
+- Chg: Minimum HumHub version is now 1.9
 
 If updating from a previous version:
-- If, on your previous version, you have "Attribute to match user tables with `email` or `id`" defined to `email`, as this version now uses only `id` attribute, you might have some users that cannot login anymore to Humhub if their email is different on Humhub and Keycloak. You should update their email on Keycloak to match.
+- If, on your previous version, you have "Attribute to match user tables with `email` or `id`" defined to `email`, as this version now uses only `id` attribute, you might have some users that cannot login anymore to HumHub if their email is different on HumHub and Keycloak. You should update their email on Keycloak to match.
 - If updating without the marketplace, proceed to database migration: "Administration" -> "Information" -> "Database"
 
 0.4.2 (March 14, 2022)
