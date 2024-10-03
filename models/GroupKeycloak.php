@@ -47,7 +47,7 @@ class GroupKeycloak extends Group
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['keycloak_id'], 'string', 'max' => 36]
+            [['keycloak_id'], 'string', 'max' => 36],
         ]);
     }
 

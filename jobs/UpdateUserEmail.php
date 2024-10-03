@@ -8,13 +8,11 @@
 
 namespace humhub\modules\authKeycloak\jobs;
 
-
 use humhub\modules\authKeycloak\components\KeycloakApi;
 use humhub\modules\queue\ActiveJob;
 use humhub\modules\user\models\User;
 use Throwable;
 use yii\base\InvalidConfigException;
-
 
 class UpdateUserEmail extends ActiveJob
 {

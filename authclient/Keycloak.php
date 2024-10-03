@@ -261,8 +261,8 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
         ) {
             $attributes['username'] = BaseInflector::id2camel(
                 BaseInflector::slug(
-                    $attributes['firstname'] . ' ' . $attributes['lastname']
-                )
+                    $attributes['firstname'] . ' ' . $attributes['lastname'],
+                ),
             );
         }
         return $attributes;

@@ -21,7 +21,6 @@ use Yii;
 use yii\base\Component;
 use yii\helpers\ArrayHelper;
 
-
 class KeycloakApi extends Component
 {
     /**
@@ -182,7 +181,7 @@ class KeycloakApi extends Component
 
         $result = $this->api->addUserToGroup([
             'id' => $userAuth->source_id,
-            'groupId' => $groupKeycloak->keycloak_id
+            'groupId' => $groupKeycloak->keycloak_id,
         ]);
         return !$this->hasError($result, 'Error adding group ID ' . $groupId . ' to user ID ' . $userId);
     }
@@ -267,7 +266,7 @@ class KeycloakApi extends Component
         }
         $result = $this->api->deleteUserFromGroup([
             'id' => $userAuth->source_id,
-            'groupId' => $groupKeycloak->keycloak_id
+            'groupId' => $groupKeycloak->keycloak_id,
         ]);
         return !$this->hasError($result, 'Error deleting group ID ' . $groupId . ' to user ID ' . $userId);
     }
@@ -364,7 +363,7 @@ class KeycloakApi extends Component
                 'id' => $userAuth->source_id,
                 'email' => $user->email,
             ],
-            ((isset($this->realm['registrationEmailAsUsername']) && $this->realm['registrationEmailAsUsername']) ? ['username' => $user->email] : [])
+            ((isset($this->realm['registrationEmailAsUsername']) && $this->realm['registrationEmailAsUsername']) ? ['username' => $user->email] : []),
         ));
         return !$this->hasError($result, 'Error saving user\'s new email on Keycloak for user ID: ' . $user->id);
     }
@@ -481,7 +480,7 @@ class KeycloakApi extends Component
             if ($addErrorToLog && strpos($errorMessage, $errorToIgnoreForLog) === false) {
                 Yii::error(
                     'Auth Keycloak module error' . ($message ? ': ' . $message : '') . '. Error message: ' . $errorMessage,
-                    'auth-keycloak'
+                    'auth-keycloak',
                 );
             }
             return true;

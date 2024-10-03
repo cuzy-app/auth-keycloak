@@ -4,7 +4,6 @@ use humhub\components\Migration;
 
 class uninstall extends Migration
 {
-
     public function up()
     {
         $this->safeDropColumn('{{%group}}', 'keycloak_id');

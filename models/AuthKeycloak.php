@@ -23,7 +23,7 @@ class AuthKeycloak extends Auth
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['keycloak_sid'], 'string', 'max' => 36]
+            [['keycloak_sid'], 'string', 'max' => 36],
         ]);
     }
 }

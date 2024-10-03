@@ -27,87 +27,87 @@ return [
         [
             'class' => AuthController::class,
             'event' => AuthController::EVENT_AFTER_LOGIN,
-            'callback' => [Events::class, 'onAfterLogin']
+            'callback' => [Events::class, 'onAfterLogin'],
         ],
         [
             'class' => HForm::class,
             'event' => HForm::EVENT_BEFORE_RENDER,
-            'callback' => [Events::class, 'onHFormBeforeRender']
+            'callback' => [Events::class, 'onHFormBeforeRender'],
         ],
         [
             'class' => User::class,
             'event' => User::EVENT_AFTER_UPDATE,
-            'callback' => [Events::class, 'onModelUserAfterUpdate']
+            'callback' => [Events::class, 'onModelUserAfterUpdate'],
         ],
         [
             'class' => UserComponent::class,
             'event' => UserComponent::EVENT_AFTER_LOGOUT,
-            'callback' => [Events::class, 'onComponentUserAfterLogout']
+            'callback' => [Events::class, 'onComponentUserAfterLogout'],
         ],
         [
             'class' => Collection::class,
             'event' => Collection::EVENT_AFTER_CLIENTS_SET,
-            'callback' => [Events::class, 'onAuthClientCollectionInit']
+            'callback' => [Events::class, 'onAuthClientCollectionInit'],
         ],
         [
             'class' => Group::class,
             'event' => Group::EVENT_AFTER_INSERT,
             'callback' => [
                 Events::class,
-                'onModelGroupAfterInsert'
-            ]
+                'onModelGroupAfterInsert',
+            ],
         ],
         [
             'class' => Group::class,
             'event' => Group::EVENT_AFTER_DELETE,
             'callback' => [
                 Events::class,
-                'onModelGroupAfterDelete'
-            ]
+                'onModelGroupAfterDelete',
+            ],
         ],
         [
             'class' => Group::class,
             'event' => Group::EVENT_AFTER_UPDATE,
             'callback' => [
                 Events::class,
-                'onModelGroupAfterUpdate'
-            ]
+                'onModelGroupAfterUpdate',
+            ],
         ],
         [
             'class' => GroupUser::class,
             'event' => GroupUser::EVENT_AFTER_INSERT,
             'callback' => [
                 Events::class,
-                'onModelGroupUserAfterInsert'
-            ]
+                'onModelGroupUserAfterInsert',
+            ],
         ],
         [
             'class' => GroupUser::class,
             'event' => GroupUser::EVENT_AFTER_DELETE,
             'callback' => [
                 Events::class,
-                'onModelGroupUserAfterDelete'
-            ]
+                'onModelGroupUserAfterDelete',
+            ],
         ],
         [
             'class' => CronController::class,
             'event' => CronController::EVENT_ON_DAILY_RUN,
-            'callback' => [Events::class, 'onCronDailyRun']
+            'callback' => [Events::class, 'onCronDailyRun'],
         ],
         [
             'class' => Auth::class,
             'event' => Auth::EVENT_AFTER_INSERT,
-            'callback' => [Events::class, 'onAuthAfterInsert']
+            'callback' => [Events::class, 'onAuthAfterInsert'],
         ],
         [
             'class' => Auth::class,
             'event' => Auth::EVENT_AFTER_UPDATE,
-            'callback' => [Events::class, 'onAuthAfterUpdate']
+            'callback' => [Events::class, 'onAuthAfterUpdate'],
         ],
         [
             'class' => AccountProfileMenu::class,
             'event' => AccountProfileMenu::EVENT_INIT,
-            'callback' => [Events::class, 'onAccountProfileMenuInit']
+            'callback' => [Events::class, 'onAccountProfileMenuInit'],
         ],
     ],
 ];

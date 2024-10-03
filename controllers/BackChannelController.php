@@ -8,7 +8,6 @@
 
 namespace humhub\modules\authKeycloak\controllers;
 
-
 use humhub\components\access\ControllerAccess;
 use humhub\components\Controller;
 use humhub\modules\authKeycloak\models\AuthKeycloak;

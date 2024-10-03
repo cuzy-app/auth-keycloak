@@ -34,7 +34,7 @@ class ConfigureForm extends Model
     public const GROUP_SYNC_MODE_FULL_NO_DEL = 'fullNoDel';
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $enabled = false;
     /**
@@ -306,10 +306,10 @@ class ConfigureForm extends Model
             return $hh2Kc;
         }
         return $hh2Kc || in_array($this->groupsSyncMode, [
-                self::GROUP_SYNC_MODE_HH_TO_KC_NO_DEL,
-                self::GROUP_SYNC_MODE_FULL_NO_DEL,
-                self::GROUP_SYNC_MODE_FULL_NO_KC_DEL,
-            ], true);
+            self::GROUP_SYNC_MODE_HH_TO_KC_NO_DEL,
+            self::GROUP_SYNC_MODE_FULL_NO_DEL,
+            self::GROUP_SYNC_MODE_FULL_NO_KC_DEL,
+        ], true);
     }
 
     /**
@@ -327,9 +327,9 @@ class ConfigureForm extends Model
             return $hh2Kc;
         }
         return $hh2Kc || in_array($this->groupsSyncMode, [
-                self::GROUP_SYNC_MODE_KC_TO_HH_NO_DEL,
-                self::GROUP_SYNC_MODE_FULL_NO_DEL,
-                self::GROUP_SYNC_MODE_FULL_NO_HH_DEL,
-            ], true);
+            self::GROUP_SYNC_MODE_KC_TO_HH_NO_DEL,
+            self::GROUP_SYNC_MODE_FULL_NO_DEL,
+            self::GROUP_SYNC_MODE_FULL_NO_HH_DEL,
+        ], true);
     }
 }

@@ -8,7 +8,6 @@
 
 namespace humhub\modules\authKeycloak\jobs;
 
-
 use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\components\KeycloakApi;
 use humhub\modules\authKeycloak\models\ConfigureForm;
@@ -24,7 +23,6 @@ use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\ArrayHelper;
 use yii\queue\RetryableJobInterface;
-
 
 class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, RetryableJobInterface
 {
