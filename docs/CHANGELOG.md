@@ -4,6 +4,7 @@ Changelog
 Unreleased
 --------------------
 - Chg: Repository URL from https://github.com/cuzy-app/humhub-modules-auth-keycloak to https://github.com/cuzy-app/auth-keycloak
+- Enh: Add GitHub HumHub PHP workflows (tests & CS fixer)
 
 1.4.2 (Feb 19, 2024)
 --------------------
