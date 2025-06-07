@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Keycloak Sign-In
  * @link https://github.com/cuzy-app/auth-keycloak
