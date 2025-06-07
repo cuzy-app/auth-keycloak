@@ -6,9 +6,9 @@
     "auth",
     "keycloak"
   ],
-  "version": "1.4.3",
+  "version": "1.4.4",
   "humhub": {
-    "minVersion": "1.15"
+    "minVersion": "1.17"
   },
   "homepage": "https://github.com/cuzy-app/auth-keycloak",
   "authors": [

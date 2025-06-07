@@ -1,9 +1,5 @@
 <?php
 
-if (PHP_VERSION_ID < 80100) {
-    return 'Please upgrade to PHP version 8.1 or later!';
-}
-
 if (!ini_get('allow_url_fopen')) {
     return 'You need to enable allow_url_fopen in your PHP configuration on the server.';
 }

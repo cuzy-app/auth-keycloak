@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.4.4 (June 7, 2025)
+--------------------
+- Chg Minimal HumHub version is now 1.17
+- Enh: Upgrade mohammad-waleed/keycloak-admin-client (v0.37.0 => v0.38.0)
+- Enh: Replace abandoned `web-token/jwt-key-mgmt` library with `web-token/jwt-library` v3.4.8
+
 1.4.3 (January 23, 2025)
 --------------------
 - Chg: Repository URL from https://github.com/cuzy-app/humhub-modules-auth-keycloak to https://github.com/cuzy-app/auth-keycloak

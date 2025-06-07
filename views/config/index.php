@@ -34,7 +34,7 @@ $requirements = include $module->basePath . '/' . 'requirements.php';
             ]) ?>
         <?php endif; ?>
 
-        <div class="alert alert-info">
+        <div class="alert alert-info cuzy-free-module-info">
             This module was created and is maintained by
             <a href="https://www.cuzy.app/"
                target="_blank">CUZY.APP (view other modules)</a>.
