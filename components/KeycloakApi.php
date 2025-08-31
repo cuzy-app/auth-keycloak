@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Keycloak Sign-In
  * @link https://github.com/cuzy-app/auth-keycloak
@@ -386,9 +387,9 @@ class KeycloakApi extends Component
             'id' => $userAuth->source_id,
             'value' => $newPassword,
         ]);
-        return $this->hasError($result, 'Error saving user\'s new password on Keycloak for user ID: ' . $user->id, true, 'Invalid password') ?
-            $result['error_description'] ?? false :
-            true;
+        return $this->hasError($result, 'Error saving user\'s new password on Keycloak for user ID: ' . $user->id, true, 'Invalid password')
+            ? $result['error_description'] ?? false
+            : true;
     }
 
     /**
