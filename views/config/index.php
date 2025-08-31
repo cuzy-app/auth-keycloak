@@ -6,13 +6,13 @@
 
 /* @var $apiAuthentificationSuccess bool */
 
-use humhub\libs\Html;
+use humhub\components\View;
+use humhub\helpers\Html;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\Module;
-use humhub\modules\ui\form\widgets\ActiveForm;
-use humhub\modules\ui\view\components\View;
-use humhub\widgets\Button;
-use yii\bootstrap\Alert;
+use humhub\widgets\bootstrap\Alert;
+use humhub\widgets\bootstrap\Button;
+use humhub\widgets\form\ActiveForm;
 
 /** @var Module $module */
 $module = Yii::$app->getModule('auth-keycloak');
@@ -23,18 +23,15 @@ $requirements = include $module->basePath . '/' . 'requirements.php';
 <div class="panel panel-default">
     <div class="panel-heading">
         <?= Yii::t('AuthKeycloakModule.base', '<strong>Keycloak</strong> Sign-In configuration') ?>
-        <div class="help-block"><?= $module->getDescription() ?></div>
+        <div class="text-body-secondary"><?= $module->getDescription() ?></div>
     </div>
 
     <div class="panel-body">
         <?php if ($requirements): ?>
-            <?= Alert::widget([
-                'options' => ['class' => 'alert-danger'],
-                'body' => Html::tag('strong', 'A requirement is not met: ' . $requirements),
-            ]) ?>
+            <?= Alert::danger(Html::tag('strong', 'A requirement is not met: ' . $requirements)) ?>
         <?php endif; ?>
 
-        <div class="alert alert-info cuzy-free-module-info">
+        <div class="alert alert-info cuzy-free-module-info" role="alert">
             This module was created and is maintained by
             <a href="https://www.cuzy.app/"
                target="_blank">CUZY.APP (view other modules)</a>.
@@ -54,20 +51,20 @@ $requirements = include $module->basePath . '/' . 'requirements.php';
             <div><?= Yii::t('AuthKeycloakModule.base', 'On Keycloak, create a client for HumHub and configure it:') ?></div>
             <ul>
                 <li><?= Yii::t('AuthKeycloakModule.base', '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).', [
-                        'ClientAuthenticationOn' => '“Client authentication”: “On”',
-                        'Settings' => '“Settings”',
-                        'AccessTypeValue' => '“Access Type”: “confidential”',
-                    ]) ?></li>
+                    'ClientAuthenticationOn' => '“Client authentication”: “On”',
+                    'Settings' => '“Settings”',
+                    'AccessTypeValue' => '“Access Type”: “confidential”',
+                ]) ?></li>
                 <li><?= Yii::t('AuthKeycloakModule.base', '{Settings} tab -> {ValidRedirectURIsValue}.', [
-                        'Settings' => '“Settings”',
-                        'ValidRedirectURIsValue' => '“Valid redirect URIs”: ' . Html::tag('code', $model->redirectUri),
-                    ]) ?></li>
+                    'Settings' => '“Settings”',
+                    'ValidRedirectURIsValue' => '“Valid redirect URIs”: ' . Html::tag('code', $model->redirectUri),
+                ]) ?></li>
                 <li><?= Yii::t('AuthKeycloakModule.base', '{Credentials} tab: copy the secret key', ['Credentials' => '“Credentials”']) ?></li>
             </ul>
             <div><?= Yii::t('AuthKeycloakModule.base', 'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:', [
-                    'BackChannelLogout' => '"Back-Channel Logout"',
-                    'LogoutSettings' => '"Logout settings"',
-                ]) ?></div>
+                'BackChannelLogout' => '"Back-Channel Logout"',
+                'LogoutSettings' => '"Logout settings"',
+            ]) ?></div>
             <ul>
                 <li>Backchannel logout URL: <?= Html::tag('code', $model->backChannelLogoutUrl) ?></li>
                 <li>Backchannel logout session required: On</li>
@@ -95,12 +92,12 @@ $requirements = include $module->basePath . '/' . 'requirements.php';
         <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings requiring an admin user for the API (optional)')) ?>
 
         <?php if ($model->apiUsername) : ?>
-            <?= Alert::widget([
-                'options' => ['class' => 'alert-' . ($apiAuthentificationSuccess ? 'success' : 'danger')],
-                'body' => $apiAuthentificationSuccess ?
-                    Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API succeeded!') :
-                    Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API failed!') . ' ' . Button::info(Yii::t('AuthKeycloakModule.base', 'View error log'))->link(['/admin/logging', 'levels[]' => 1])
-            ]) ?>
+            <?= Alert::instance(
+                $apiAuthentificationSuccess
+                    ? Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API succeeded!')
+                    : Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API failed!') . ' ' . Button::info(Yii::t('AuthKeycloakModule.base', 'View error log'))->link(['/admin/logging', 'levels[]' => 1]),
+                $apiAuthentificationSuccess ? 'success' : 'danger',
+            ) ?>
         <?php endif; ?>
 
         <?= $form->field($model, 'apiUsername') ?>

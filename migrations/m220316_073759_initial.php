@@ -22,7 +22,7 @@ class m220316_073759_initial extends Migration
         // Migration to version 0.5.0
         /** @var Module $module */
         $module = Yii::$app->getModule('auth-keycloak');
-        if ($module) {
+        if ($module?->isEnabled) {
             $settings = $module->settings;
             $oldApiBaseUrl = $settings->get('apiBaseUrl');
             if ($oldApiBaseUrl) {

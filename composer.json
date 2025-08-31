@@ -1,10 +1,11 @@
 {
-  "name": "cuzy-app/auth-keycloak",
-  "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
-  "minimum-stability": "stable",
-  "type": "library",
-  "require": {
-    "mohammad-waleed/keycloak-admin-client": "^0.38.0",
-    "web-token/jwt-library": "^3.4.8"
-  }
+    "name": "cuzy-app/auth-keycloak",
+    "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
+    "minimum-stability": "stable",
+    "type": "library",
+    "require": {
+        "php": ">=8.2",
+        "mohammad-waleed/keycloak-admin-client": "^0.38.0",
+        "web-token/jwt-library": "^3.4.8"
+    }
 }

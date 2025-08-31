@@ -1,10 +1,15 @@
 Changelog
 =========
 
+1.5.0 (August 31, 2025)
+--------------------
+- Enh: Migration to Bootstrap 5 for HumHub 1.18
+- Enh: Use new `ControllerHelper::isActivePath` & `$module?->isEnabled`
+
 1.4.4 (June 7, 2025)
 --------------------
 - Chg Minimal HumHub version is now 1.17
-- Enh: Upgrade mohammad-waleed/keycloak-admin-client (v0.37.0 => v0.38.0)
+- Enh: Upgrade `mohammad-waleed/keycloak-admin-client` (v0.37.0 => v0.38.0)
 - Enh: Replace abandoned `web-token/jwt-key-mgmt` library with `web-token/jwt-library` v3.4.8
 
 1.4.3 (January 23, 2025)

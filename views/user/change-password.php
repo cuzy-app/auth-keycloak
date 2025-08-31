@@ -6,7 +6,7 @@
  * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
  */
 
-use humhub\libs\Html;
+use humhub\helpers\Html;
 use yii\web\View;
 
 /**
@@ -15,7 +15,7 @@ use yii\web\View;
 ?>
 
 <?php $this->beginContent('@user/views/account/_userProfileLayout.php') ?>
-<div class="help-block">
+<div class="form-text">
     <?= Yii::t('AuthKeycloakModule.base', 'Your current password can be changed here.') ?>
 </div>
 

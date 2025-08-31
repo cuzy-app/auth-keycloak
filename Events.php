@@ -10,6 +10,7 @@ namespace humhub\modules\authKeycloak;
 
 use humhub\commands\CronController;
 use humhub\compat\HForm;
+use humhub\helpers\ControllerHelper;
 use humhub\modules\admin\models\forms\UserEditForm;
 use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\components\KeycloakApi;
@@ -18,7 +19,6 @@ use humhub\modules\authKeycloak\jobs\GroupsUserSync;
 use humhub\modules\authKeycloak\jobs\UpdateUserEmail;
 use humhub\modules\authKeycloak\jobs\UpdateUserUsername;
 use humhub\modules\authKeycloak\models\ConfigureForm;
-use humhub\modules\membersMap\Module;
 use humhub\modules\ui\menu\MenuLink;
 use humhub\modules\user\authclient\Collection;
 use humhub\modules\user\events\UserEvent;
@@ -319,7 +319,9 @@ class Events
      */
     public static function onCronDailyRun($event)
     {
-        if (!Yii::$app->getModule('auth-keycloak')) {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        if (!$module?->isEnabled) {
             return;
         }
 
@@ -414,6 +416,9 @@ class Events
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('auth-keycloak');
+        if (!$module?->isEnabled) {
+            return;
+        }
         $settings = $module->settings;
         if (
             Yii::$app->user->isGuest
@@ -437,7 +442,7 @@ class Events
             'label' => Yii::t('AuthKeycloakModule.base', 'Change password on {keycloakRealmDisplayName}', ['keycloakRealmDisplayName' => $keycloakApi->realm['displayName'] ?? '']),
             'url' => ['/auth-keycloak/user/change-password'],
             'sortOrder' => 410,
-            'isActive' => MenuLink::isActiveState('auth-keycloak', 'user', 'change-password'),
+            'isActive' => ControllerHelper::isActivePath('auth-keycloak', 'user', 'change-password'),
             'isVisible' => true,
         ]));
     }
