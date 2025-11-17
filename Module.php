@@ -19,11 +19,6 @@ class Module extends BaseModule
     public $icon = 'sign-in';
 
     /**
-     * @var string defines path for resources, including the screenshots path for the marketplace
-     */
-    public $resourcesPath = 'resources';
-
-    /**
      * @var bool When connecting to Keycloak API, check if SSL certificate is valid
      */
     public $apiVerifySsl = true;

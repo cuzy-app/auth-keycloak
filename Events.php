@@ -44,7 +44,7 @@ class Events
     {
         /** @var Collection $authClientCollection */
         $authClientCollection = $event->sender;
-
+        
         $config = new ConfigureForm();
         if ($config->enabled) {
             $authClientCollection->setClient(Keycloak::DEFAULT_NAME, [

@@ -22,13 +22,12 @@ use yii\web\View;
 <?= Html::beginForm() ?>
 
 <div class="input-group">
-    <label class="control-label" for="labelName"><?= Yii::t('AuthKeycloakModule.base', 'New password') ?> *</label>
+    <label class="form-label" for="labelName"><?= Yii::t('AuthKeycloakModule.base', 'New password') ?> *</label>
     <?= Html::textInput('newPassword', null, ['class' => 'form-control', 'type' => 'password', 'required' => true]) ?>
 </div>
 
 <div class="input-group">
-    <label class="control-label"
-           for="labelName"><?= Yii::t('AuthKeycloakModule.base', 'Confirm new password') ?> *</label>
+    <label class="form-label" for="labelName"><?= Yii::t('AuthKeycloakModule.base', 'Confirm new password') ?> *</label>
     <?= Html::textInput('newPasswordConfirm', null, ['class' => 'form-control', 'type' => 'password', 'required' => true]) ?>
 </div>
 <br>
