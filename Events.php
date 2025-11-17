@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Keycloak Sign-In
  * @link https://github.com/cuzy-app/auth-keycloak
@@ -44,7 +45,7 @@ class Events
     {
         /** @var Collection $authClientCollection */
         $authClientCollection = $event->sender;
-        
+
         $config = new ConfigureForm();
         if ($config->enabled) {
             $authClientCollection->setClient(Keycloak::DEFAULT_NAME, [
