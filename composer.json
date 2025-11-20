@@ -2,10 +2,27 @@
     "name": "cuzy-app/auth-keycloak",
     "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
     "minimum-stability": "stable",
-    "type": "library",
+    "config": {
+        "platform": {
+            "php": "8.2"
+        }
+    },
+    "type": "humhub-module",
     "require": {
         "php": ">=8.2",
         "mohammad-waleed/keycloak-admin-client": "^0.38.0",
         "web-token/jwt-library": "^3.4.8"
+    },
+    "repositories": [{
+        "name": "humhub-module-coding-standards",
+        "type": "vcs",
+        "url": "https://github.com/humhub/module-coding-standards.git"
+    }],
+    "require-dev": {
+        "humhub/module-coding-standards": "dev-main"
+    },
+    "scripts": {
+        "rector": "vendor/bin/rector process --config=vendor/humhub/module-coding-standards/rector.php",
+        "fixer": "vendor/bin/php-cs-fixer fix --config=vendor/humhub/module-coding-standards/php-cs-fixer.php"
     }
 }
