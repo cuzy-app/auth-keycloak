@@ -63,7 +63,7 @@ class BackChannelController extends Controller
         }
 
         // Decode it to get Keycloak shared session identifier
-        [$header, $payload, $signature] = explode('.', $logoutToken);
+        [$header, $payload, $signature] = explode('.', (string) $logoutToken);
         $payloadDecoded = json_decode(base64_decode($payload), true);
         $sid = $payloadDecoded['sid'] ?? null;
         if (!$sid) {

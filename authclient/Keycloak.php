@@ -46,7 +46,7 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
      */
     public function init()
     {
-        if (!class_exists('Jose\Component\KeyManagement\JWKFactory')) {
+        if (!class_exists(\Jose\Component\KeyManagement\JWKFactory::class)) {
             require_once Yii::getAlias('@auth-keycloak/vendor/autoload.php');
         }
 
@@ -139,7 +139,7 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
 
         try {
             (new AuthClientUserService($user))->add($this);
-        } catch (PDOException $e) {
+        } catch (PDOException) {
         }
 
         $sourceId = $userAttributes['id'] ?? null;
@@ -203,7 +203,7 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
     {
         try {
             return $this->api('userinfo');
-        } catch (InvalidResponseException|\Exception $e) {
+        } catch (InvalidResponseException|\Exception) {
             return [];
         }
     }

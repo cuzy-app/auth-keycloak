@@ -26,9 +26,9 @@ class m220316_073759_initial extends Migration
             $settings = $module->settings;
             $oldApiBaseUrl = $settings->get('apiBaseUrl');
             if ($oldApiBaseUrl) {
-                $posRealms = strpos($oldApiBaseUrl, '/realms/');
-                $baseUrl = substr($oldApiBaseUrl, 0, $posRealms);
-                $realm = substr($oldApiBaseUrl, $posRealms + 8, strpos($oldApiBaseUrl, '/protocol/') - $posRealms - 8);
+                $posRealms = strpos((string) $oldApiBaseUrl, '/realms/');
+                $baseUrl = substr((string) $oldApiBaseUrl, 0, $posRealms);
+                $realm = substr((string) $oldApiBaseUrl, $posRealms + 8, strpos((string) $oldApiBaseUrl, '/protocol/') - $posRealms - 8);
                 $module->settings->set('baseUrl', $baseUrl);
                 $module->settings->set('realm', $realm);
             }
