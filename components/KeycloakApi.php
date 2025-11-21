@@ -104,9 +104,7 @@ class KeycloakApi extends Component
             Yii::error('Error retrieving user\'s groups from Keycloak for user ID: ' . $userId . ' (result is not an array)', 'auth-keycloak');
             return [];
         }
-        return array_map(static function ($group) {
-            return (int)$group['id'];
-        }, $result);
+        return array_map(static fn($group) => (int)$group['id'], $result);
     }
 
     /**
@@ -288,7 +286,7 @@ class KeycloakApi extends Component
             return;
         }
 
-        if (!class_exists('Keycloak\Admin\KeycloakClient')) {
+        if (!class_exists(\Keycloak\Admin\KeycloakClient::class)) {
             require_once Yii::getAlias('@auth-keycloak/vendor/autoload.php');
         }
 
@@ -446,9 +444,7 @@ class KeycloakApi extends Component
                 'first' => $first,
                 'max' => self::MAX_USERS_RESULT,
             ]);
-            $currentMemberIds = array_map(static function ($member) {
-                return $member['id'] ?? null;
-            }, $currentMembers);
+            $currentMemberIds = array_map(static fn($member) => $member['id'] ?? null, $currentMembers);
             $currentMemberIds = array_filter($currentMemberIds);
             $memberIds = array_merge($memberIds, $currentMemberIds);
             $first += self::MAX_USERS_RESULT;
@@ -478,7 +474,7 @@ class KeycloakApi extends Component
         }
         if (count($errors) > 0) {
             $errorMessage = implode(' | ', $errors);
-            if ($addErrorToLog && strpos($errorMessage, $errorToIgnoreForLog) === false) {
+            if ($addErrorToLog && !str_contains($errorMessage, (string) $errorToIgnoreForLog)) {
                 Yii::error(
                     'Auth Keycloak module error' . ($message ? ': ' . $message : '') . '. Error message: ' . $errorMessage,
                     'auth-keycloak',
