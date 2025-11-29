@@ -286,7 +286,7 @@ class KeycloakApi extends Component
             return;
         }
 
-        if (!class_exists(\Keycloak\Admin\KeycloakClient::class)) {
+        if (!class_exists('Keycloak\Admin\KeycloakClient')) {
             require_once Yii::getAlias('@auth-keycloak/vendor/autoload.php');
         }
 
