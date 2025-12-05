@@ -46,7 +46,7 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
      */
     public function init()
     {
-        if (!class_exists('Jose\Component\KeyManagement\JWKFactory')) {
+        if (!class_exists(\Jose\Component\KeyManagement\JWKFactory::class)) {
             require_once Yii::getAlias('@auth-keycloak/vendor/autoload.php');
         }
 
