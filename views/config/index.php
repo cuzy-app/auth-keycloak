@@ -17,7 +17,8 @@ use humhub\widgets\form\ActiveForm;
 /** @var Module $module */
 $module = Yii::$app->getModule('auth-keycloak');
 
-$requirements = include $module->basePath . '/' . 'requirements.php';
+$requirementsFile = $module->basePath . '/' . 'requirements.php';
+$requirements = file_exists($requirementsFile) ? (include $module->basePath . '/' . 'requirements.php') : null;
 ?>
 
 <div class="panel panel-default">
