@@ -8,8 +8,10 @@
         }
     },
     "type": "humhub-module",
+    "extra": {
+        "hasOnlyHumHubModuleCodingStandards": false
+    },
     "require": {
-        "php": ">=8.2",
         "mohammad-waleed/keycloak-admin-client": "^0.38.0",
         "web-token/jwt-library": "^3.4.8"
     },
@@ -19,6 +21,7 @@
         "url": "https://github.com/humhub/module-coding-standards.git"
     }],
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "humhub/module-coding-standards": "dev-main"
     },
     "scripts": {
