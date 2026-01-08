@@ -446,7 +446,7 @@ class KeycloakApi extends Component
             ]);
             $currentMemberIds = array_map(static fn($member) => $member['id'] ?? null, $currentMembers);
             $currentMemberIds = array_filter($currentMemberIds);
-            $memberIds = array_merge($memberIds, $currentMemberIds);
+            array_push($memberIds, ...$currentMemberIds);
             $first += self::MAX_USERS_RESULT;
         }
 
