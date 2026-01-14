@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Unreleased
+--------------------
+- Enh #29: Add `email` scope to Keycloak API configuration (thanks @saeltz)
+
 1.5.0 (August 31, 2025)
 --------------------
 - Enh: Migration to Bootstrap 5 for HumHub 1.18
