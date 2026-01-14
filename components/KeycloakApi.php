@@ -300,7 +300,7 @@ class KeycloakApi extends Component
             'username' => $config->apiUsername,
             'password' => $config->apiPassword,
             'baseUri' => $config->baseUrl . '/',
-            'scope' => 'openid',
+            'scope' => 'openid email',
             'verify' => $module->apiVerifySsl,
         ]);
         if ($config->realm !== 'master') {
