@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Unreleased
+1.5.1 (January 15, 2025)
 --------------------
 - Enh #29: Add `email` scope to Keycloak API configuration (thanks @saeltz)
 
