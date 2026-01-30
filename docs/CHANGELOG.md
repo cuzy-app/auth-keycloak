@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.5.2 (Unreleased)
+------------------
+- Enh: Automated code refactoring for HumHub 1.18 using Rector
+
 1.5.1 (January 15, 2025)
 --------------------
 - Enh #29: Add `email` scope to Keycloak API configuration (thanks @saeltz)

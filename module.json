@@ -1,23 +1,22 @@
 {
-  "id": "auth-keycloak",
-  "name": "Keycloak Sign-In",
-  "description": "Integrating Keycloak Sign-In (OpenID Connect)",
-  "keywords": [
-    "auth",
-    "keycloak"
-  ],
-  "version": "1.5.1",
-  "humhub": {
-    "minVersion": "1.18"
-  },
-  "homepage": "https://github.com/cuzy-app/auth-keycloak",
-  "authors": [
-    {
-      "name": "Marc FARRE",
-      "homepage": "https://marc.fun",
-      "role": "Developer"
-    }
-  ],
-  "screenshots": [
-  ]
+    "id": "auth-keycloak",
+    "name": "Keycloak Sign-In",
+    "description": "Integrating Keycloak Sign-In (OpenID Connect)",
+    "keywords": [
+        "auth",
+        "keycloak"
+    ],
+    "version": "1.5.2",
+    "humhub": {
+        "minVersion": "1.18"
+    },
+    "homepage": "https://github.com/cuzy-app/auth-keycloak",
+    "authors": [
+        {
+            "name": "Marc FARRE",
+            "homepage": "https://marc.fun",
+            "role": "Developer"
+        }
+    ],
+    "screenshots": []
 }
