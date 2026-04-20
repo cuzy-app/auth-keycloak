@@ -72,6 +72,27 @@ class Events
             return;
         }
 
+        // Recover Auth record for newly registered Keycloak users.
+        // On a user's very first login, Keycloak::syncUserAttributes() runs
+        // before the user has been persisted in the database, so the Auth
+        // record cannot be written at that point. EVENT_AFTER_LOGIN fires
+        // after the user has been persisted, so we can catch up here.
+        // Without this, user_auth.source_id stays empty until the user
+        // logs in a second time, which in turn prevents the group sync
+        // (both GroupsUserSync and GroupsFullSync rely on this record).
+        if ($user->auth_mode === Keycloak::DEFAULT_NAME) {
+            $existingAuth = Auth::findOne([
+                'user_id' => $user->id,
+                'source' => Keycloak::DEFAULT_NAME,
+            ]);
+            if ($existingAuth === null) {
+                $authClient = Yii::$app->authClientCollection->getClient(Keycloak::DEFAULT_NAME);
+                if ($authClient instanceof Keycloak) {
+                    $authClient->createOrUpdateAuthRecord($user);
+                }
+            }
+        }
+
         if ($config->updatedBrokerUsernameFromHumhubUsername) {
             Yii::$app->queue->push(new UpdateUserUsername(['userId' => $user->id]));
         }
