@@ -124,6 +124,58 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
     }
 
     /**
+     * Creates or updates the Keycloak Auth record for a given user.
+     *
+     * Extracted from syncUserAttributes() so the same logic can be called
+     * from Events::onAfterLogin() as well. This is needed to recover the
+     * Auth record for newly registered users: syncUserAttributes() runs
+     * during OAuth callback processing, but at that point a brand-new user
+     * does not yet exist in the database, so getUser() returns null and
+     * the original logic exits before the Auth record can be written.
+     * EVENT_AFTER_LOGIN fires after the user has been persisted, so calling
+     * this method from there guarantees the Auth record is created on the
+     * very first login.
+     *
+     * @param User $user
+     * @return void
+     */
+    public function createOrUpdateAuthRecord(User $user)
+    {
+        $userAttributes = $this->getUserAttributes();
+        $sourceId = $userAttributes['id'] ?? null;
+        if (!$sourceId) {
+            return;
+        }
+
+        $auth = AuthKeycloak::findOne([
+            'source' => self::DEFAULT_NAME,
+            'source_id' => $sourceId,
+        ]);
+
+        // Make sure authClient is not doubly assigned
+        if ($auth !== null && $auth->user_id !== $user->id) {
+            $auth->delete();
+            $auth = null;
+        }
+
+        // Get Keycloak shared session identifier
+        $sid = Yii::$app->request->get('session_state');
+
+        if ($auth === null) {
+            $auth = new AuthKeycloak([
+                'user_id' => $user->id,
+                'source' => self::DEFAULT_NAME,
+                'source_id' => (string)$sourceId,
+                'keycloak_sid' => $sid,
+            ]);
+            $auth->save();
+        } elseif ($auth->keycloak_sid !== $sid) {
+            $auth->keycloak_sid = $sid;
+            $auth->save();
+        }
+    }
+
+    /**
      * @inheridoc
      * @throws StaleObjectException
      * @throws \Throwable
@@ -142,35 +194,7 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
         } catch (PDOException) {
         }
 
-        $sourceId = $userAttributes['id'] ?? null;
-        if ($sourceId) {
-            $auth = AuthKeycloak::findOne([
-                'source' => self::DEFAULT_NAME,
-                'source_id' => $sourceId,
-            ]);
-
-            // Make sure authClient is not doubly assigned
-            if ($auth !== null && $auth->user_id !== $user->id) {
-                $auth->delete();
-                $auth = null;
-            }
-
-            // Get Keycloak shared session identifier
-            $sid = Yii::$app->request->get('session_state');
-
-            if ($auth === null) {
-                $auth = new AuthKeycloak([
-                    'user_id' => $user->id,
-                    'source' => self::DEFAULT_NAME,
-                    'source_id' => (string)$sourceId,
-                    'keycloak_sid' => $sid,
-                ]);
-                $auth->save();
-            } elseif ($auth->keycloak_sid !== $sid) {
-                $auth->keycloak_sid = $sid;
-                $auth->save();
-            }
-        }
+        $this->createOrUpdateAuthRecord($user);
 
         /** @var Module $module */
         $module = Yii::$app->getModule('auth-keycloak');
