@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.5.2 (April 26, 2026)
+--------------------
+- Fix #33: Create user_auth record on first login for new Keycloak users (thanks @hochleitner)
+
 1.5.1 (January 15, 2025)
 --------------------
 - Enh #29: Add `email` scope to Keycloak API configuration (thanks @saeltz)
