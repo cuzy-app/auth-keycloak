@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.5.3 (May 6, 2026)
+--------------------
+- Fix #32: Error with account reconciliation when same email
+
 1.5.2 (April 26, 2026)
 --------------------
 - Fix #33: Create user_auth record on first login for new Keycloak users (thanks @hochleitner)

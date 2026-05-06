@@ -93,14 +93,14 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
 
         if (array_key_exists('email', $userAttributes)) {
             $userByEmail = User::findOne(['email' => $userAttributes['email']]);
-            if ($userByEmail !== null) {
+            if ($userByEmail !== null && $this->isUserSafeToLink($userByEmail, $userAttributes['id'] ?? null)) {
                 return $userByEmail;
             }
         }
 
         if (array_key_exists('username', $userAttributes)) {
             $userByUsername = User::findOne(['username' => $userAttributes['username']]);
-            if ($userByUsername !== null) {
+            if ($userByUsername !== null && $this->isUserSafeToLink($userByUsername, $userAttributes['id'] ?? null)) {
                 return $userByUsername;
             }
         }
@@ -121,6 +121,38 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
         }
 
         return parent::getUserAttributes();
+    }
+
+    /**
+     * Checks whether a HumHub user found via email/username fallback is safe to link
+     * to the current Keycloak identity.
+     *
+     * Returns false when the user already has a Keycloak auth record whose source_id
+     * differs from the incoming one. Without this guard a Keycloak principal whose
+     * email matches an existing HumHub account could impersonate that account even
+     * though the two principals have completely different sub claims (source_ids).
+     *
+     * @param User        $user     The HumHub user found by the fallback lookup.
+     * @param string|null $sourceId The source_id (sub) of the currently authenticating Keycloak principal.
+     * @return bool
+     */
+    protected function isUserSafeToLink(User $user, ?string $sourceId): bool
+    {
+        // No source_id means we cannot reliably identify the Keycloak principal – block linking.
+        if ($sourceId === null) {
+            return false;
+        }
+
+        $existingAuth = Auth::findOne([
+            'user_id' => $user->id,
+            'source' => self::DEFAULT_NAME,
+        ]);
+
+        // No existing Keycloak auth record → safe to link (first Keycloak login for this user).
+        // Existing record matches the current source_id → same principal, safe.
+        // Existing record has a different source_id → different Keycloak identity already owns
+        // this account; block linking to prevent impersonation.
+        return $existingAuth === null || $existingAuth->source_id === $sourceId;
     }
 
     /**
