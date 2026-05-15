@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.6.0 (Unreleased)
+--------------------
+- Enh: Compatibility with HumHub 1.19 user/auth refactor (humhub/humhub#TBD)
+- Enh: Register `KeycloakUserSource` — Keycloak users are now properly owned by this module (`user.user_source = 'Keycloak'`), replacing the pre-1.19 `PrimaryClient` semantic. Locked profile attributes follow the existing `updateHumhubEmailFromBrokerEmail` / `updateHumhubUsernameFromBrokerUsername` settings. Opt out via `Module::$provideUserSource = false`.
+- Enh: One-time migration backfills `user_source = 'Keycloak'` for every existing user with a Keycloak `user_auth` row (core's 1.19 migration only backfills LDAP).
+- Chg: Drop `PrimaryClient` marker on `Keycloak` auth client (interface is now an empty marker in core)
+- Chg: Drop legacy `user.auth_mode` lookups — the column is removed in core 1.19. Auth record recovery on first login now relies solely on the missing `user_auth` row + the current OAuth session.
+- Chg: Minimum HumHub version is now 1.19
+
 1.5.3 (May 6, 2026)
 --------------------
 - Fix #32: Error with account reconciliation when same email

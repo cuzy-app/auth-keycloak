@@ -16,6 +16,7 @@ use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\Group;
 use humhub\modules\user\models\GroupUser;
 use humhub\modules\user\models\User;
+use humhub\modules\user\source\UserSourceCollection;
 use humhub\modules\user\widgets\AccountProfileMenu;
 use yii\web\User as UserComponent;
 
@@ -109,6 +110,11 @@ return [
             'class' => AccountProfileMenu::class,
             'event' => AccountProfileMenu::EVENT_INIT,
             'callback' => [Events::class, 'onAccountProfileMenuInit'],
+        ],
+        [
+            'class' => UserSourceCollection::class,
+            'event' => UserSourceCollection::EVENT_BEFORE_USER_SOURCES_SET,
+            'callback' => [Events::class, 'onUserSourceCollectionSet'],
         ],
     ],
 ];

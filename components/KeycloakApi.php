@@ -16,7 +16,6 @@ use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\authKeycloak\Module;
 use humhub\modules\user\models\Auth;
-use humhub\modules\user\models\User;
 use Keycloak\Admin\KeycloakClient;
 use Yii;
 use yii\base\Component;
@@ -114,22 +113,10 @@ class KeycloakApi extends Component
      */
     public function getUserAuth($userId)
     {
-        $auth = Auth::find()
+        return Auth::find()
             ->where(['source' => Keycloak::DEFAULT_NAME, 'user_id' => $userId])
             ->orderBy(['id' => SORT_DESC]) // get the latest if it has multiple
             ->one();
-
-        if ($auth === null) {
-            $user = User::findOne(['id' => $userId, 'auth_mode' => Keycloak::DEFAULT_NAME]);
-            if ($user !== null) {
-                $keycloakUserId = $this->getUserId($user->email);
-                if ($keycloakUserId !== null) {
-                    $auth = Auth::findOne(['source' => Keycloak::DEFAULT_NAME, 'source_id' => $keycloakUserId]);
-                }
-            }
-        }
-
-        return $auth;
     }
 
     /**

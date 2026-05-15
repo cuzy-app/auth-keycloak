@@ -25,6 +25,22 @@ class Module extends BaseModule
     public $apiVerifySsl = true;
 
     /**
+     * @var bool Register a dedicated UserSource for Keycloak-provisioned users.
+     *
+     * Default: true. Mirrors the pre-1.19 `PrimaryClient` semantic — users that
+     * log in via Keycloak are owned by this module (locked profile attributes
+     * per the `updateHumhubEmailFromBrokerEmail` / `updateHumhubUsernameFromBrokerUsername`
+     * settings, password tab hidden, etc.).
+     *
+     * Set to false in `protected/config/common.php` to opt out — Keycloak users
+     * then fall back to `LocalUserSource`. See `docs/CHANGELOG.md` 1.6.0 for the
+     * trade-offs.
+     *
+     * @since 1.6.0
+     */
+    public bool $provideUserSource = true;
+
+    /**
      * @inheritdoc
      */
     public function getConfigUrl()
