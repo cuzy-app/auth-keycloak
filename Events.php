@@ -20,6 +20,7 @@ use humhub\modules\authKeycloak\jobs\GroupsUserSync;
 use humhub\modules\authKeycloak\jobs\UpdateUserEmail;
 use humhub\modules\authKeycloak\jobs\UpdateUserUsername;
 use humhub\modules\authKeycloak\models\ConfigureForm;
+use humhub\modules\authKeycloak\source\KeycloakUserSource;
 use humhub\modules\ui\menu\MenuLink;
 use humhub\modules\user\authclient\Collection;
 use humhub\modules\user\events\UserEvent;
@@ -37,6 +38,24 @@ use yii\helpers\Console;
 
 class Events
 {
+    /**
+     * Registers the Keycloak UserSource. Opt-out via `Module::$provideUserSource = false`.
+     *
+     * @param Event $event UserSourceCollection::EVENT_BEFORE_USER_SOURCES_SET
+     */
+    public static function onUserSourceCollectionSet($event)
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        if (!$module || !$module->provideUserSource) {
+            return;
+        }
+
+        $event->parameters['userSources'][KeycloakUserSource::SOURCE_ID] = [
+            'class' => KeycloakUserSource::class,
+        ];
+    }
+
     /**
      * @param Event $event
      * @return void
@@ -80,16 +99,17 @@ class Events
         // Without this, user_auth.source_id stays empty until the user
         // logs in a second time, which in turn prevents the group sync
         // (both GroupsUserSync and GroupsFullSync rely on this record).
-        if ($user->auth_mode === Keycloak::DEFAULT_NAME) {
-            $existingAuth = Auth::findOne([
-                'user_id' => $user->id,
-                'source' => Keycloak::DEFAULT_NAME,
-            ]);
-            if ($existingAuth === null) {
-                $authClient = Yii::$app->authClientCollection->getClient(Keycloak::DEFAULT_NAME);
-                if ($authClient instanceof Keycloak) {
-                    $authClient->createOrUpdateAuthRecord($user);
-                }
+        // For non-Keycloak logins the Keycloak auth client has no user
+        // attributes in the session, so createOrUpdateAuthRecord() exits
+        // early.
+        $existingAuth = Auth::findOne([
+            'user_id' => $user->id,
+            'source' => Keycloak::DEFAULT_NAME,
+        ]);
+        if ($existingAuth === null) {
+            $authClient = Yii::$app->authClientCollection->getClient(Keycloak::DEFAULT_NAME);
+            if ($authClient instanceof Keycloak) {
+                $authClient->createOrUpdateAuthRecord($user);
             }
         }
 

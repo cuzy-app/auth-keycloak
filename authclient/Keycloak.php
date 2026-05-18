@@ -12,7 +12,6 @@ namespace humhub\modules\authKeycloak\authclient;
 use humhub\modules\authKeycloak\models\AuthKeycloak;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\Module;
-use humhub\modules\user\authclient\interfaces\PrimaryClient;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
 use humhub\modules\user\services\AuthClientUserService;
@@ -24,11 +23,7 @@ use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\BaseInflector;
 
-/**
- * With PrimaryClient, the user will have the `auth_mode` field in the `user` table set to 'Keycloak'.
- * This will avoid showing the "Change Password" tab when logged in with Keycloak
- */
-class Keycloak extends OpenIdConnect implements PrimaryClient
+class Keycloak extends OpenIdConnect
 {
     public const DEFAULT_NAME = 'Keycloak';
 
