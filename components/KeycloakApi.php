@@ -16,6 +16,7 @@ use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\authKeycloak\Module;
 use humhub\modules\user\models\Auth;
+use humhub\modules\user\models\User;
 use Keycloak\Admin\KeycloakClient;
 use Yii;
 use yii\base\Component;
