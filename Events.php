@@ -12,6 +12,7 @@ namespace humhub\modules\authKeycloak;
 use humhub\commands\CronController;
 use humhub\compat\HForm;
 use humhub\helpers\ControllerHelper;
+use humhub\libs\ParameterEvent;
 use humhub\modules\admin\models\forms\UserEditForm;
 use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\components\KeycloakApi;
@@ -43,7 +44,7 @@ class Events
      *
      * @param Event $event UserSourceCollection::EVENT_BEFORE_USER_SOURCES_SET
      */
-    public static function onUserSourceCollectionSet($event)
+    public static function onUserSourceCollectionSet(ParameterEvent $event)
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('auth-keycloak');
@@ -220,7 +221,7 @@ class Events
      * Remove session on Keycloak after logout
      * @param $event
      */
-    public static function onComponentUserAfterLogout($event)
+    public static function onComponentUserAfterLogout(\yii\web\UserEvent $event)
     {
         /** @var User $user */
         $user = $event->identity;
