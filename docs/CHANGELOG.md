@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.0 (Unreleased)
+1.6.0 (July 16, 2026)
 --------------------
 - Enh: Compatibility with HumHub 1.19 user/auth refactor (humhub/humhub#TBD)
 - Enh: Register `KeycloakUserSource` — Keycloak users are now properly owned by this module (`user.user_source = 'Keycloak'`), replacing the pre-1.19 `PrimaryClient` semantic. Locked profile attributes follow the existing `updateHumhubEmailFromBrokerEmail` / `updateHumhubUsernameFromBrokerUsername` settings. Opt out via `Module::$provideUserSource = false`.
