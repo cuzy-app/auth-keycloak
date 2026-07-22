@@ -1,6 +1,11 @@
 {
     "name": "cuzy-app/auth-keycloak",
     "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
+    "autoload": {
+        "psr-4": {
+            "humhub\\modules\\authKeycloak\\": ""
+        }
+    },
     "minimum-stability": "stable",
     "config": {
         "platform": {
