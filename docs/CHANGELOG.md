@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.6.1 (Unreleased)
+--------------------
+- Fix: Do not bundle `web-token/jwt-library`: HumHub core requires it (^4.1) for `yii\authclient\OpenIdConnect` ID token validation, and the bundled 3.x copy could shadow it mid-validation
+
 1.6.0 (July 16, 2026)
 --------------------
 - Enh: Compatibility with HumHub 1.19 user/auth refactor (humhub/humhub#TBD)

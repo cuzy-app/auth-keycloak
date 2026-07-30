@@ -41,10 +41,10 @@ class Keycloak extends OpenIdConnect
      */
     public function init()
     {
-        if (!class_exists(\Jose\Component\KeyManagement\JWKFactory::class)) {
-            require_once Yii::getAlias('@auth-keycloak/vendor/autoload.php');
-        }
-
+        // web-token/jwt-library is not loaded here on purpose: yii\authclient\OpenIdConnect needs it
+        // for ID token validation and HumHub core requires it (^4.1). Bundling a copy in this module
+        // made the module's autoloader shadow core's for any Jose class not yet loaded, so token
+        // validation could run against a mix of two library versions.
         $config = new ConfigureForm();
         $this->issuerUrl = $config->baseUrl . '/realms/' . $config->realm;
         $this->apiBaseUrl = $this->issuerUrl . '/protocol/openid-connect';
