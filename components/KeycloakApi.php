@@ -286,9 +286,9 @@ class KeycloakApi extends Component
             return;
         }
 
-        if (!class_exists(\Keycloak\Admin\KeycloakClient::class)) {
-            require_once Yii::getAlias('@auth-keycloak/vendor/autoload.php');
-        }
+        // require_once is idempotent, so no class_exists() sentinel: a sentinel can be satisfied by
+        // another module's (or core's) copy of the library and leave this autoloader unregistered.
+        require_once Yii::getAlias('@auth-keycloak/vendor/autoload.php');
 
         /** @var Module $module */
         $module = Yii::$app->getModule('auth-keycloak');

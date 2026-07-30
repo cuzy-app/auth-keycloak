@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.5.4 (Unreleased)
+--------------------
+- Fix: Do not bundle `web-token/jwt-library`: HumHub core requires it (^4.1) for `yii\authclient\OpenIdConnect` ID token validation, and the bundled 3.x copy could shadow it mid-validation
+
 1.5.3 (May 6, 2026)
 --------------------
 - Fix #32: Error with account reconciliation when same email
