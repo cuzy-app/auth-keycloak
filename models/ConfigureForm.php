@@ -35,6 +35,14 @@ class ConfigureForm extends Model
     public const GROUP_SYNC_MODE_FULL_NO_DEL = 'fullNoDel';
 
     /**
+     * What a stored secret (the client secret, the API admin password) renders as once saved.
+     * Submitting this value unchanged keeps the stored secret; clearing the field and submitting
+     * empty deletes it. Never echo a real stored secret back into the form: any other admin could
+     * read or copy it via the password field's reveal icon.
+     */
+    public const SECRET_PLACEHOLDER = '••••••••';
+
+    /**
      * @var bool
      */
     public $enabled = false;
@@ -127,6 +135,38 @@ class ConfigureForm extends Model
             [['enabled', 'hideRegistrationUsernameField', 'hideAdminUserEditPassword', 'removeKeycloakSessionsAfterLogout', 'updateHumhubUsernameFromBrokerUsername', 'updatedBrokerUsernameFromHumhubUsername', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount'], 'boolean'],
             [['groupsSyncMode'], 'safe'],
         ];
+    }
+
+    /**
+     * Replaces the stored secrets with the placeholder for display. This class doubles as the
+     * settings accessor for every real usage (`KeycloakApi`, `Keycloak` auth client, the group
+     * sync jobs and events all build their own `new ConfigureForm()`), so masking cannot live in
+     * {@see init()} — that would hand the literal placeholder to Keycloak as the client secret or
+     * admin password. Only the config controller may call this, and only right before rendering
+     * the form.
+     */
+    public function maskSecretsForDisplay(): void
+    {
+        if ((string)$this->clientSecret !== '') {
+            $this->clientSecret = self::SECRET_PLACEHOLDER;
+        }
+        if ((string)$this->apiPassword !== '') {
+            $this->apiPassword = self::SECRET_PLACEHOLDER;
+        }
+    }
+
+    /**
+     * If a submitted secret is still the placeholder, the admin left it untouched: restore the
+     * real value so {@see save()} does not overwrite it with the placeholder bullets.
+     */
+    public function restoreSecretsIfUnchanged(?string $storedClientSecret, ?string $storedApiPassword): void
+    {
+        if ($this->clientSecret === self::SECRET_PLACEHOLDER) {
+            $this->clientSecret = $storedClientSecret;
+        }
+        if ($this->apiPassword === self::SECRET_PLACEHOLDER) {
+            $this->apiPassword = $storedApiPassword;
+        }
     }
 
     /**

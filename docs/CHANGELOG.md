@@ -1,9 +1,10 @@
 Changelog
 =========
 
-1.6.1 (Unreleased)
+1.6.1 (September 3, 2026))
 --------------------
 - Fix: Do not bundle `web-token/jwt-library`: HumHub core requires it (^4.1) for `yii\authclient\OpenIdConnect` ID token validation, and the bundled 3.x copy could shadow it mid-validation
+- Fix: The client secret and the Keycloak API admin password are no longer echoed into the configuration form once saved, so they cannot be revealed or copied by another admin; the form keeps the stored values when the fields are left unchanged
 
 1.6.0 (July 16, 2026)
 --------------------

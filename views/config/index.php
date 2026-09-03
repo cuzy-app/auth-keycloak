@@ -80,7 +80,10 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
         <?= $form->field($model, 'baseUrl') ?>
         <?= $form->field($model, 'realm') ?>
         <?= $form->field($model, 'clientId') ?>
-        <?= $form->field($model, 'clientSecret')->textInput(['type' => 'password']) ?>
+        <?php // A stored secret is never echoed into HTML: the field carries the bullet
+              // placeholder, and submitting it unchanged keeps the real value (see
+              // ConfigController::actionIndex()). ?>
+        <?= $form->field($model, 'clientSecret')->textInput(['type' => 'password', 'autocomplete' => 'new-password']) ?>
         <?= $form->field($model, 'redirectUri')->textInput(['readonly' => true]) ?>
         <?= $form->field($model, 'usernameMapper') ?>
 
@@ -102,7 +105,8 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
         <?php endif; ?>
 
         <?= $form->field($model, 'apiUsername') ?>
-        <?= $form->field($model, 'apiPassword')->textInput(['type' => 'password']) ?>
+        <?php // Same masking as the client secret above (see ConfigController::actionIndex()). ?>
+        <?= $form->field($model, 'apiPassword')->textInput(['type' => 'password', 'autocomplete' => 'new-password']) ?>
         <?= $form->field($model, 'removeKeycloakSessionsAfterLogout')->checkbox() ?>
         <?= $form->field($model, 'updateHumhubUsernameFromBrokerUsername')->checkbox() ?>
         <?= $form->field($model, 'updatedBrokerUsernameFromHumhubUsername')->checkbox() ?>
