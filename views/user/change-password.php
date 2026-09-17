@@ -2,7 +2,7 @@
 /**
  * Keycloak Sign-In
  * @link https://github.com/cuzy-app/auth-keycloak
- * @license https://github.com/cuzy-app/auth-keycloak/blob/master/docs/LICENCE.md
+ * @license https://github.com/cuzy-app/auth-keycloak/blob/main/docs/LICENCE.md
  * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
  */
 

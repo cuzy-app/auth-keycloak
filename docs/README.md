@@ -49,4 +49,4 @@ https://github.com/cuzy-app/auth-keycloak
 
 ## Licence
 
-[GNU AGPL](https://github.com/cuzy-app/auth-keycloak/blob/master/docs/LICENCE.md)
+[GNU AGPL](https://github.com/cuzy-app/auth-keycloak/blob/main/docs/LICENCE.md)
