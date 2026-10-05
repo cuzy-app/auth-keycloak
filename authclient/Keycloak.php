@@ -23,6 +23,7 @@ use yii\authclient\OpenIdConnect;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\BaseInflector;
+use yii\web\HttpException;
 
 /**
  * With PrimaryClient, the user will have the `auth_mode` field in the `user` table set to 'Keycloak'.
@@ -67,6 +68,29 @@ class Keycloak extends OpenIdConnect implements PrimaryClient
         $data = $request->getData();
         $data['Authorization'] = 'Bearer ' . $accessToken->getToken();
         $request->setHeaders($data);
+    }
+
+    /**
+     * Verifies the signature and the claims of a back-channel logout token
+     * https://openid.net/specs/openid-connect-backchannel-1_0.html#Validation
+     *
+     * @param string $logoutToken
+     * @return array the token claims
+     * @throws HttpException if the token is not valid
+     */
+    public function verifyLogoutToken(string $logoutToken): array
+    {
+        $claims = $this->loadJws($logoutToken);
+        $this->validateClaims($claims);
+
+        if (!isset($claims['events']['http://schemas.openid.net/event/backchannel-logout'])) {
+            throw new HttpException(400, 'Invalid "events"');
+        }
+        if (isset($claims['nonce'])) {
+            throw new HttpException(400, 'Invalid "nonce"');
+        }
+
+        return $claims;
     }
 
     /**

@@ -11,10 +11,12 @@ namespace humhub\modules\authKeycloak\controllers;
 
 use humhub\components\access\ControllerAccess;
 use humhub\components\Controller;
+use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\models\AuthKeycloak;
 use humhub\modules\user\models\Session;
 use Yii;
 use yii\web\BadRequestHttpException;
+use yii\web\HttpException;
 use yii\web\JsonParser;
 use yii\web\NotFoundHttpException;
 
@@ -62,9 +64,19 @@ class BackChannelController extends Controller
             $this->sendError('Missing logout token');
         }
 
-        // Decode it to get Keycloak shared session identifier
-        [$header, $payload, $signature] = explode('.', (string) $logoutToken);
-        $payloadDecoded = json_decode(base64_decode($payload), true);
+        if (!Yii::$app->authClientCollection->hasClient(Keycloak::DEFAULT_NAME)) {
+            $this->sendError('Keycloak client not enabled');
+        }
+
+        /** @var Keycloak $authClient */
+        $authClient = Yii::$app->authClientCollection->getClient(Keycloak::DEFAULT_NAME);
+
+        // Verify it and get Keycloak shared session identifier
+        try {
+            $payloadDecoded = $authClient->verifyLogoutToken((string)$logoutToken);
+        } catch (HttpException $e) {
+            throw new BadRequestHttpException('Keycloak: invalid logout token', 0, $e);
+        }
         $sid = $payloadDecoded['sid'] ?? null;
         if (!$sid) {
             $this->sendError('Missing sid in logout token');
