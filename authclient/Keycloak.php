@@ -3,7 +3,7 @@
 /**
  * Keycloak Sign-In
  * @link https://github.com/cuzy-app/auth-keycloak
- * @license https://github.com/cuzy-app/auth-keycloak/blob/master/docs/LICENCE.md
+ * @license https://github.com/cuzy-app/auth-keycloak/blob/main/docs/LICENCE.md
  * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
  */
 
@@ -22,6 +22,7 @@ use yii\authclient\OpenIdConnect;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
 use yii\helpers\BaseInflector;
+use yii\web\HttpException;
 
 class Keycloak extends OpenIdConnect
 {
@@ -62,6 +63,29 @@ class Keycloak extends OpenIdConnect
         $data = $request->getData();
         $data['Authorization'] = 'Bearer ' . $accessToken->getToken();
         $request->setHeaders($data);
+    }
+
+    /**
+     * Verifies the signature and the claims of a back-channel logout token
+     * https://openid.net/specs/openid-connect-backchannel-1_0.html#Validation
+     *
+     * @param string $logoutToken
+     * @return array the token claims
+     * @throws HttpException if the token is not valid
+     */
+    public function verifyLogoutToken(string $logoutToken): array
+    {
+        $claims = $this->loadJws($logoutToken);
+        $this->validateClaims($claims);
+
+        if (!isset($claims['events']['http://schemas.openid.net/event/backchannel-logout'])) {
+            throw new HttpException(400, 'Invalid "events"');
+        }
+        if (isset($claims['nonce'])) {
+            throw new HttpException(400, 'Invalid "nonce"');
+        }
+
+        return $claims;
     }
 
     /**
