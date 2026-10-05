@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.6.2 (Unreleased)
-------------------
+1.6.2 (October 5, 2026)
+-----------------------
 - Fix: Minor cleanup of model validation rules.
 
 1.6.1 (September 3, 2026))
