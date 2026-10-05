@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.6.3 (Unreleased)
-------------------
+1.6.3 (October 5, 2026)
+-----------------------
 - Enh: Add a hint to the "change password" configuration option
 
 1.6.2 (October 5, 2026)
