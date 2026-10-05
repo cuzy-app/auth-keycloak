@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.5.4 (Unreleased)
---------------------
+1.5.4 (October 5, 2026)
+-----------------------
 - Fix: Minor cleanup of model validation rules.
 - Fix: Do not bundle `web-token/jwt-library`: HumHub core requires it (^4.1) for `yii\authclient\OpenIdConnect` ID token validation, and the bundled 3.x copy could shadow it mid-validation
 
