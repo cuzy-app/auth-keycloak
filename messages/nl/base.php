@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => 'Configuratie van <strong>Keycloak</strong> -aanmelding',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Voeg een pagina toe in accountinstellingen waarmee gebruikers hun Keycloak-wachtwoord kunnen wijzigen',
   'Advanced settings (optional)' => 'Geavanceerde instellingen (optioneel)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Clientgeheim staat op het tabblad "Inloggegevens" (als in de instellingen "Toegangstype" is ingesteld op "vertrouwelijk")',
   'Client secret key' => 'Geheime sleutel van client',
   'Confirm new password' => 'Bevestig nieuw wachtwoord',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Deactiveer het gebruikersaccount op Keycloak wanneer het account op HumHub wordt verwijderd.',
   'Enable this auth client' => 'Deze auth-client inschakelen',
   'For administrators allowed to manage users' => 'Voor beheerders die gebruikers mogen beheren',
   'Hide username field in registration form' => 'Verberg gebruikersnaamveld in registratieformulier',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'De synchronisatie tussen HumHub en Keycloak gebeurt in realtime. De synchronisatie van Keycloak met HumHub vindt eenmaal per dag plaats. Keycloak-subgroepen worden niet gesynchroniseerd.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Indien ingeschakeld, wordt een e-mailadres dat niet is geverifieerd op Keycloak genegeerd bij het inloggen: het wordt niet gebruikt om in te loggen op een bestaand HumHub-account met hetzelfde e-mailadres, om een HumHub-account aan te maken (als een e-mailadres vereist is, mislukt het inloggen totdat het e-mailadres is geverifieerd op Keycloak) of om het HumHub-e-mailadres bij te werken. Gebruikers die al zijn verbonden met Keycloak kunnen nog steeds inloggen. Keycloak moet de claim {emailVerifiedClaim} verzenden (dit doet het standaard). Indien uitgeschakeld, wordt het door Keycloak verzonden e-mailadres altijd vertrouwd: als Keycloak toestaat dat een e-mailadres wordt ingesteld zonder verificatie (bijvoorbeeld zelfregistratie zonder e-mailverificatie), kan iedereen inloggen op een HumHub-account met behulp van het e-mailadres op Keycloak.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Als de gebruikersnaam die door Keycloak is verzonden het e-mailadres van de gebruiker is, wordt deze vervangen door een gebruikersnaam die automatisch wordt gegenereerd op basis van de voor- en achternaam (in CamelCase-indeling)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Als u een aangepaste titel instelt, wordt deze niet vertaald naar de taal van de gebruiker, tenzij u een aangepast vertaalbestand in de beveiligde/config-map hebt. Laat leeg om de standaardtitel in te stellen.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Als u {BackChannelLogout} wilt inschakelen (waarmee gebruikerssessies automatisch kunnen worden verwijderd bij het afmelden bij Keycloak), configureert u de client {LogoutSettings} :',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Synchroniseer beide kanten op (maar geen verwijdering op Keycloak of HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'Synchroniseer in beide richtingen (maar geen verwijdering op Keycloak)',
   'Synchronize groups and their members' => 'Synchroniseer groepen en hun leden',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Het Keycloak-account wordt uitgeschakeld (niet verwijderd) en de bijbehorende Keycloak-sessies worden verwijderd. Het account kan opnieuw worden ingeschakeld via Keycloak. De Keycloak API-beheerder wordt nooit uitgeschakeld.',
   'The client id provided by Keycloak' => 'De client-ID verstrekt door Keycloak',
   'The new password could not be saved.' => 'Het nieuwe wachtwoord kon niet worden opgeslagen.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Deze admin-gebruiker moet in dezelfde realm worden gemaakt als degene die is ingevoerd in het veld {RealmName} . Als uw realm {masterRealmName} is, wijst u gewoon de rol {adminRoleName} toe aan deze gebruiker. Anders moet u de {realmManagementClientRole} toevoegen en alle rollen toewijzen. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Update het e-mailadres van de gebruiker op Keycloak wanneer dit is gewijzigd op HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Update de gebruikersnaam van de gebruiker op HumHub wanneer deze wordt gewijzigd op Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Update de gebruikersnaam van de gebruiker op Keycloak wanneer deze wordt gewijzigd op HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Gebruik het e-mailadres dat Keycloak heeft verzonden alleen als het door Keycloak is geverifieerd (aanbevolen als Keycloak-gebruikers een e-mailadres kunnen instellen zonder het te verifiëren).',
   'View error log' => 'Bekijk het foutenlogboek',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Waarschuwing: op deze pagina wordt niet om het huidige wachtwoord gevraagd (gebruikers die inloggen met Keycloak kennen dit mogelijk niet). Iedereen met toegang tot een actieve sessie van de gebruiker kan daarom het Keycloak-wachtwoord van de gebruiker wijzigen.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Werkt alleen als in de rijkinstellingen van Keycloak "E-mail als gebruikersnaam" is uitgeschakeld en "Gebruikersnaam bewerken" is ingeschakeld.',
   'Your current password can be changed here.' => 'Je huidige wachtwoord kan hier worden gewijzigd.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (om Keycloak-gebruikersnaam te gebruiken), `sub` (om Keycloak-ID te gebruiken) of een andere aangepaste Token Claim Name',
   '{Credentials} tab: copy the secret key' => 'Tabblad {Credentials} : kopieer de geheime sleutel',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Tabblad {Settings} -> {ClientAuthenticationOn} (voor Humhub-versie <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Tabblad {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

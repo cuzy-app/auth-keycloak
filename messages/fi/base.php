@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Keycloak</strong> -sisäänkirjautumisasetukset',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Lisää tilin asetuksiin sivu, jolla käyttäjät voivat vaihtaa Keycloak-salasanansa',
   'Advanced settings (optional)' => 'Lisäasetukset (valinnainen)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Asiakkaan salaisuus on "Käyttöoikeustiedot"-välilehdellä (jos asetuksissa "Käyttöoikeustyyppi" on "luottamuksellinen")',
   'Client secret key' => 'Asiakkaan salainen avain',
   'Confirm new password' => 'Vahvista uusi salasana',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Deaktivoi käyttäjän tili Keycloakissa, kun käyttäjätili poistetaan HumHubissa',
   'Enable this auth client' => 'Ota tämä todennusohjelma käyttöön',
   'For administrators allowed to manage users' => 'Järjestelmänvalvojille, joilla on oikeus hallita käyttäjiä',
   'Hide username field in registration form' => 'Piilota käyttäjätunnuskenttä rekisteröintilomakkeessa',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'HumHubin ja Keycloakin synkronointi tapahtuu reaaliajassa. Keycloak to HumHub synkronoidaan kerran päivässä. Keycloak-alaryhmiä ei synkronoida.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Jos tämä on käytössä, Keycloakissa vahvistamatonta sähköpostiosoitetta ei oteta huomioon kirjautumisen yhteydessä: sitä ei käytetä kirjautumiseen olemassa olevalle HumHub-tilille samalla sähköpostiosoitteella, HumHub-tilin luomiseen (jos sähköpostiosoite vaaditaan, kirjautuminen epäonnistuu, kunnes sähköpostiosoite on vahvistettu Keycloakissa) tai HumHub-sähköpostiosoitteen päivittämiseen. Keycloakiin jo yhteydessä olevat käyttäjät voivat silti kirjautua sisään. Keycloakin on lähetettävä {emailVerifiedClaim} vaatimus (se tekee sen oletusarvoisesti). Jos tämä on poistettu käytöstä, Keycloakin lähettämään sähköpostiin luotetaan aina: jos Keycloak sallii sähköpostiosoitteen asettamisen ilman sen vahvistamista (esim. itserekisteröityminen ilman sähköpostiosoitteen vahvistusta), kuka tahansa voi kirjautua HumHub-tilille käyttämällä sen sähköpostiosoitetta Keycloakissa.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Jos Keycloakin lähettämä käyttäjätunnus on käyttäjän sähköposti, se korvataan etu- ja sukunimestä automaattisesti luodulla käyttäjätunnuksella (CamelCase-muotoiltu)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Jos asetat mukautetun otsikon, sitä ei käännetä käyttäjän kielelle, ellei suojatussa/konfiguraatiokansiossa ole mukautettua käännöstiedostoa. Jätä tyhjäksi asettaaksesi oletusotsikon.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Jos haluat ottaa {BackChannelLogout} käyttöön (mikä mahdollistaa käyttäjäistuntojen poistamisen automaattisesti, kun kirjaudut ulos Keycloakista), määritä asiakkaan {LogoutSettings} :',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Synkronoi molempiin suuntiin (mutta ei poistamista Keycloakissa tai HumHubissa)',
   'Sync both ways (but no removal on Keycloak)' => 'Synkronoi molempiin suuntiin (mutta ei poistamista Keycloakissa)',
   'Synchronize groups and their members' => 'Synkronoi ryhmät ja niiden jäsenet',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Keycloak-tili poistetaan käytöstä (ei poisteta) ja sen Keycloak-istunnot poistetaan. Se voidaan ottaa uudelleen käyttöön Keycloakissa. Keycloak API:n järjestelmänvalvojan käyttäjää ei koskaan poisteta käytöstä.',
   'The client id provided by Keycloak' => 'Keycloakin tarjoama asiakastunnus',
   'The new password could not be saved.' => 'Uutta salasanaa ei voitu tallentaa.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Tämä järjestelmänvalvojan käyttäjä on luotava samaan alueeseen kuin {RealmName} -kenttään syötetty käyttäjä. Jos toimialueesi on {masterRealmName} , määritä vain {adminRoleName} rooli tälle käyttäjälle. Muussa tapauksessa sinun on lisättävä {realmManagementClientRole} Client Role ja määritettävä kaikki roolit. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Päivitä käyttäjän sähköpostiosoite Keycloakissa, kun sitä muutetaan HumHubissa',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Päivitä käyttäjän käyttäjänimi HumHubissa, kun sitä vaihdetaan Keycloakissa',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Päivitä käyttäjän käyttäjänimi Keycloakissa, kun se vaihdetaan HumHubissa',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Käytä Keycloakin lähettämää sähköpostiosoitetta vain, jos se on vahvistettu Keycloakissa (suositellaan, jos Keycloakin käyttäjät voivat asettaa sähköpostiosoitteen ilman vahvistusta)',
   'View error log' => 'Näytä virheloki',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Varoitus: tämä sivu ei kysy nykyistä salasanaa (Keycloakilla kirjautuvat käyttäjät eivät välttämättä tiedä sitä). Kuka tahansa, jolla on pääsy käyttäjän avoimeen istuntoon, voi siksi vaihtaa käyttäjän Keycloak-salasanan.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Toimii vain, jos Keycloakin asetuksissa "Sähköposti käyttäjänimenä" on poistettu käytöstä ja "Muokkaa käyttäjänimeä" on käytössä.',
   'Your current password can be changed here.' => 'Voit vaihtaa nykyisen salasanasi täällä.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (jos haluat käyttää Keycloak-käyttäjänimeä), `sub` (käyttää Keycloak ID:tä) tai muu mukautettu Token Claim Name',
   '{Credentials} tab: copy the secret key' => '{Credentials} -välilehti: kopioi salainen avain',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => '{Settings} -välilehti -> {ClientAuthenticationOn} (Humhub-versiolle <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => '{Settings} -välilehti -> {ValidRedirectURIsValue} .',
-);
+];

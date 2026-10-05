@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => 'Cyfluniad Sign-In <strong>cloak bysell</strong>',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Ychwanegu tudalen mewn gosodiadau cyfrif sy\'n galluogi defnyddwyr i newid eu cyfrinair Keycloak',
   'Advanced settings (optional)' => 'Gosodiadau uwch (dewisol)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Mae cyfrinach y cleient yn y tab "Credentials" (os yn y gosodiadau mae "Math o Fynediad" wedi\'i osod i "gyfrinachol")',
   'Client secret key' => 'Allwedd gyfrinachol cleient',
   'Confirm new password' => 'Cadarnhau cyfrinair Newydd',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Dadactifadu cyfrif defnyddiwr ar Keycloak pan gaiff ei ddileu ar HumHub',
   'Enable this auth client' => 'Galluogi\'r cleient awdurdod hwn',
   'For administrators allowed to manage users' => 'Ar gyfer gweinyddwyr a ganiateir i reoli defnyddwyr',
   'Hide username field in registration form' => 'Cuddio maes enw defnyddiwr yn y ffurflen gofrestru',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'Mae cysoni HumHub i Keycloak yn cael ei wneud mewn amser real. Cloak cloak i HumHub cysoni yn cael ei wneud unwaith y dydd. Nid yw is-grwpiau cloak bysell yn cysoni.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Os yw wedi\'i alluogi, anwybyddir e-bost nad yw wedi\'i wirio ar Keycloak wrth fewngofnodi: ni chaiff ei ddefnyddio i fewngofnodi i gyfrif HumHub presennol gyda\'r un e-bost, i greu cyfrif HumHub (os oes angen e-bost, mae mewngofnodi\'n methu nes bod yr e-bost wedi\'i wirio ar Keycloak), neu i ddiweddaru\'r e-bost HumHub. Gall defnyddwyr sydd eisoes wedi\'u cysylltu â Keycloak fewngofnodi o hyd. Rhaid i Keycloak anfon yr hawliad {emailVerifiedClaim} (mae\'n gwneud hynny yn ddiofyn). Os yw wedi\'i analluogi, mae\'r e-bost a anfonir gan Keycloak bob amser yn cael ei ymddiried: os yw Keycloak yn caniatáu gosod e-bost heb ei wirio (e.e. hunangofrestru heb wirio e-bost), gall unrhyw un fewngofnodi i gyfrif HumHub trwy ddefnyddio ei e-bost ar Keycloak.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Os mai\'r enw defnyddiwr a anfonwyd gan Keycloak yw e-bost y defnyddiwr, caiff ei ddisodli gan enw defnyddiwr a gynhyrchir yn awtomatig o\'r enw cyntaf ac olaf (CamelCase wedi\'i fformatio)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Os ydych chi\'n gosod teitl wedi\'i deilwra, ni fydd yn cael ei gyfieithu i iaith y defnyddiwr oni bai bod gennych chi ffeil cyfieithu wedi\'i deilwra yn y ffolder gwarchodedig/config. Gadewch yn wag i osod teitl diofyn.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Os ydych chi am alluogi {BackChannelLogout} (sy\'n caniatáu tynnu sesiynau defnyddwyr yn awtomatig wrth allgofnodi o Keycloak), ffurfweddwch y cleient {LogoutSettings} :',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Cysoni\'r ddwy ffordd (ond dim tynnu ar Keycloak neu HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'Cysoni\'r ddwy ffordd (ond dim tynnu ar Keycloak)',
   'Synchronize groups and their members' => 'Cydamseru grwpiau a\'u haelodau',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Mae\'r cyfrif Keycloak wedi\'i analluogi (heb ei ddileu) a chaiff ei sesiynau Keycloak eu tynnu. Gellir ei ail-alluogi ar Keycloak. Ni chaiff defnyddiwr gweinyddwr API Keycloak ei analluogi byth.',
   'The client id provided by Keycloak' => 'Yr id cleient a ddarperir gan Keycloak',
   'The new password could not be saved.' => 'Nid oedd modd cadw\'r cyfrinair newydd.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Rhaid creu\'r defnyddiwr gweinyddol hwn yn yr un deyrnas â\'r un a roddwyd yn y maes {RealmName} . Os mai {masterRealmName} yw eich maes, rhowch y rôl {adminRoleName} i\'r defnyddiwr hwn. Fel arall, mae angen i chi ychwanegu Rôl Cleient {realmManagementClientRole} a phennu pob Rôl. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Diweddaru e-bost defnyddiwr ar Keycloak pan gaiff ei newid ar HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Diweddaru enw defnyddiwr defnyddiwr ar HumHub pan gaiff ei newid ar Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Diweddaru enw defnyddiwr y defnyddiwr ar Keycloak pan gaiff ei newid ar HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Defnyddiwch yr e-bost a anfonwyd gan Keycloak dim ond os yw wedi\'i wirio ar Keycloak (argymhellir os gall defnyddwyr Keycloak osod e-bost heb ei wirio)',
   'View error log' => 'Gweld log gwall',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Rhybudd: nid yw\'r dudalen hon yn gofyn am y cyfrinair cyfredol (efallai na fydd defnyddwyr sy\'n mewngofnodi gyda Keycloak yn ei wybod). Felly gall unrhyw un sydd â mynediad i sesiwn agored y defnyddiwr newid cyfrinair Keycloak y defnyddiwr.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Dim ond os yw "E-bost fel enw defnyddiwr" wedi\'i analluogi yng ngosodiadau maes Keycloak a bod "Golygu enw defnyddiwr" wedi\'i alluogi.',
   'Your current password can be changed here.' => 'Gellir newid eich cyfrinair presennol yma.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`enw defnyddiwr_dewisol` (i ddefnyddio enw defnyddiwr Keycloak), `sub` (i ddefnyddio Keycloak ID) neu Enw Hawliad Tocyn personol arall',
   '{Credentials} tab: copy the secret key' => 'Tab {Credentials} : copïwch yr allwedd gyfrinachol',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Tab {Settings} -> {ClientAuthenticationOn} (ar gyfer fersiwn Humhub <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Tab {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

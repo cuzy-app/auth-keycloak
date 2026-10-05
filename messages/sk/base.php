@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Konfigurácia</strong> prihlasovania pomocou masky kľúča',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Pridajte stránku do nastavení účtu, ktorá používateľom umožní zmeniť heslo Keycloak',
   'Advanced settings (optional)' => 'Rozšírené nastavenia (voliteľné)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Tajomstvo klienta je na karte "Poverenia" (ak je v nastaveniach "Typ prístupu" nastavený na "dôverný")',
   'Client secret key' => 'Tajný kľúč klienta',
   'Confirm new password' => 'Potvrďte nové heslo',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Deaktivovať používateľský účet na Keycloak po jeho vymazaní na HumHub',
   'Enable this auth client' => 'Povoliť tohto overovacieho klienta',
   'For administrators allowed to manage users' => 'Pre správcov s povolením spravovať používateľov',
   'Hide username field in registration form' => 'Skryť pole používateľského mena v registračnom formulári',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'Synchronizácia HumHub a Keycloak prebieha v reálnom čase. Synchronizácia Keycloak s HumHub sa vykonáva raz denne. Podskupiny Keycloak nie sú synchronizované.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Ak je povolené, e-mail, ktorý nie je overený na Keycloaku, sa pri prihlasovaní ignoruje: nepoužíva sa na prihlásenie do existujúceho účtu HumHub s rovnakým e-mailom, na vytvorenie účtu HumHub (ak je e-mail potrebný, prihlásenie zlyhá, kým sa e-mail neoverí na Keycloaku) ani na aktualizáciu e-mailu HumHub. Používatelia, ktorí sú už pripojení ku Keycloaku, sa môžu stále prihlásiť. Keycloak musí odoslať požiadavku {emailVerifiedClaim} (štandardne to robí). Ak je vypnuté, e-mail odoslaný Keycloakom je vždy dôveryhodný: ak Keycloak umožňuje nastavenie e-mailu bez jeho overenia (napr. samoregistrácia bez overenia e-mailu), ktokoľvek sa môže prihlásiť do účtu HumHub pomocou svojho e-mailu na Keycloaku.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Ak je používateľské meno odoslané službou Keycloak e-mailom používateľa, nahradí sa používateľským menom automaticky vygenerovaným z mena a priezviska (vo formáte CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Ak nastavíte vlastný názov, nebude preložený do jazyka používateľa, pokiaľ nemáte vlastný prekladový súbor v zložke protected/config. Ak chcete nastaviť predvolený názov, nechajte prázdne.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Ak chcete povoliť {BackChannelLogout} (čo umožňuje automatické odstránenie relácií používateľa pri odhlásení z Keycloak), nakonfigurujte klienta {LogoutSettings} :',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Synchronizujte oboma spôsobmi (ale bez odstránenia na Keycloak alebo HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'Synchronizujte oboma spôsobmi (ale bez odstránenia na Keycloak)',
   'Synchronize groups and their members' => 'Synchronizujte skupiny a ich členov',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Účet Keycloak je deaktivovaný (nie odstránený) a jeho relácie Keycloak sú odstránené. Dá sa znova povoliť v Keycloaku. Správca rozhrania Keycloak API nie je nikdy deaktivovaný.',
   'The client id provided by Keycloak' => 'ID klienta poskytnuté spoločnosťou Keycloak',
   'The new password could not be saved.' => 'Nové heslo sa nepodarilo uložiť.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Tento administrátor musí byť vytvorený v rovnakej sfére ako tá, ktorá je zadaná v poli {RealmName} . Ak je vaša oblasť {masterRealmName} , priraďte tomuto používateľovi rolu {adminRoleName} . V opačnom prípade musíte pridať rolu klienta {realmManagementClientRole} a priradiť všetky roly. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Aktualizujte e-mail používateľa na Keycloak pri zmene na HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Aktualizujte používateľské meno používateľa na HumHub pri zmene na Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Aktualizujte používateľské meno používateľa na Keycloak pri zmene na HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'E-mail odoslaný službou Keycloak použite iba v prípade, že je overený na platforme Keycloak (odporúča sa, ak si používatelia služby Keycloak môžu nastaviť e-mail bez jeho overenia).',
   'View error log' => 'Zobraziť denník chýb',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Upozornenie: Táto stránka nepožaduje aktuálne heslo (používatelia prihlasujúci sa pomocou Keycloaku ho nemusia poznať). Ktokoľvek s prístupom k otvorenej relácii používateľa preto môže zmeniť heslo používateľa v Keycloaku.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Bude fungovať iba vtedy, ak je v nastaveniach sféry Keycloak vypnutá možnosť „E-mailovať ako používateľské meno“ a povolená možnosť „Upraviť používateľské meno“.',
   'Your current password can be changed here.' => 'Vaše aktuálne heslo si môžete zmeniť tu.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (ak chcete použiť meno používateľa Keycloak), `sub` (ak chcete použiť Keycloak ID) alebo iný vlastný názov nároku na token',
   '{Credentials} tab: copy the secret key' => 'Karta {Credentials} : skopírujte tajný kľúč',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Karta {Settings} -> {ClientAuthenticationOn} (pre verziu Humhub <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Karta {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

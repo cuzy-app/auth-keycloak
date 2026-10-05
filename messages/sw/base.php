@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => 'Usanidi wa Kuingia kwa <strong>Keycloak</strong>',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Ongeza ukurasa katika mipangilio ya akaunti inayowaruhusu watumiaji kubadilisha nenosiri lao la Keycloak',
   'Advanced settings (optional)' => 'Mipangilio ya kina (si lazima)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Siri ya mteja iko kwenye kichupo cha "Sifa" (ikiwa katika mipangilio "Aina ya Ufikiaji" imewekwa kuwa "siri").',
   'Client secret key' => 'Ufunguo wa siri wa mteja',
   'Confirm new password' => 'Thibitisha nenosiri jipya',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Zima akaunti ya mtumiaji kwenye Keycloak inapofutwa kwenye HumHub',
   'Enable this auth client' => 'Washa mteja huyu auth',
   'For administrators allowed to manage users' => 'Kwa wasimamizi wanaoruhusiwa kudhibiti watumiaji',
   'Hide username field in registration form' => 'Ficha uga wa jina la mtumiaji katika fomu ya usajili',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'Usawazishaji wa HumHub hadi Keycloak unafanywa kwa wakati halisi. Usawazishaji wa keycloak kwa HumHub hufanywa mara moja kwa siku. Vikundi vidogo vya keycloak havijasawazishwa.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Ikiwa imewezeshwa, barua pepe ambayo haijathibitishwa kwenye Keycloak hupuuzwa wakati wa kuingia: haitumiki kuingia kwenye akaunti iliyopo ya HumHub yenye barua pepe hiyo hiyo, kuunda akaunti ya HumHub (ikiwa barua pepe inahitajika, kuingia hushindwa hadi barua pepe itakapothibitishwa kwenye Keycloak), au kusasisha barua pepe ya HumHub. Watumiaji ambao tayari wameunganishwa na Keycloak bado wanaweza kuingia. Keycloak lazima itume dai la {emailVerifiedClaim} (linafanya hivyo kwa chaguo-msingi). Ikiwa imezimwa, barua pepe inayotumwa na Keycloak inaaminika kila wakati: ikiwa Keycloak inaruhusu kuweka barua pepe bila kuithibitisha (km kujisajili bila uthibitishaji wa barua pepe), mtu yeyote anaweza kuingia kwenye akaunti ya HumHub kwa kutumia barua pepe yake kwenye Keycloak.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Ikiwa jina la mtumiaji lililotumwa na Keycloak ni barua pepe ya mtumiaji, nafasi yake inabadilishwa na jina la mtumiaji linalozalishwa kiotomatiki kutoka kwa jina la kwanza na la mwisho (CamelCase imeumbizwa)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Ukiweka kichwa maalum, hakitatafsiriwa kwa lugha ya mtumiaji isipokuwa uwe na faili maalum ya tafsiri katika folda iliyolindwa/kusanidi. Acha wazi ili kuweka kichwa chaguomsingi.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Ikiwa unataka kuwezesha {BackChannelLogout} (ambayo inaruhusu kuondoa vipindi vya mtumiaji kiotomatiki unapoondoka kwenye Keycloak), sanidi mteja {LogoutSettings} :',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Sawazisha njia zote mbili (lakini hakuna kuondolewa kwenye Keycloak au HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'Sawazisha njia zote mbili (lakini hakuna kuondolewa kwenye Keycloak)',
   'Synchronize groups and their members' => 'Sawazisha vikundi na washiriki wao',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Akaunti ya Keycloak imezimwa (haijafutwa) na vipindi vyake vya Keycloak vimeondolewa. Inaweza kuwezeshwa tena kwenye Keycloak. Mtumiaji wa msimamizi wa Keycloak API hajazimwa kamwe.',
   'The client id provided by Keycloak' => 'Kitambulisho cha mteja kilichotolewa na Keycloak',
   'The new password could not be saved.' => 'Nenosiri jipya halikuweza kuhifadhiwa.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Mtumiaji huyu msimamizi lazima aundwe katika ulimwengu sawa na ule uliowekwa katika uga wa {RealmName} . Ikiwa eneo lako ni {masterRealmName} , mpe tu mtumiaji huyu jukumu la {adminRoleName} . Vinginevyo, unahitaji kuongeza Jukumu la Mteja wa {realmManagementClientRole} na kukabidhi Majukumu yote. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Sasisha barua pepe ya mtumiaji kwenye Keycloak inapobadilishwa kwenye HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Sasisha jina la mtumiaji la mtumiaji kwenye HumHub linapobadilishwa kwenye Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Sasisha jina la mtumiaji la mtumiaji kwenye Keycloak linapobadilishwa kwenye HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Tumia barua pepe iliyotumwa na Keycloak tu ikiwa imethibitishwa kwenye Keycloak (inapendekezwa ikiwa watumiaji wa Keycloak wanaweza kuweka barua pepe bila kuithibitisha)',
   'View error log' => 'Tazama kumbukumbu ya makosa',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Onyo: ukurasa huu hauulizi nenosiri la sasa (watumiaji wanaoingia kwa kutumia Keycloak huenda wasijue). Mtu yeyote mwenye ufikiaji wa kipindi cha wazi cha mtumiaji anaweza kubadilisha nenosiri la Keycloak la mtumiaji.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Itafanya kazi tu ikiwa katika mipangilio ya eneo la Keycloak "Barua pepe kama jina la mtumiaji" imezimwa na "Hariri jina la mtumiaji" imewashwa.',
   'Your current password can be changed here.' => 'Nenosiri lako la sasa linaweza kubadilishwa hapa.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (kutumia jina la mtumiaji Keycloak), `sub` (kutumia Keycloak ID) au Jina lingine maalum la Dai la Tokeni.',
   '{Credentials} tab: copy the secret key' => '{Credentials} cha vitambulisho: nakili ufunguo wa siri',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Kichupo cha {Settings} -> {ClientAuthenticationOn} (kwa toleo la Keycloak <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Kichupo cha {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

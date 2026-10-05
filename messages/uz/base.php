@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Keycloak tizimga</strong> kirish konfiguratsiyasi',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Hisob sozlamalarida foydalanuvchilarga Keycloak parolini o\'zgartirish imkonini beruvchi sahifa qo\'shing',
   'Advanced settings (optional)' => 'Kengaytirilgan sozlamalar (ixtiyoriy)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Mijoz siri "Hisobga olish ma\'lumotlari" yorlig\'ida (agar sozlamalarda "Kirish turi" "maxfiy" ga o\'rnatilgan bo\'lsa)',
   'Client secret key' => 'Mijoz maxfiy kaliti',
   'Confirm new password' => 'Yangi parolni tasdiqlang',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'HumHub’da o‘chirilganda foydalanuvchining Keycloak’dagi hisobini o‘chirib qo‘ying',
   'Enable this auth client' => 'Ushbu autentifikatsiya mijozini yoqing',
   'For administrators allowed to manage users' => 'Administratorlar uchun foydalanuvchilarni boshqarishga ruxsat berilgan',
   'Hide username field in registration form' => 'Ro\'yxatdan o\'tish formasida foydalanuvchi nomi maydonini yashirish',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'HumHub to Keycloak sinxronlash real vaqtda amalga oshiriladi. HumHub sinxronlash uchun Keycloak kuniga bir marta amalga oshiriladi. Keycloak kichik guruhlari sinxronlashtirilmaydi.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Agar yoqilgan bo\'lsa, Keycloak’da tasdiqlanmagan elektron pochta xabari tizimga kirishda e\'tiborga olinmaydi: u xuddi shu elektron pochta manzili bilan mavjud HumHub hisobiga kirish, HumHub hisobini yaratish (agar elektron pochta kerak bo\'lsa, elektron pochta Keycloak’da tasdiqlanmaguncha tizimga kirish amalga oshmaydi) yoki HumHub elektron pochtasini yangilash uchun ishlatilmaydi. Keycloak’ga allaqachon ulangan foydalanuvchilar hali ham tizimga kirishlari mumkin. Keycloak {emailVerifiedClaim} da\'voni yuborishi kerak (u sukut bo\'yicha shunday qiladi). Agar o\'chirilgan bo\'lsa, Keycloak tomonidan yuborilgan elektron pochta har doim ishonchli hisoblanadi: agar Keycloak elektron pochta xabarini tasdiqlamasdan o\'rnatishga ruxsat bersa (masalan, elektron pochtani tasdiqlamasdan o\'z-o\'zini ro\'yxatdan o\'tkazish), istalgan kishi Keycloak’dagi elektron pochta manzilidan foydalanib HumHub hisobiga kirishi mumkin.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Agar Keycloak tomonidan yuborilgan foydalanuvchi nomi foydalanuvchining elektron pochtasi bo\'lsa, u ism va familiyadan avtomatik ravishda yaratilgan foydalanuvchi nomi bilan almashtiriladi (CamelCase formatlangan)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Agar siz maxsus sarlavha o\'rnatgan bo\'lsangiz, himoyalangan/config jildida maxsus tarjima faylingiz bo\'lmaguningizcha, u foydalanuvchi tiliga tarjima qilinmaydi. Standart sarlavhani o\'rnatish uchun bo\'sh qoldiring.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => '{BackChannelLogout} (Keycloak-dan chiqishda foydalanuvchi seanslarini avtomatik ravishda o‘chirish imkonini beradi) funksiyasini yoqmoqchi bo‘lsangiz, mijozning {LogoutSettings} sozlang:',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Ikkala usulni ham sinxronlashtiring (lekin Keycloak yoki HumHub-da olib tashlanmaydi)',
   'Sync both ways (but no removal on Keycloak)' => 'Ikkala usulni ham sinxronlashtiring (lekin Keycloak-da o\'chirilmaydi)',
   'Synchronize groups and their members' => 'Guruhlar va ularning a\'zolarini sinxronlashtiring',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Keycloak hisobi o\'chirilgan (o\'chirilmaydi) va uning Keycloak sessiyalari olib tashlanadi. Uni Keycloak-da qayta yoqish mumkin. Keycloak API administrator foydalanuvchisi hech qachon o\'chirilmaydi.',
   'The client id provided by Keycloak' => 'Keycloak tomonidan taqdim etilgan mijoz identifikatori',
   'The new password could not be saved.' => 'Yangi parolni saqlab boʻlmadi.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Ushbu administrator foydalanuvchi {RealmName} maydoniga kiritilgan sohada yaratilishi kerak. Agar sizning hududingiz {masterRealmName} bo\'lsa, ushbu foydalanuvchiga {adminRoleName} rolini tayinlang. Aks holda, {realmManagementClientRole} mijoz rolini qo\'shishingiz va barcha rollarni belgilashingiz kerak. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'HumHub-da o\'zgartirilganda Keycloak-da foydalanuvchining elektron pochta manzilini yangilang',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Keycloak-da o\'zgartirilganda HumHub-da foydalanuvchi nomini yangilang',
   'Update user\'s username on Keycloak when changed on HumHub' => 'HumHub-da o\'zgartirilganda Keycloak-dagi foydalanuvchi nomini yangilang',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Keycloak tomonidan yuborilgan elektron pochtadan faqat Keycloak’da tasdiqlangan bo‘lsa foydalaning (agar Keycloak foydalanuvchilari elektron pochtani tasdiqlamasdan o‘rnatishlari mumkin bo‘lsa, tavsiya etiladi)',
   'View error log' => 'Xatolar jurnalini ko\'rish',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Ogohlantirish: ushbu sahifa joriy parolni so\'ramaydi (Keycloak yordamida tizimga kiruvchi foydalanuvchilar buni bilmasligi mumkin). Shuning uchun foydalanuvchining ochiq sessiyasiga kirish huquqiga ega bo\'lgan har qanday kishi foydalanuvchining Keycloak parolini o\'zgartirishi mumkin.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Keycloak sohasi sozlamalarida "Foydalanuvchi nomi sifatida elektron pochta" o\'chirilgan va "Foydalanuvchi nomini tahrirlash" yoqilgan bo\'lsagina ishlaydi.',
   'Your current password can be changed here.' => 'Joriy parolingiz shu yerda oʻzgartirilishi mumkin.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (Keycloak foydalanuvchi nomidan foydalanish uchun), `sub` (Keycloak ID-dan foydalanish uchun) yoki boshqa maxsus token da`vo nomi',
   '{Credentials} tab: copy the secret key' => '{Credentials} yorlig\'i: maxfiy kalitni nusxalash',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => '{Settings} yorlig\'i -> {ClientAuthenticationOn} (Humhub versiyasi <20: {AccessTypeValue} uchun).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => '{Settings} yorlig\'i -> {ValidRedirectURIsValue} .',
-);
+];

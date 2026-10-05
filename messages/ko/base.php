@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Keycloak</strong> 로그인 구성',
   'Add a page in account settings allowing users to change their Keycloak password' => '사용자가 Keycloak 암호를 변경할 수 있도록 계정 설정에 페이지 추가',
   'Advanced settings (optional)' => '고급 설정(선택 사항)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => '클라이언트 암호는 "자격 증명" 탭에 있습니다(설정에서 "액세스 유형"이 "기밀"로 설정된 경우)',
   'Client secret key' => '클라이언트 비밀 키',
   'Confirm new password' => '새 암호를 확인합니다',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'HumHub에서 계정이 삭제되면 Keycloak에서도 해당 사용자의 계정을 비활성화합니다.',
   'Enable this auth client' => '이 인증 클라이언트 활성화',
   'For administrators allowed to manage users' => '사용자 관리가 허용된 관리자용',
   'Hide username field in registration form' => '등록 양식에서 사용자 이름 필드 숨기기',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'HumHub와 Keycloak의 동기화는 실시간으로 이루어집니다. HumHub에 대한 Keycloak 동기화는 하루에 한 번 수행됩니다. Keycloak 하위 그룹은 동기화되지 않습니다.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => '이 기능이 활성화된 경우, Keycloak에서 인증되지 않은 이메일은 로그인 시 무시됩니다. 동일한 이메일 주소로 기존 HumHub 계정에 로그인하거나, HumHub 계정을 생성하거나(이메일 주소가 필요한 경우, Keycloak에서 이메일 주소가 인증될 때까지 로그인이 실패함), HumHub 이메일 주소를 업데이트하는 데 사용되지 않습니다. Keycloak에 이미 연결된 사용자는 계속 로그인할 수 있습니다. Keycloak은 {emailVerifiedClaim} 클레임을 전송해야 합니다(기본적으로 전송됨). 이 기능이 비활성화된 경우, Keycloak에서 전송한 이메일은 항상 신뢰할 수 있는 것으로 간주됩니다. Keycloak에서 이메일 인증 없이 이메일 설정을 허용하는 경우(예: 이메일 인증 없는 자체 등록), 누구나 Keycloak에 등록된 이메일을 사용하여 HumHub 계정에 로그인할 수 있습니다.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Keycloak에서 보낸 사용자 이름이 사용자의 이메일인 경우 이름과 성에서 자동 생성된 사용자 이름으로 대체됩니다(CamelCase 형식).',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => '사용자 정의 제목을 설정하면 보호/구성 폴더에 사용자 정의 번역 파일이 없는 한 사용자의 언어로 번역되지 않습니다. 기본 제목을 설정하려면 비워 둡니다.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => '{BackChannelLogout} (Keycloak에서 로그아웃할 때 자동으로 사용자 세션 제거 가능)을 활성화하려면 클라이언트 {LogoutSettings} 구성합니다.',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => '양방향 동기화(단, Keycloak 또는 HumHub에서는 제거되지 않음)',
   'Sync both ways (but no removal on Keycloak)' => '양방향 동기화(그러나 Keycloak에서는 제거되지 않음)',
   'Synchronize groups and their members' => '그룹 및 해당 구성원 동기화',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Keycloak 계정은 비활성화되지만(삭제되는 것은 아님) 해당 Keycloak 세션은 제거됩니다. Keycloak에서 다시 활성화할 수 있습니다. Keycloak API 관리자 사용자는 절대 비활성화되지 않습니다.',
   'The client id provided by Keycloak' => 'Keycloak에서 제공한 클라이언트 ID',
   'The new password could not be saved.' => '새 비밀번호를 저장할 수 없습니다.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => '이 관리 사용자는 영역 이름 필드에 입력한 {RealmName} 동일한 영역에서 생성되어야 합니다. 영역이 {masterRealmName} 인 경우 이 사용자에게 {adminRoleName} 역할을 할당하기만 하면 됩니다. 그렇지 않으면 {realmManagementClientRole} 클라이언트 역할을 추가하고 모든 역할을 할당해야 합니다. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'HumHub에서 변경되면 Keycloak에서 사용자 이메일을 업데이트하세요.',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Keycloak에서 변경되면 HumHub에서 사용자 이름 업데이트',
   'Update user\'s username on Keycloak when changed on HumHub' => 'HumHub에서 변경되면 Keycloak에서 사용자 이름 업데이트',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Keycloak에서 보낸 이메일은 Keycloak에서 인증된 경우에만 사용하십시오(Keycloak 사용자가 인증 없이 이메일을 설정할 수 있는 경우 권장).',
   'View error log' => '오류 로그 보기',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => '경고: 이 페이지는 현재 비밀번호를 묻지 않습니다(Keycloak으로 로그인하는 사용자는 비밀번호를 모를 수 있습니다). 따라서 해당 사용자의 열린 세션에 접근 권한이 있는 사람은 누구나 사용자의 Keycloak 비밀번호를 변경할 수 있습니다.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Keycloak의 영역 설정에서 "사용자 이름으로 이메일 보내기"가 비활성화되고 "사용자 이름 편집"이 활성화된 경우에만 작동합니다.',
   'Your current password can be changed here.' => '현재 비밀번호는 여기에서 변경할 수 있습니다.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username`(Keycloak 사용자 이름 사용), `sub`(Keycloak ID 사용) 또는 기타 사용자 지정 토큰 청구 이름',
   '{Credentials} tab: copy the secret key' => '{Credentials} 탭: 비밀 키 복사',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => '{Settings} 탭 -> {ClientAuthenticationOn} (Humhub 버전 <20: {AccessTypeValue} 의 경우).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => '{Settings} 탭 -> {ValidRedirectURIsValue} .',
-);
+];

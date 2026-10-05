@@ -1,6 +1,16 @@
 Changelog
 =========
 
+1.5.6 (October 5, 2026)
+------------------
+- Enh: Add an option to deactivate the user's account on Keycloak when the user is deleted on HumHub
+- Enh: Add an option to ignore the email sent by Keycloak if it is not verified on Keycloak
+- Enh: Add a timeout to the Keycloak API requests (configurable with the `apiTimeout` and `apiConnectTimeout` module properties)
+- Fix: Keycloak to HumHub groups sync on login never worked (Keycloak group IDs were cast to integers)
+- Fix: Do not link a Keycloak user to an existing HumHub account having the same username, as Keycloak users may be able to choose any username
+- Fix: Groups full sync removed all members of a HumHub group when the Keycloak API failed to return the group members
+- Fix: When a user had no Keycloak Auth record, the Keycloak account of another user could be used (e.g. to change the password)
+
 1.5.5 (October 5, 2026)
 -----------------------
 - Enh: Add a hint to the "change password" configuration option
