@@ -252,6 +252,7 @@ class ConfigureForm extends Model
                 'MoreInformationHere' => Html::a(Yii::t('AuthKeycloakModule.base', 'More informations here.'), 'https://stackoverflow.com/a/65054444', ['target' => '_blank']),
             ]),
             'updatedBrokerUsernameFromHumhubUsername' => Yii::t('AuthKeycloakModule.base', 'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.'),
+            'addChangePasswordFormToAccount' => Yii::t('AuthKeycloakModule.base', 'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.'),
             'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.'),
         ];
     }
