@@ -89,6 +89,10 @@ class ConfigureForm extends Model
     /**
      * @var bool
      */
+    public $trustOnlyVerifiedEmail = false;
+    /**
+     * @var bool
+     */
     public $removeKeycloakSessionsAfterLogout = false;
     /**
      * @var bool
@@ -111,6 +115,10 @@ class ConfigureForm extends Model
      */
     public $addChangePasswordFormToAccount = false;
     /**
+     * @var bool
+     */
+    public $disableKeycloakUserOnDelete = false;
+    /**
      * @var string
      */
     public $apiUsername = '';
@@ -132,7 +140,7 @@ class ConfigureForm extends Model
         return [
             [['clientId', 'clientSecret', 'realm', 'baseUrl', 'usernameMapper'], 'required'],
             [['clientId', 'clientSecret', 'baseUrl', 'usernameMapper', 'title', 'realm', 'apiUsername', 'apiPassword'], 'string'],
-            [['enabled', 'hideRegistrationUsernameField', 'hideAdminUserEditPassword', 'removeKeycloakSessionsAfterLogout', 'updateHumhubUsernameFromBrokerUsername', 'updatedBrokerUsernameFromHumhubUsername', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount'], 'boolean'],
+            [['enabled', 'hideRegistrationUsernameField', 'hideAdminUserEditPassword', 'trustOnlyVerifiedEmail', 'removeKeycloakSessionsAfterLogout', 'updateHumhubUsernameFromBrokerUsername', 'updatedBrokerUsernameFromHumhubUsername', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount', 'disableKeycloakUserOnDelete'], 'boolean'],
             [['groupsSyncMode'], 'safe'],
         ];
     }
@@ -189,12 +197,14 @@ class ConfigureForm extends Model
         $this->title = $settings->get('title', Yii::t('AuthKeycloakModule.base', self::DEFAULT_TITLE));
         $this->hideRegistrationUsernameField = (bool)$settings->get('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
         $this->hideAdminUserEditPassword = (bool)$settings->get('hideAdminUserEditPassword', $this->hideAdminUserEditPassword);
+        $this->trustOnlyVerifiedEmail = (bool)$settings->get('trustOnlyVerifiedEmail', $this->trustOnlyVerifiedEmail);
         $this->removeKeycloakSessionsAfterLogout = (bool)$settings->get('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
         $this->updateHumhubUsernameFromBrokerUsername = (bool)$settings->get('updateHumhubUsernameFromBrokerUsername', $this->updateHumhubUsernameFromBrokerUsername);
         $this->updatedBrokerUsernameFromHumhubUsername = (bool)$settings->get('updatedBrokerUsernameFromHumhubUsername', $this->updatedBrokerUsernameFromHumhubUsername);
         $this->updateHumhubEmailFromBrokerEmail = (bool)$settings->get('updateHumhubEmailFromBrokerEmail', $this->updateHumhubEmailFromBrokerEmail);
         $this->updatedBrokerEmailFromHumhubEmail = (bool)$settings->get('updatedBrokerEmailFromHumhubEmail', $this->updatedBrokerEmailFromHumhubEmail);
         $this->addChangePasswordFormToAccount = (bool)$settings->get('addChangePasswordFormToAccount', $this->addChangePasswordFormToAccount);
+        $this->disableKeycloakUserOnDelete = (bool)$settings->get('disableKeycloakUserOnDelete', $this->disableKeycloakUserOnDelete);
         $this->apiUsername = $settings->get('apiUsername', $this->apiUsername);
         $this->apiPassword = $settings->get('apiPassword', $this->apiPassword);
         $this->groupsSyncMode = $settings->get('groupsSyncMode', $this->groupsSyncMode);
@@ -218,12 +228,14 @@ class ConfigureForm extends Model
             'title' => Yii::t('AuthKeycloakModule.base', 'Title of the button'),
             'hideRegistrationUsernameField' => Yii::t('AuthKeycloakModule.base', 'Hide username field in registration form'),
             'hideAdminUserEditPassword' => Yii::t('AuthKeycloakModule.base', 'In admin, hide password fields in edit user form'),
+            'trustOnlyVerifiedEmail' => Yii::t('AuthKeycloakModule.base', 'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)'),
             'removeKeycloakSessionsAfterLogout' => Yii::t('AuthKeycloakModule.base', 'Remove user\'s Keycloak sessions after logout'),
             'updateHumhubUsernameFromBrokerUsername' => Yii::t('AuthKeycloakModule.base', 'Update user\'s username on HumHub when changed on Keycloak'),
             'updatedBrokerUsernameFromHumhubUsername' => Yii::t('AuthKeycloakModule.base', 'Update user\'s username on Keycloak when changed on HumHub'),
             'updateHumhubEmailFromBrokerEmail' => Yii::t('AuthKeycloakModule.base', 'Update user\'s email on HumHub when changed on Keycloak'),
             'updatedBrokerEmailFromHumhubEmail' => Yii::t('AuthKeycloakModule.base', 'Update user\'s email on Keycloak when changed on HumHub'),
             'addChangePasswordFormToAccount' => Yii::t('AuthKeycloakModule.base', 'Add a page in account settings allowing users to change their Keycloak password'),
+            'disableKeycloakUserOnDelete' => Yii::t('AuthKeycloakModule.base', 'Deactivate user\'s account on Keycloak when deleted on HumHub'),
             'apiUsername' => Yii::t('AuthKeycloakModule.base', 'Keycloak API admin username'),
             'apiPassword' => Yii::t('AuthKeycloakModule.base', 'Keycloak API admin password'),
             'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'Synchronize groups and their members'),
@@ -244,6 +256,7 @@ class ConfigureForm extends Model
             'title' => Yii::t('AuthKeycloakModule.base', 'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.'),
             'hideRegistrationUsernameField' => Yii::t('AuthKeycloakModule.base', 'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)'),
             'hideAdminUserEditPassword' => Yii::t('AuthKeycloakModule.base', 'For administrators allowed to manage users'),
+            'trustOnlyVerifiedEmail' => Yii::t('AuthKeycloakModule.base', 'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.', ['emailVerifiedClaim' => '`email_verified`']),
             'apiUsername' => Yii::t('AuthKeycloakModule.base', 'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}', [
                 'RealmName' => '“' . Yii::t('AuthKeycloakModule.base', 'Realm name') . '”',
                 'masterRealmName' => '“master”',
@@ -253,6 +266,7 @@ class ConfigureForm extends Model
             ]),
             'updatedBrokerUsernameFromHumhubUsername' => Yii::t('AuthKeycloakModule.base', 'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.'),
             'addChangePasswordFormToAccount' => Yii::t('AuthKeycloakModule.base', 'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.'),
+            'disableKeycloakUserOnDelete' => Yii::t('AuthKeycloakModule.base', 'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.'),
             'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.'),
         ];
     }
@@ -295,6 +309,7 @@ class ConfigureForm extends Model
         $module->settings->set('title', $this->title);
         $module->settings->set('hideRegistrationUsernameField', $this->hideRegistrationUsernameField);
         $module->settings->set('hideAdminUserEditPassword', $this->hideAdminUserEditPassword);
+        $module->settings->set('trustOnlyVerifiedEmail', $this->trustOnlyVerifiedEmail);
         $module->settings->set('apiUsername', $this->apiUsername);
         $module->settings->set('apiPassword', $this->apiPassword);
         $module->settings->set('groupsSyncMode', $this->groupsSyncMode);
@@ -305,6 +320,7 @@ class ConfigureForm extends Model
             $this->updatedBrokerUsernameFromHumhubUsername = false;
             $this->updatedBrokerEmailFromHumhubEmail = false;
             $this->addChangePasswordFormToAccount = false;
+            $this->disableKeycloakUserOnDelete = false;
         }
         $module->settings->set('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
         $module->settings->set('updateHumhubUsernameFromBrokerUsername', $this->updateHumhubUsernameFromBrokerUsername);
@@ -312,6 +328,7 @@ class ConfigureForm extends Model
         $module->settings->set('updateHumhubEmailFromBrokerEmail', $this->updateHumhubEmailFromBrokerEmail);
         $module->settings->set('updatedBrokerEmailFromHumhubEmail', $this->updatedBrokerEmailFromHumhubEmail);
         $module->settings->set('addChangePasswordFormToAccount', $this->addChangePasswordFormToAccount);
+        $module->settings->set('disableKeycloakUserOnDelete', $this->disableKeycloakUserOnDelete);
 
         // Add groups sync to jobs
         if (

@@ -42,6 +42,11 @@ return [
             'callback' => [Events::class, 'onModelUserAfterUpdate'],
         ],
         [
+            'class' => User::class,
+            'event' => User::EVENT_BEFORE_SOFT_DELETE,
+            'callback' => [Events::class, 'onModelUserBeforeSoftDelete'],
+        ],
+        [
             'class' => UserComponent::class,
             'event' => UserComponent::EVENT_AFTER_LOGOUT,
             'callback' => [Events::class, 'onComponentUserAfterLogout'],

@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => 'Configuració d\'inici de sessió <strong>Keycloak</strong>',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Afegiu una pàgina a la configuració del compte que permeti als usuaris canviar la seva contrasenya Keycloak',
   'Advanced settings (optional)' => 'Configuració avançada (opcional)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'El secret del client es troba a la pestanya "Credencials" (si a la configuració "Tipus d\'accés" està definit com a "confidencial")',
   'Client secret key' => 'Clau secreta del client',
   'Confirm new password' => 'Confirmar nova contrasenya',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Desactiva el compte d\'usuari a Keycloak quan s\'elimina a HumHub',
   'Enable this auth client' => 'Activa aquest client d\'autenticació',
   'For administrators allowed to manage users' => 'Per a administradors autoritzats a gestionar usuaris',
   'Hide username field in registration form' => 'Amaga el camp del nom d\'usuari al formulari de registre',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'La sincronització de HumHub amb Keycloak es fa en temps real. La sincronització de Keycloak amb HumHub es fa un cop al dia. Els subgrups de claus no estan sincronitzats.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Si està habilitat, un correu electrònic que no estigui verificat a Keycloak s\'ignora en iniciar la sessió: no s\'utilitza per iniciar la sessió en un compte HumHub existent amb el mateix correu electrònic, per crear un compte HumHub (si es requereix un correu electrònic, l\'inici de sessió falla fins que el correu electrònic no es verifiqui a Keycloak) ni per actualitzar el correu electrònic HumHub. Els usuaris que ja estiguin connectats amb Keycloak encara poden iniciar la sessió. Keycloak ha d\'enviar la reclamació {emailVerifiedClaim} (ho fa per defecte). Si està desactivat, el correu electrònic enviat per Keycloak sempre és de confiança: si Keycloak permet configurar un correu electrònic sense verificar-lo (per exemple, l\'autoregistre sense verificació del correu electrònic), qualsevol persona pot iniciar la sessió en un compte HumHub utilitzant el seu correu electrònic a Keycloak.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Si el nom d\'usuari enviat per Keycloak és el correu electrònic de l\'usuari, se substituirà per un nom d\'usuari generat automàticament a partir del nom i cognom (format CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Si configureu un títol personalitzat, no es traduirà a l\'idioma de l\'usuari tret que tingueu un fitxer de traducció personalitzat a la carpeta protegida/config. Deixa en blanc per definir el títol predeterminat.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Si voleu habilitar {BackChannelLogout} (que permet eliminar les sessions d\'usuari automàticament quan tanqueu la sessió de Keycloak), configureu la configuració del client {LogoutSettings} :',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Sincronitza les dues maneres (però sense eliminació a Keycloak o HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'Sincronitza les dues maneres (però sense eliminació a Keycloak)',
   'Synchronize groups and their members' => 'Sincronitzar grups i els seus membres',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'El compte de Keycloak està desactivat (no suprimit) i les seves sessions de Keycloak s\'eliminen. Es pot tornar a habilitar a Keycloak. L\'usuari administrador de l\'API de Keycloak no està mai desactivat.',
   'The client id provided by Keycloak' => 'L\'identificador de client proporcionat per Keycloak',
   'The new password could not be saved.' => 'No s\'ha pogut desar la contrasenya nova.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Aquest usuari administrador s\'ha de crear al mateix regne que el que s\'ha introduït al camp {RealmName} . Si el vostre regne és {masterRealmName} , només heu d\'assignar el rol {adminRoleName} a aquest usuari. En cas contrari, haureu d\'afegir el rol de client {realmManagementClientRole} i assignar tots els rols. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Actualitza el correu electrònic de l\'usuari a Keycloak quan es canvia a HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Actualitza el nom d\'usuari de l\'usuari a HumHub quan es canvia a Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Actualitza el nom d\'usuari de l\'usuari a Keycloak quan es canvia a HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Feu servir el correu electrònic enviat per Keycloak només si està verificat a Keycloak (recomanat si els usuaris de Keycloak poden configurar un correu electrònic sense verificar-lo)',
   'View error log' => 'Visualitza el registre d\'errors',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Avís: aquesta pàgina no demana la contrasenya actual (és possible que els usuaris que iniciïn sessió amb Keycloak no la coneguin). Per tant, qualsevol persona amb accés a una sessió oberta de l\'usuari pot canviar la contrasenya de Keycloak de l\'usuari.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Només funcionarà si a la configuració del regne de Keycloak està desactivat "Correu electrònic com a nom d\'usuari" i "Edita el nom d\'usuari" està habilitat.',
   'Your current password can be changed here.' => 'La vostra contrasenya actual es pot canviar aquí.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (per utilitzar el nom d\'usuari de Keycloak), `sub` (per utilitzar l\'ID de Keycloak) o un altre nom de reclamació de testimoni personalitzat',
   '{Credentials} tab: copy the secret key' => 'Pestanya {Credentials} : copieu la clau secreta',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Pestanya {Settings} -> {ClientAuthenticationOn} (per a la versió de Humhub <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Pestanya {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

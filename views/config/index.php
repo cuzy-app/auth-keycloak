@@ -91,6 +91,7 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
         <?= $form->field($model, 'title') ?>
         <?= $form->field($model, 'hideRegistrationUsernameField')->checkbox() ?>
         <?= $form->field($model, 'hideAdminUserEditPassword')->checkbox() ?>
+        <?= $form->field($model, 'trustOnlyVerifiedEmail')->checkbox() ?>
         <?= $form->endCollapsibleFields(); ?>
 
         <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings requiring an admin user for the API (optional)')) ?>
@@ -113,6 +114,7 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
         <?= $form->field($model, 'updateHumhubEmailFromBrokerEmail')->checkbox() ?>
         <?= $form->field($model, 'updatedBrokerEmailFromHumhubEmail')->checkbox() ?>
         <?= $form->field($model, 'addChangePasswordFormToAccount')->checkbox() ?>
+        <?= $form->field($model, 'disableKeycloakUserOnDelete')->checkbox() ?>
         <?= $form->field($model, 'groupsSyncMode')->dropDownList($model->groupsSyncModeItems()) ?>
         <?= $form->endCollapsibleFields(); ?>
 

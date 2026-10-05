@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Keycloak</strong> Inloggningskonfiguration',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Lägg till en sida i kontoinställningarna så att användare kan ändra sitt Keycloak-lösenord',
   'Advanced settings (optional)' => 'Avancerade inställningar (valfritt)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Klienthemlighet finns på fliken "Inloggningsuppgifter" (om "Åtkomsttyp" är inställd på "konfidentiellt" i inställningarna)',
   'Client secret key' => 'Klientens hemliga nyckel',
   'Confirm new password' => 'Bekräfta nytt lösenord',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Inaktivera användarens konto på Keycloak när det tas bort på HumHub',
   'Enable this auth client' => 'Aktivera denna autentiseringsklient',
   'For administrators allowed to manage users' => 'För administratörer som får hantera användare',
   'Hide username field in registration form' => 'Dölj användarnamnsfältet i registreringsformuläret',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'Synkronisering av HumHub till Keycloak görs i realtid. Keycloak till HumHub synkronisering görs en gång om dagen. Keycloak-undergrupper synkroniseras inte.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Om aktiverat ignoreras en e-postadress som inte är verifierad på Keycloak vid inloggning: den används inte för att logga in på ett befintligt HumHub-konto med samma e-postadress, för att skapa ett HumHub-konto (om en e-postadress krävs misslyckas inloggningen förrän e-postadressen har verifierats på Keycloak) eller för att uppdatera HumHub-e-postadressen. Användare som redan är anslutna till Keycloak kan fortfarande logga in. Keycloak måste skicka {emailVerifiedClaim} -anspråket (det gör det som standard). Om inaktiverat är e-postadressen som skickas av Keycloak alltid betrodd: om Keycloak tillåter att en e-postadress ställs in utan att verifiera den (t.ex. självregistrering utan e-postverifiering), kan vem som helst logga in på ett HumHub-konto med hjälp av sin e-postadress på Keycloak.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Om användarnamnet som skickas av Keycloak är användarens e-post, ersätts det av ett användarnamn som automatiskt genereras från för- och efternamn (CamelCase-formaterat)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Om du ställer in en anpassad titel kommer den inte att översättas till användarens språk om du inte har en anpassad översättningsfil i mappen protected/config. Lämna tomt för att ställa in standardtitel.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Om du vill aktivera {BackChannelLogout} (som tillåter att användarsessioner tas bort automatiskt när du loggar ut från Keycloak), konfigurerar du klientens {LogoutSettings} :',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Synkronisera åt båda hållen (men ingen borttagning på Keycloak eller HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'Synkronisera åt båda hållen (men ingen borttagning på Keycloak)',
   'Synchronize groups and their members' => 'Synkronisera grupper och deras medlemmar',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Keycloak-kontot är inaktiverat (inte raderat) och dess Keycloak-sessioner är borttagna. Det kan återaktiveras på Keycloak. Administratörsanvändaren för Keycloak API är aldrig inaktiverad.',
   'The client id provided by Keycloak' => 'Klient-id som tillhandahålls av Keycloak',
   'The new password could not be saved.' => 'Det nya lösenordet kunde inte sparas.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Den här administratörsanvändaren måste skapas i samma område som den som anges i fältet {RealmName} . Om din sfär är {masterRealmName} , tilldela bara rollen {adminRoleName} till denna användare. Annars måste du lägga till {realmManagementClientRole} Client Roll och tilldela alla roller. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Uppdatera användarens e-post på Keycloak när den ändras på HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Uppdatera användarens användarnamn på HumHub när det ändras på Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Uppdatera användarens användarnamn på Keycloak när det ändras på HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Använd endast e-postadressen som skickas av Keycloak om den är verifierad på Keycloak (rekommenderas om Keycloak-användare kan ange en e-postadress utan att verifiera den)',
   'View error log' => 'Visa fellogg',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Varning: den här sidan frågar inte efter det aktuella lösenordet (användare som loggar in med Keycloak kanske inte känner till det). Vem som helst med åtkomst till en öppen användares session kan därför ändra användarens Keycloak-lösenord.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Fungerar bara om "E-posta som användarnamn" är inaktiverat i Keycloaks rikes inställningar och "Redigera användarnamn" är aktiverat.',
   'Your current password can be changed here.' => 'Ditt nuvarande lösenord kan ändras här.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (för att använda Keycloak användarnamn), `sub` (för att använda Keycloak ID) eller annat anpassat Token Claim Name',
   '{Credentials} tab: copy the secret key' => '{Credentials} : kopiera den hemliga nyckeln',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Fliken {Settings} -> {ClientAuthenticationOn} (för Humhub-version <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Fliken {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

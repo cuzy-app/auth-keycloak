@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Keycloak</strong>登录配置',
   'Add a page in account settings allowing users to change their Keycloak password' => '在帐户设置中添加一个页面，允许用户更改其 Keycloak 密码',
   'Advanced settings (optional)' => '高级设置（可选）',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => '客户端密码位于“凭据”选项卡中（如果在设置中“访问类型”设置为“机密”）',
   'Client secret key' => '客户端密钥',
   'Confirm new password' => '确认新密码',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => '当用户在 HumHub 上被删除时，在 Keycloak 上停用该用户帐户。',
   'Enable this auth client' => '启用此身份验证客户端',
   'For administrators allowed to manage users' => '对于允许管理用户的管理员',
   'Hide username field in registration form' => '在注册表单中隐藏用户名字段',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'HumHub 和 Keycloak 的同步是实时进行的。Keycloak 和 HumHub 的同步每天进行一次。Keycloak 子组不同步。',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => '启用此功能后，未经 Keycloak 验证的电子邮件地址在登录时将被忽略：它不会用于登录已存在的 HumHub 帐户（使用同一电子邮件地址）、创建 HumHub 帐户（如果需要电子邮件地址，则登录将失败，直到该电子邮件地址在 Keycloak 上得到验证）或更新 HumHub 电子邮件地址。已连接到 Keycloak 的用户仍然可以登录。Keycloak 必须发送{emailVerifiedClaim}声明（默认情况下会发送）。禁用此功能后，Keycloak 发送的电子邮件地址始终被信任：如果 Keycloak 允许用户在不验证电子邮件地址的情况下设置电子邮件地址（例如，无需电子邮件验证的自助注册），则任何人都可以使用其在 Keycloak 上的电子邮件地址登录 HumHub 帐户。',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => '如果 Keycloak 发送的用户名是用户的电子邮件，则替换为根据名字和姓氏自动生成的用户名（CamelCase 格式）',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => '如果您设置了自定义标题，除非您在 protected/config 文件夹中有自定义翻译文件，否则它不会被翻译成用户的语言。留空以设置默认标题。',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => '如果要启用{BackChannelLogout} （允许在从 Keycloak 注销时自动删除用户会话），请配置客户端{LogoutSettings} ：',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => '双向同步（但不能删除 Keycloak 或 HumHub）',
   'Sync both ways (but no removal on Keycloak)' => '双向同步（但在 Keycloak 上没有删除）',
   'Synchronize groups and their members' => '同步组及其成员',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Keycloak 帐户已被禁用（但未被删除），其 Keycloak 会话已被移除。该帐户可在 Keycloak 中重新启用。Keycloak API 管理员用户永远不会被禁用。',
   'The client id provided by Keycloak' => 'Keycloak提供的客户端ID',
   'The new password could not be saved.' => '无法保存新密码。',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => '此管理员用户必须在与{RealmName}字段中输入的相同领域中创建。如果您的领域是{masterRealmName} ，只需将{adminRoleName}角色分配给该用户。否则，您需要添加{realmManagementClientRole}客户端角色并分配所有角色。 {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => '当 HumHub 上的电子邮件发生变化时，更新 Keycloak 上的用户电子邮件',
   'Update user\'s username on HumHub when changed on Keycloak' => '当 Keycloak 上的用户名发生变化时，更新 HumHub 上的用户名',
   'Update user\'s username on Keycloak when changed on HumHub' => '当 HumHub 上发生更改时，更新 Keycloak 上的用户名',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => '仅当 Keycloak 发送的电子邮件已在 Keycloak 上验证时才使用该电子邮件（如果 Keycloak 用户无需验证即可设置电子邮件，则建议这样做）。',
   'View error log' => '查看错误日志',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => '警告：此页面不会要求输入当前密码（使用 Keycloak 登录的用户可能不知道自己的密码）。因此，任何能够访问该用户已打开会话的人都可以更改该用户的 Keycloak 密码。',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => '仅当在 Keycloak 的领域设置中禁用“以用户名发送电子邮件”并启用“编辑用户名”时才有效。',
   'Your current password can be changed here.' => '您可以在此处更改当前密码。',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username`（使用 Keycloak 用户名）、`sub`（使用 Keycloak ID）或其他自定义令牌声明名称',
   '{Credentials} tab: copy the secret key' => '{Credentials}选项卡：复制密钥',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => '{Settings}选项卡 -> {ClientAuthenticationOn} （对于 Humhub 版本 <20： {AccessTypeValue} ）。',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => '{Settings}选项卡 -> {ValidRedirectURIsValue} 。',
-);
+];

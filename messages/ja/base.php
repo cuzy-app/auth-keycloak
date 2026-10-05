@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Keycloak</strong>サインイン構成',
   'Add a page in account settings allowing users to change their Keycloak password' => 'アカウント設定にページを追加して、ユーザーがKeycloakパスワードを変更できるようにします',
   'Advanced settings (optional)' => '詳細設定（オプション）',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'クライアントシークレットは[資格情報]タブにあります（設定で[アクセスタイプ]が[機密]に設定されている場合）',
   'Client secret key' => 'クライアントの秘密鍵',
   'Confirm new password' => '新しいパスワードを確認',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'HumHubで削除されたユーザーのアカウントをKeycloakで無効化する',
   'Enable this auth client' => 'この認証クライアントを有効にする',
   'For administrators allowed to manage users' => 'ユーザーの管理を許可された管理者の場合',
   'Hide username field in registration form' => '登録フォームのユーザー名フィールドを非表示にする',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'HumHub から Keycloak への同期はリアルタイムで行われます。Keycloak から HumHub への同期は 1 日に 1 回行われます。Keycloak サブグループは同期されません。',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => '有効にすると、Keycloak で検証されていないメールはサインイン時に無視されます。つまり、同じメールで既存の HumHub アカウントにサインインしたり、HumHub アカウントを作成したり (メールが必要な場合、Keycloak でメールが検証されるまでサインインは失敗します)、HumHub メールを更新したりするために使用されません。Keycloak に既に接続しているユーザーは引き続きサインインできます。Keycloak は{emailVerifiedClaim}クレームを送信する必要があります (デフォルトでは送信されます)。無効にすると、Keycloak から送信されるメールは常に信頼されます。Keycloak が検証せずにメールを設定することを許可している場合 (たとえば、メール検証なしの自己登録)、誰でも Keycloak のメールを使用して HumHub アカウントにサインインできます。',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Keycloakによって送信されたユーザー名がユーザーの電子メールである場合、それは姓名から自動生成されたユーザー名に置き換えられます（CamelCase形式）',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'カスタムタイトルを設定した場合、protected / configフォルダーにカスタム翻訳ファイルがない限り、ユーザーの言語に翻訳されません。デフォルトのタイトルを設定するには、空白のままにします。',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => '{BackChannelLogout} (Keycloakからサインアウトするときにユーザーセッションを自動的に削除できるようにする)を有効にする場合は、クライアント{LogoutSettings}を構成します。',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => '双方向で同期します（ただし、Keycloak または HumHub では削除されません）',
   'Sync both ways (but no removal on Keycloak)' => '両方の方法で同期します（ただし、Keycloakでは削除されません）',
   'Synchronize groups and their members' => 'グループとそのメンバーを同期する',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Keycloakアカウントは無効化されます（削除されるわけではありません）。Keycloakセッションも削除されます。アカウントはKeycloak上で再度有効化できます。Keycloak API管理者ユーザーは決して無効化されません。',
   'The client id provided by Keycloak' => 'Keycloakによって提供されるクライアントID',
   'The new password could not be saved.' => '新しいパスワードを保存できませんでした。',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'この管理ユーザーは、 {RealmName}フィールドに入力したものと同じレルムで作成する必要があります。レルムが{masterRealmName}の場合、 {adminRoleName}ロールをこのユーザーに割り当てるだけです。それ以外の場合は、 {realmManagementClientRole}クライアント ロールを追加し、すべてのロールを割り当てる必要があります。 {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'HumHub で変更があった場合に Keycloak でユーザーのメール アドレスを更新する',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Keycloak で変更されたら HumHub でユーザーのユーザー名を更新する',
   'Update user\'s username on Keycloak when changed on HumHub' => 'HumHub で変更されたときに Keycloak でユーザーのユーザー名を更新する',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Keycloakから送信されるメールは、Keycloak上で認証済みの場合にのみ使用してください（Keycloakユーザーが認証なしでメールアドレスを設定できる場合は、この方法を推奨します）。',
   'View error log' => 'エラーログを表示',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => '警告：このページでは現在のパスワードは求められません（Keycloakでログインしているユーザーはパスワードを知らない可能性があります）。そのため、ユーザーのセッションにアクセスできる人は誰でも、ユーザーのKeycloakパスワードを変更できます。',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Keycloakのレルム設定で「ユーザー名としてのメール」が無効になっていて「ユーザー名の編集」が有効になっている場合にのみ機能します。',
   'Your current password can be changed here.' => '現在のパスワードはここで変更できます。',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username`（Keycloakユーザー名を使用する場合）、` sub`（Keycloak IDを使用する場合）またはその他のカスタムトークンクレーム名',
   '{Credentials} tab: copy the secret key' => '[ {Credentials} ]タブ：秘密鍵をコピーします',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => '{Settings} ] タブ -> {ClientAuthenticationOn} (Humhub バージョン <20: {AccessTypeValue}の場合)。',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => '{Settings} ] タブ -> {ValidRedirectURIsValue} 。',
-);
+];

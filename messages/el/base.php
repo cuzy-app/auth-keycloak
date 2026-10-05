@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Διαμόρφωση εισόδου Keycloak</strong>',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Προσθέστε μια σελίδα στις ρυθμίσεις λογαριασμού που επιτρέπει στους χρήστες να αλλάξουν τον κωδικό πρόσβασής τους στο Keycloak',
   'Advanced settings (optional)' => 'Προηγμένες ρυθμίσεις (προαιρετικά)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Το μυστικό πελάτη βρίσκεται στην καρτέλα "Διαπιστευτήρια" (εάν στις ρυθμίσεις ο "Τύπος πρόσβασης" έχει οριστεί σε "εμπιστευτικό")',
   'Client secret key' => 'Μυστικό κλειδί πελάτη',
   'Confirm new password' => 'Επιβεβαιώστε τον καινούριο σας κωδικό',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Απενεργοποίηση λογαριασμού χρήστη στο Keycloak όταν διαγραφεί στο HumHub',
   'Enable this auth client' => 'Ενεργοποιήστε αυτόν τον πελάτη εξουσιοδότησης',
   'For administrators allowed to manage users' => 'Για διαχειριστές που επιτρέπεται να διαχειρίζονται χρήστες',
   'Hide username field in registration form' => 'Απόκρυψη πεδίου ονόματος χρήστη στη φόρμα εγγραφής',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'Ο συγχρονισμός HumHub σε Keycloak γίνεται σε πραγματικό χρόνο. Ο συγχρονισμός του Keycloak στο HumHub πραγματοποιείται μία φορά την ημέρα. Οι υποομάδες Keycloak δεν συγχρονίζονται.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Εάν είναι ενεργοποιημένη, μια διεύθυνση ηλεκτρονικού ταχυδρομείου που δεν έχει επαληθευτεί στο Keycloak αγνοείται κατά τη σύνδεση: δεν χρησιμοποιείται για σύνδεση σε έναν υπάρχοντα λογαριασμό HumHub με την ίδια διεύθυνση ηλεκτρονικού ταχυδρομείου, για τη δημιουργία ενός λογαριασμού HumHub (εάν απαιτείται διεύθυνση ηλεκτρονικού ταχυδρομείου, η σύνδεση αποτυγχάνει μέχρι να επαληθευτεί η διεύθυνση ηλεκτρονικού ταχυδρομείου στο Keycloak) ή για την ενημέρωση της διεύθυνσης ηλεκτρονικού ταχυδρομείου HumHub. Οι χρήστες που είναι ήδη συνδεδεμένοι με το Keycloak μπορούν ακόμα να συνδεθούν. Το Keycloak πρέπει να στείλει την αξίωση {emailVerifiedClaim} (αυτό συμβαίνει από προεπιλογή). Εάν είναι απενεργοποιημένη, το email που αποστέλλεται από το Keycloak είναι πάντα αξιόπιστο: εάν το Keycloak επιτρέπει τον ορισμό μιας διεύθυνσης ηλεκτρονικού ταχυδρομείου χωρίς επαλήθευσή της (π.χ. αυτοεγγραφή χωρίς επαλήθευση email), οποιοσδήποτε μπορεί να συνδεθεί σε έναν λογαριασμό HumHub χρησιμοποιώντας τη διεύθυνση ηλεκτρονικού ταχυδρομείου του στο Keycloak.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Εάν το όνομα χρήστη που αποστέλλεται από το Keycloak είναι το email του χρήστη, αντικαθίσταται από ένα όνομα χρήστη που δημιουργείται αυτόματα από το όνομα και το επίθετο (μορφοποίηση CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Εάν ορίσετε έναν προσαρμοσμένο τίτλο, δεν θα μεταφραστεί στη γλώσσα του χρήστη, εκτός εάν έχετε ένα προσαρμοσμένο αρχείο μετάφρασης στον φάκελο προστατευμένη/διαμόρφωση. Αφήστε κενό για να ορίσετε τον προεπιλεγμένο τίτλο.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Εάν θέλετε να ενεργοποιήσετε {BackChannelLogout} (το οποίο επιτρέπει την αυτόματη κατάργηση των περιόδων σύνδεσης χρήστη κατά την αποσύνδεση από το Keycloak), διαμορφώστε τις {LogoutSettings} του πελάτη:',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Συγχρονισμός και με τους δύο τρόπους (αλλά όχι κατάργηση στο Keycloak ή στο HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'Συγχρονισμός και με τους δύο τρόπους (αλλά όχι κατάργηση στο Keycloak)',
   'Synchronize groups and their members' => 'Συγχρονίστε ομάδες και τα μέλη τους',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Ο λογαριασμός Keycloak απενεργοποιείται (δεν διαγράφεται) και οι συνεδρίες Keycloak καταργούνται. Μπορεί να ενεργοποιηθεί ξανά στο Keycloak. Ο χρήστης διαχειριστή του API Keycloak δεν απενεργοποιείται ποτέ.',
   'The client id provided by Keycloak' => 'Το αναγνωριστικό πελάτη που παρέχεται από το Keycloak',
   'The new password could not be saved.' => 'Δεν ήταν δυνατή η αποθήκευση του νέου κωδικού πρόσβασης.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Αυτός ο χρήστης διαχειριστή πρέπει να δημιουργηθεί στον ίδιο τομέα με αυτόν που έχει εισαχθεί στο πεδίο {RealmName} . Εάν το βασίλειό σας είναι {masterRealmName} , απλώς εκχωρήστε τον ρόλο {adminRoleName} σε αυτόν τον χρήστη. Διαφορετικά, πρέπει να προσθέσετε τον ρόλο πελάτη {realmManagementClientRole} και να εκχωρήσετε όλους τους ρόλους. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Ενημερώστε το email του χρήστη στο Keycloak όταν αλλάξει στο HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Ενημερώστε το όνομα χρήστη του χρήστη στο HumHub όταν το αλλάξει στο Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Ενημερώστε το όνομα χρήστη του χρήστη στο Keycloak όταν αλλάξει στο HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Χρησιμοποιήστε το email που αποστέλλεται από το Keycloak μόνο εάν έχει επαληθευτεί στο Keycloak (συνιστάται εάν οι χρήστες του Keycloak μπορούν να ορίσουν ένα email χωρίς να το επαληθεύσουν)',
   'View error log' => 'Προβολή αρχείου καταγραφής σφαλμάτων',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Προειδοποίηση: αυτή η σελίδα δεν ζητά τον τρέχοντα κωδικό πρόσβασης (οι χρήστες που συνδέονται με το Keycloak ενδέχεται να μην τον γνωρίζουν). Οποιοσδήποτε έχει πρόσβαση σε μια ανοιχτή συνεδρία του χρήστη μπορεί επομένως να αλλάξει τον κωδικό πρόσβασης Keycloak του χρήστη.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Θα λειτουργήσει μόνο εάν στις ρυθμίσεις σφαίρας του Keycloak είναι απενεργοποιημένο το "Email ως όνομα χρήστη" και το "Επεξεργασία ονόματος χρήστη" είναι ενεργοποιημένο.',
   'Your current password can be changed here.' => 'Ο τρέχων κωδικός πρόσβασης μπορεί να αλλάξει εδώ.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '"preferred_username" (για χρήση ονόματος χρήστη Keycloak), "sub" (για χρήση Keycloak ID) ή άλλο προσαρμοσμένο όνομα αξίωσης Token',
   '{Credentials} tab: copy the secret key' => 'Καρτέλα {Credentials} : αντιγράψτε το μυστικό κλειδί',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Καρτέλα {Settings} -> {ClientAuthenticationOn} (για έκδοση Humhub <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Καρτέλα {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

@@ -16,6 +16,7 @@ use humhub\libs\ParameterEvent;
 use humhub\modules\admin\models\forms\UserEditForm;
 use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\components\KeycloakApi;
+use humhub\modules\authKeycloak\jobs\DisableUser;
 use humhub\modules\authKeycloak\jobs\GroupsFullSync;
 use humhub\modules\authKeycloak\jobs\GroupsUserSync;
 use humhub\modules\authKeycloak\jobs\UpdateUserEmail;
@@ -214,6 +215,39 @@ class Events
         ) {
             Yii::$app->queue->push(new UpdateUserEmail(['userId' => $user->id]));
         }
+    }
+
+
+    /**
+     * Deactivate the user's account on Keycloak when deleted on HumHub
+     * Must be done before the soft deletion, as it removes the user's Keycloak Auth record
+     * @param UserEvent $event
+     */
+    public static function onModelUserBeforeSoftDelete($event)
+    {
+        if (empty($event->user)) {
+            return;
+        }
+        $user = $event->user;
+
+        $config = new ConfigureForm();
+        if (
+            !$config->enabled
+            || !$config->hasApiParams()
+            || !$config->disableKeycloakUserOnDelete
+        ) {
+            return;
+        }
+
+        $auth = Auth::find()
+            ->where(['source' => Keycloak::DEFAULT_NAME, 'user_id' => $user->id])
+            ->orderBy(['id' => SORT_DESC]) // get the latest if it has multiple
+            ->one();
+        if ($auth === null || !$auth->source_id) {
+            return;
+        }
+
+        Yii::$app->queue->push(new DisableUser(['keycloakUserId' => (string)$auth->source_id]));
     }
 
 

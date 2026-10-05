@@ -117,13 +117,6 @@ class Keycloak extends OpenIdConnect
             }
         }
 
-        if (array_key_exists('username', $userAttributes)) {
-            $userByUsername = User::findOne(['username' => $userAttributes['username']]);
-            if ($userByUsername !== null && $this->isUserSafeToLink($userByUsername, $userAttributes['id'] ?? null)) {
-                return $userByUsername;
-            }
-        }
-
         return null;
     }
 
@@ -143,7 +136,7 @@ class Keycloak extends OpenIdConnect
     }
 
     /**
-     * Checks whether a HumHub user found via email/username fallback is safe to link
+     * Checks whether a HumHub user found via email fallback is safe to link
      * to the current Keycloak identity.
      *
      * Returns false when the user already has a Keycloak auth record whose source_id
@@ -255,6 +248,7 @@ class Keycloak extends OpenIdConnect
 
         if (
             $updateHumhubEmailFromBrokerEmail
+            && isset($userAttributes['email'])
             && $user->email !== $userAttributes['email']
         ) {
             $user->email = $userAttributes['email'];
@@ -325,6 +319,7 @@ class Keycloak extends OpenIdConnect
 
     /**
      * If the username sent by Keycloak is the user's email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)
+     * If enabled in the module settings, the email is removed if not verified on Keycloak
      * @inerhitdoc
      * @throws InvalidConfigException
      */
@@ -341,6 +336,18 @@ class Keycloak extends OpenIdConnect
                 ),
             );
         }
+
+        // Ignore unverified emails, so that they cannot be used to sign in to an existing HumHub account
+        // (by HumHub core or this module), to create a HumHub account, or to update the HumHub email
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        if (
+            $module->settings->get('trustOnlyVerifiedEmail')
+            && !filter_var($attributes['email_verified'] ?? false, FILTER_VALIDATE_BOOLEAN)
+        ) {
+            unset($attributes['email']);
+        }
+
         return $attributes;
     }
 }

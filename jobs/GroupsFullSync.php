@@ -106,7 +106,9 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
         }
 
         $this->initUsersKeycloakIdToHumhubId();
-        $this->initKeycloakGroupsMembers();
+        if (!$this->initKeycloakGroupsMembers()) {
+            return;
+        }
         $this->initHumhubGroupsMembers();
 
         if ($config->syncKeycloakGroupsToHumhub()) {
@@ -254,19 +256,26 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     }
 
     /**
-     * @return void
+     * @return bool false if the members of a group could not be retrieved
      */
     protected function initKeycloakGroupsMembers()
     {
         foreach ($this->keycloakGroupsNamesById as $keycloakGroupId => $keycloakGroupName) {
             $this->keycloakGroupsMembers[$keycloakGroupId] = [];
-            foreach ($this->keycloakApi->getGroupMemberIds($keycloakGroupId) as $keycloakUserId) {
+            $keycloakUserIds = $this->keycloakApi->getGroupMemberIds($keycloakGroupId);
+            if ($keycloakUserIds === null) {
+                // Abort, otherwise all members of this group would be removed from the HumHub group
+                Yii::error('Groups full sync aborted: members of the Keycloak group ID ' . $keycloakGroupId . ' could not be retrieved', 'auth-keycloak');
+                return false;
+            }
+            foreach ($keycloakUserIds as $keycloakUserId) {
                 // If this user has an account on HumHub
                 if ($this->getHumhubUserId($keycloakUserId) !== null) {
                     $this->keycloakGroupsMembers[$keycloakGroupId][] = $keycloakUserId;
                 }
             }
         }
+        return true;
     }
 
     /**

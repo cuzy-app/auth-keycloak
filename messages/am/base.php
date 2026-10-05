@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>የቁልፍ ካባ የመግቢያ</strong> ውቅር',
   'Add a page in account settings allowing users to change their Keycloak password' => 'ተጠቃሚዎች የ Keycloak የይለፍ ቃላቸውን እንዲቀይሩ የሚያስችል ገጽ በመለያ ቅንብሮች ውስጥ ያክሉ',
   'Advanced settings (optional)' => 'የላቁ ቅንብሮች (አማራጭ)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'የደንበኛ ሚስጥር በ "ምስክርነቶች" ትር ውስጥ ነው (በቅንብሮች ውስጥ "የመዳረሻ አይነት" ወደ "ሚስጥራዊ" ከተዋቀረ)',
   'Client secret key' => 'የደንበኛ ሚስጥራዊ ቁልፍ',
   'Confirm new password' => 'አዲሱን የይለፍ ቃል አረጋግጥ',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'በHumHub ላይ ሲሰረዝ የተጠቃሚውን መለያ በ Keycloak ላይ ያቦዝኑት',
   'Enable this auth client' => 'ይህን የuth ደንበኛ አንቃ',
   'For administrators allowed to manage users' => 'ተጠቃሚዎችን እንዲያስተዳድሩ ለተፈቀደላቸው አስተዳዳሪዎች',
   'Hide username field in registration form' => 'የምዝገባ ቅጽ ውስጥ የተጠቃሚ ስም መስክ ደብቅ',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'HumHub ከ Keycloak ጋር ማመሳሰል በእውነተኛ ጊዜ ነው የሚደረገው። ከ HumHub ወደ ኪሎክ ማመሳሰል በቀን አንድ ጊዜ ይከናወናል። የቁልፍ ካባ ንዑስ ቡድኖች አልተመሳሰሉም።',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'ከነቃ፣ በኪሎክ ላይ ያልተረጋገጠ ኢሜይል ሲገባ ችላ ይባላል፡ በተመሳሳይ ኢሜይል ወደ ነባር የሂምሃብ መለያ ለመግባት፣ የሂምሃብ መለያ ለመፍጠር (ኢሜይል አስፈላጊ ከሆነ፣ ኢሜይሉ በኪሎክ እስኪረጋገጥ ድረስ መግባት አይሳካም) ወይም የሂምሃብ ኢሜይልን ለማዘመን ጥቅም ላይ አይውልም። አስቀድመው ከኪሎክ ጋር የተገናኙ ተጠቃሚዎች አሁንም መግባት ይችላሉ። ኪሎክ {emailVerifiedClaim} የይገባኛል ጥያቄን መላክ አለበት (በነባሪነት ያደርጋል)። ከተሰናከለ፣ በኪሎክ የተላከው ኢሜይል ሁልጊዜም የታመነ ነው፡ ኪሎክ ኢሜልን ሳያረጋግጥ ማዋቀር የሚፈቅድ ከሆነ (ለምሳሌ ያለኢሜይል ማረጋገጫ የራስ ምዝገባ)፣ ማንኛውም ሰው በኪሎክ ላይ ያለውን ኢሜል በመጠቀም ወደ የሁምሃብ መለያ መግባት ይችላል።',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'በ Keycloak የተላከው የተጠቃሚ ስም የተጠቃሚው ኢሜል ከሆነ ከመጀመሪያ እና ከአያት ስም (CamelCase ቅርጸት የተሰራ) በራስ-ሰር በተፈጠረ የተጠቃሚ ስም ይተካል።',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'ብጁ ርዕስ ካዘጋጁ በተጠበቀው/ውቅር አቃፊ ውስጥ ብጁ የትርጉም ፋይል ከሌለዎት ወደ ተጠቃሚው ቋንቋ አይተረጎምም። ነባሪ ርዕስ ለማዘጋጀት ባዶ ይተውት።',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => '{BackChannelLogout} ማንቃት ከፈለጉ (ከቁልፍ ልብስ ሲወጡ የተጠቃሚ ክፍለ-ጊዜዎችን በራስ-ሰር ለማስወገድ ያስችላል) ደንበኛውን {LogoutSettings} ያዋቅሩት',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'ሁለቱንም መንገዶች ያመሳስሉ (ነገር ግን በ Keycloak ወይም HumHub ላይ መወገድ የለም)',
   'Sync both ways (but no removal on Keycloak)' => 'ሁለቱንም መንገዶች ያመሳስሉ (ነገር ግን በቁልፍ ልብስ ላይ መወገድ የለም)',
   'Synchronize groups and their members' => 'ቡድኖችን እና አባሎቻቸውን ያመሳስሉ',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'የኪሎክ አካውንቱ ተሰናክሏል (አልተሰረዘም) እና የኪሎክ ክፍለ ጊዜዎቹ ተወግደዋል። በኪሎክ ላይ እንደገና ሊነቃ ይችላል። የኪሎክ ኤፒአይ አስተዳዳሪ ተጠቃሚ በጭራሽ አይሰናከልም።',
   'The client id provided by Keycloak' => 'የደንበኛ መታወቂያ በቁልፍክሎክ የቀረበ',
   'The new password could not be saved.' => 'አዲሱ የይለፍ ቃል ሊቀመጥ አልቻለም።',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'ይህ የአስተዳዳሪ ተጠቃሚ በ {RealmName} መስክ ውስጥ ከገባው ጋር በተመሳሳይ ግዛት ውስጥ መፈጠር አለበት። የእርስዎ ግዛት {masterRealmName} ከሆነ፣ {adminRoleName} ሚና ስም ሚናውን ለዚህ ተጠቃሚ ብቻ ይመድቡ። አለበለዚያ፣ {realmManagementClientRole} Client Role ማከል እና ሁሉንም ሚናዎች መመደብ አለቦት። {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'በHumHub ላይ ሲቀየር የተጠቃሚውን ኢሜይል በቁልፍክሎክ ላይ ያዘምኑ',
   'Update user\'s username on HumHub when changed on Keycloak' => 'በቁልፍክሎክ ላይ ሲቀየር የተጠቃሚውን ስም በHumHub ያዘምኑ',
   'Update user\'s username on Keycloak when changed on HumHub' => 'በHumHub ላይ ሲቀየር የተጠቃሚውን የተጠቃሚ ስም በቁልፍክሎክ ላይ ያዘምኑ',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'በኪሎክ የተላከውን ኢሜይል በኪሎክ ላይ ከተረጋገጠ ብቻ ይጠቀሙ (የኪሎክ ተጠቃሚዎች ኢሜይል ሳያረጋግጡ ማዘጋጀት ከቻሉ ይመከራል)',
   'View error log' => 'የስህተት ምዝግብ ማስታወሻን ይመልከቱ',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'ማስጠንቀቂያ፡ ይህ ገጽ የአሁኑን የይለፍ ቃል አይጠይቅም (በኪይክሎክ የሚገቡ ተጠቃሚዎች ላያውቁት ይችላሉ)። ስለዚህ የተጠቃሚውን ክፍት ክፍለ ጊዜ የማግኘት መብት ያለው ማንኛውም ሰው የተጠቃሚውን የቁልፍክሎክ የይለፍ ቃል መቀየር ይችላል።',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'የሚሰራው በ Keycloak ግዛት ቅንብሮች ውስጥ "ኢሜል እንደ ተጠቃሚ ስም" ከተሰናከለ እና "የተጠቃሚ ስም አርትዕ" ከነቃ ብቻ ነው።',
   'Your current password can be changed here.' => 'የአሁኑ የይለፍ ቃልህ እዚህ ሊቀየር ይችላል።',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`የተመረጠ_ተጠቃሚ ስም\' (የኪሎክ ተጠቃሚ ስም ለመጠቀም)፣ `ንዑስ` (የቁልፍ ልብስ መታወቂያ ለመጠቀም) ወይም ሌላ ብጁ የማስመሰያ የይገባኛል ጥያቄ ስም',
   '{Credentials} tab: copy the secret key' => '{Credentials} ትር፡ የሚስጥር ቁልፉን ይቅዱ',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => '{Settings} ትር -> {ClientAuthenticationOn} (ለHumhub ስሪት <20 {AccessTypeValue} )።',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => '{Settings} ትር -> {ValidRedirectURIsValue} .',
-);
+];

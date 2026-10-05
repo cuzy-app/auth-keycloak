@@ -25,6 +25,16 @@ class Module extends BaseModule
     public $apiVerifySsl = true;
 
     /**
+     * @var int|float Maximum duration in seconds of a request to the Keycloak API (0 to wait indefinitely)
+     */
+    public $apiTimeout = 10;
+
+    /**
+     * @var int|float Maximum duration in seconds to connect to the Keycloak API (0 to wait indefinitely)
+     */
+    public $apiConnectTimeout = 5;
+
+    /**
      * @var bool Register a dedicated UserSource for Keycloak-provisioned users.
      *
      * Default: true. Mirrors the pre-1.19 `PrimaryClient` semantic — users that

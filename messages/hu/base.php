@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Keycloak</strong> bejelentkezési konfiguráció',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Adjon hozzá egy oldalt a fiókbeállításokhoz, amely lehetővé teszi a felhasználók számára, hogy módosítsák Keycloak jelszavukat',
   'Advanced settings (optional)' => 'Speciális beállítások (opcionális)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Az ügyfél titkossága a "Hitelesítési adatok" lapon található (ha a beállításokban a "Hozzáférés típusa" "bizalmas" értékre van állítva)',
   'Client secret key' => 'Kliens titkos kulcsa',
   'Confirm new password' => 'Erősítsd meg az új jelszót',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Felhasználói fiók deaktiválása a Keycloakon, ha a HumHubon törlik',
   'Enable this auth client' => 'Engedélyezze ezt a hitelesítési klienst',
   'For administrators allowed to manage users' => 'A felhasználók kezelésére jogosult rendszergazdáknak',
   'Hide username field in registration form' => 'Felhasználónév mező elrejtése a regisztrációs űrlapon',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'A HumHub és a Keycloak közötti szinkronizálás valós időben történik. A Keycloak és a HumHub szinkronizálása naponta egyszer történik. A Keycloak alcsoportok nincsenek szinkronizálva.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Ha engedélyezve van, a Keycloakon nem ellenőrzött e-mail címeket a rendszer figyelmen kívül hagyja bejelentkezéskor: nem használják ugyanazzal az e-mail címmel rendelkező meglévő HumHub fiókba való bejelentkezéshez, HumHub fiók létrehozásához (ha e-mail cím szükséges, a bejelentkezés sikertelen, amíg az e-mail címet nem ellenőrzik a Keycloakon), vagy a HumHub e-mail cím frissítéséhez. A Keycloakon már csatlakozott felhasználók továbbra is bejelentkezhetnek. A Keycloaknak el kell küldenie az {emailVerifiedClaim} igényt (alapértelmezés szerint elküldi). Ha le van tiltva, a Keycloak által küldött e-mail mindig megbízható: ha a Keycloak lehetővé teszi az e-mail cím beállítását ellenőrzés nélkül (pl. önregisztráció e-mail cím ellenőrzés nélkül), akkor bárki bejelentkezhet egy HumHub fiókba a Keycloakon található e-mail címével.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Ha a Keycloak által küldött felhasználónév a felhasználó e-mail-címe, akkor azt egy, a vezeték- és utónévből automatikusan generált felhasználónév váltja fel (CamelCase formátumban).',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Ha egyéni címet ad meg, az nem lesz lefordítva a felhasználó nyelvére, hacsak nincs egyéni fordítási fájlja a védett/konfigurációs mappában. Hagyja üresen az alapértelmezett cím beállításához.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Ha engedélyezni szeretné {BackChannelLogout} (amely lehetővé teszi a felhasználói munkamenetek automatikus eltávolítását, amikor kijelentkezik a Keycloakból), konfigurálja a kliens {LogoutSettings} beállítását:',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Szinkronizálás mindkét irányban (de nincs eltávolítása a Keycloakon vagy a HumHubon)',
   'Sync both ways (but no removal on Keycloak)' => 'Szinkronizálás mindkét irányban (de nincs eltávolítása a Keycloakon)',
   'Synchronize groups and their members' => 'Csoportok és tagjaik szinkronizálása',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'A Keycloak fiók letiltásra kerül (nem törlődik), és a Keycloak munkamenetei eltávolításra kerülnek. Újra engedélyezhető a Keycloakon. A Keycloak API adminisztrátori felhasználója soha nem kerül letiltásra.',
   'The client id provided by Keycloak' => 'A Keycloak által biztosított ügyfél-azonosító',
   'The new password could not be saved.' => 'Az új jelszót nem sikerült elmenteni.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Ezt az adminisztrátor felhasználót ugyanabban a tartományban kell létrehozni, mint a {RealmName} mezőben megadott. Ha a tartomány a {masterRealmName} , csak rendelje hozzá az {adminRoleName} szerepkört ehhez a felhasználóhoz. Ellenkező esetben hozzá kell adnia a {realmManagementClientRole} Client Role-t, és hozzá kell rendelnie az összes szerepet. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Frissítse a felhasználó e-mail-címét a Keycloakon, ha módosítja a HumHubon',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Frissítse a felhasználó felhasználónevét a HumHubon, ha módosítja a Keycloakon',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Frissítse a felhasználó felhasználónevét a Keycloakon, ha módosítja a HumHubon',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Csak akkor használja a Keycloak által küldött e-mailt, ha az ellenőrizve van a Keycloakon (ajánlott, ha a Keycloak felhasználók ellenőrzés nélkül is be tudnak állítani egy e-mailt).',
   'View error log' => 'Hibanapló megtekintése',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Figyelem: ez az oldal nem kéri az aktuális jelszót (a Keycloak-kal bejelentkező felhasználók esetleg nem tudják). Bárki, aki hozzáfér a felhasználó nyitott munkamenetéhez, ezért megváltoztathatja a felhasználó Keycloak jelszavát.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Csak akkor működik, ha a Keycloak tartomány beállításaiban az „E-mail mint felhasználónév” le van tiltva, és a „Felhasználónév szerkesztése” engedélyezve van.',
   'Your current password can be changed here.' => 'Jelenlegi jelszava itt módosítható.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '"preferred_username" (a Keycloak felhasználónév használatához), "sub" (a Keycloak ID használatához) vagy más egyéni Token Claim név',
   '{Credentials} tab: copy the secret key' => '{Credentials} lap: másolja ki a titkos kulcsot',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => '{Settings} lap -> {ClientAuthenticationOn} (<20-as Humhub-verzióhoz: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => '{Settings} lap -> {ValidRedirectURIsValue} .',
-);
+];

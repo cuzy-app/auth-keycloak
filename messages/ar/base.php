@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => 'تكوين تسجيل الدخول <strong>Keycloak</strong>',
   'Add a page in account settings allowing users to change their Keycloak password' => 'أضف صفحة في إعدادات الحساب للسماح للمستخدمين بتغيير كلمة مرور Keycloak الخاصة بهم',
   'Advanced settings (optional)' => 'الإعدادات المتقدمة (اختياري)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'يوجد سر العميل في علامة التبويب "بيانات الاعتماد" (إذا تم تعيين "نوع الوصول" في الإعدادات على "سري")',
   'Client secret key' => 'مفتاح سر العميل',
   'Confirm new password' => 'تأكيد كلمة المرور الجديدة',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'تعطيل حساب المستخدم على Keycloak عند حذفه من HumHub',
   'Enable this auth client' => 'تفعيل عميل المصادقة هذا',
   'For administrators allowed to manage users' => 'للمسؤولين يسمح لهم بإدارة المستخدمين',
   'Hide username field in registration form' => 'إخفاء حقل اسم المستخدم في استمارة التسجيل',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'تتم مزامنة HumHub إلى Keycloak في الوقت الفعلي. تتم مزامنة Keycloak مع HumHub مرة واحدة يوميًا. لا تتم مزامنة مجموعات Keycloak الفرعية.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'في حال تفعيل هذه الميزة، يتم تجاهل أي بريد إلكتروني غير مُؤكَّد على Keycloak عند تسجيل الدخول: فلا يُستخدم لتسجيل الدخول إلى حساب HumHub موجود بنفس البريد الإلكتروني، أو لإنشاء حساب HumHub (إذا كان البريد الإلكتروني مطلوبًا، فسيفشل تسجيل الدخول حتى يتم التحقق منه على Keycloak)، أو لتحديث بريد HumHub الإلكتروني. ويمكن للمستخدمين المرتبطين بالفعل بـ Keycloak تسجيل الدخول. يجب على Keycloak إرسال مطالبة {emailVerifiedClaim} (وهو ما يفعله افتراضيًا). أما في حال تعطيل هذه الميزة، فيتم الوثوق دائمًا بالبريد الإلكتروني المُرسَل من Keycloak: فإذا سمح Keycloak بتعيين بريد إلكتروني دون التحقق منه (مثل التسجيل الذاتي دون التحقق من البريد الإلكتروني)، فيمكن لأي شخص تسجيل الدخول إلى حساب HumHub باستخدام بريده الإلكتروني على Keycloak.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'إذا كان اسم المستخدم المرسل بواسطة Keycloak هو البريد الإلكتروني للمستخدم ، فسيتم استبداله باسم مستخدم تم إنشاؤه تلقائيًا من الاسم الأول والأخير (تنسيق CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'إذا قمت بتعيين عنوان مخصص ، فلن تتم ترجمته إلى لغة المستخدم إلا إذا كان لديك ملف ترجمة مخصص في المجلد المحمي / التكوين. اتركه فارغا لتعيين العنوان الافتراضي.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'إذا كنت تريد تمكين {BackChannelLogout} (الذي يسمح بإزالة جلسات المستخدم تلقائيًا عند تسجيل الخروج من Keycloak)، فقم بتكوين {LogoutSettings} للعميل:',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'المزامنة في كلا الاتجاهين (ولكن لا توجد إزالة على Keycloak أو HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'مزامنة كلا الاتجاهين (ولكن بدون إزالة على Keycloak)',
   'Synchronize groups and their members' => 'مزامنة المجموعات وأعضائها',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'تم تعطيل حساب Keycloak (وليس حذفه) وإزالة جلسات Keycloak الخاصة به. ويمكن إعادة تفعيله على Keycloak. أما مستخدم مسؤول واجهة برمجة تطبيقات Keycloak فلا يتم تعطيله مطلقًا.',
   'The client id provided by Keycloak' => 'معرف العميل المقدم من Keycloak',
   'The new password could not be saved.' => 'تعذر حفظ كلمة المرور الجديدة.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'يجب إنشاء هذا المستخدم المسؤول في نفس المجال الذي تم إدخاله في حقل {RealmName} . إذا كان المجال الخاص بك هو {masterRealmName} ، فقم فقط بتعيين دور {adminRoleName} لهذا المستخدم. وإلا ، فأنت بحاجة إلى إضافة دور عميل {realmManagementClientRole} وتعيين جميع الأدوار. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'قم بتحديث البريد الإلكتروني للمستخدم على Keycloak عند تغييره على HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'قم بتحديث اسم المستخدم الخاص بالمستخدم على HumHub عند تغييره على Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'قم بتحديث اسم المستخدم الخاص بالمستخدم على Keycloak عند تغييره على HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'استخدم البريد الإلكتروني المرسل من Keycloak فقط إذا تم التحقق منه على Keycloak (يوصى به إذا كان بإمكان مستخدمي Keycloak تعيين بريد إلكتروني دون التحقق منه).',
   'View error log' => 'عرض سجل الأخطاء',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'تنبيه: لا تطلب هذه الصفحة كلمة المرور الحالية (قد لا يعرفها المستخدمون الذين يسجلون الدخول باستخدام Keycloak). وبالتالي، يمكن لأي شخص لديه صلاحية الوصول إلى جلسة المستخدم المفتوحة تغيير كلمة مرور Keycloak الخاصة به.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'لن يعمل إلا إذا تم تعطيل "البريد الإلكتروني كاسم مستخدم" في إعدادات نطاق Keycloak وتم تمكين "تحرير اسم المستخدم".',
   'Your current password can be changed here.' => 'يمكن تغيير كلمة مرورك الحالية هنا.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '"مفضل_اسم المستخدم" (لاستخدام اسم مستخدم Keycloak) ، "فرعي" (لاستخدام معرّف Keycloak) أو اسم مطالبة رمز مخصص آخر',
   '{Credentials} tab: copy the secret key' => 'علامة تبويب {Credentials} : انسخ المفتاح السري',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'علامة تبويب {Settings} -> {ClientAuthenticationOn} (لإصدار Humhub <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'علامة التبويب {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

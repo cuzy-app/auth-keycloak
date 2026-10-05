@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Keycloak</strong> pierakstīšanās konfigurācija',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Pievienojiet lapu konta iestatījumos, kas ļauj lietotājiem mainīt Keycloak paroli',
   'Advanced settings (optional)' => 'Papildu iestatījumi (neobligāti)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Klienta noslēpums atrodas cilnē "Akreditācijas dati" (ja iestatījumos "Piekļuves veids" ir iestatīts uz "konfidenciāli")',
   'Client secret key' => 'Klienta slepenā atslēga',
   'Confirm new password' => 'Apstipriniet jauno paroli',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Deaktivizēt lietotāja kontu vietnē Keycloak, ja tas tiek dzēsts vietnē HumHub',
   'Enable this auth client' => 'Iespējot šo autentifikācijas klientu',
   'For administrators allowed to manage users' => 'Administratoriem, kam atļauts pārvaldīt lietotājus',
   'Hide username field in registration form' => 'Slēpt lietotājvārda lauku reģistrācijas formā',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'HumHub un Keycloak sinhronizācija tiek veikta reāllaikā. Keycloak sinhronizācija ar HumHub tiek veikta reizi dienā. Keycloak apakšgrupas netiek sinhronizētas.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Ja šī opcija ir iespējota, e-pasts, kas nav verificēts Keycloak, pierakstoties tiek ignorēts: tas netiek izmantots, lai pierakstītos esošā HumHub kontā ar to pašu e-pastu, izveidotu HumHub kontu (ja ir nepieciešama e-pasta adrese, pierakstīšanās neizdodas, kamēr e-pasts nav verificēts Keycloak) vai atjauninātu HumHub e-pastu. Lietotāji, kas jau ir izveidojuši savienojumu ar Keycloak, joprojām var pierakstīties. Keycloak ir jānosūta pieprasījums {emailVerifiedClaim} (tas to dara pēc noklusējuma). Ja šī opcija ir atspējota, Keycloak nosūtītais e-pasts vienmēr tiek uzskatīts par uzticamu: ja Keycloak ļauj iestatīt e-pastu bez tā verifikācijas (piemēram, pašreģistrācija bez e-pasta verifikācijas), ikviens var pierakstīties HumHub kontā, izmantojot tā e-pastu Keycloak.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Ja Keycloak nosūtītais lietotājvārds ir lietotāja e-pasts, tas tiek aizstāts ar lietotājvārdu, kas automātiski ģenerēts no vārda un uzvārda (CamelCase formatēts)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Ja iestatāt pielāgotu nosaukumu, tas netiks tulkots lietotāja valodā, ja vien aizsargātajā/konfigurācijas mapē nebūs pielāgota tulkošanas faila. Atstājiet tukšu, lai iestatītu noklusējuma nosaukumu.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Ja vēlaties iespējot {BackChannelLogout} (kas ļauj automātiski noņemt lietotāju sesijas, izrakstoties no Keycloak), konfigurējiet klienta {LogoutSettings} :',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Sinhronizēt abos veidos (bet nenoņemt Keycloak vai HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'Sinhronizēt abos veidos (bet nenoņemt Keycloak)',
   'Synchronize groups and their members' => 'Sinhronizējiet grupas un to dalībniekus',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Keycloak konts ir atspējots (nevis dzēsts), un tā Keycloak sesijas ir noņemtas. To var atkārtoti iespējot Keycloak. Keycloak API administratora lietotājs nekad netiek atspējots.',
   'The client id provided by Keycloak' => 'Keycloak nodrošinātais klienta ID',
   'The new password could not be saved.' => 'Jauno paroli nevarēja saglabāt.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Šis administratora lietotājs ir jāizveido tajā pašā jomā, kurā ir ievadīts laukā {RealmName} . Ja jūsu sfēra ir {masterRealmName} , vienkārši piešķiriet šim lietotājam lomu {adminRoleName} . Pretējā gadījumā jums ir jāpievieno {realmManagementClientRole} klienta loma un jāpiešķir visas lomas. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Atjauniniet lietotāja e-pasta adresi Keycloak, kad izmaiņas tiek veiktas HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Atjauniniet lietotāja lietotājvārdu HumHub, kad tas ir mainīts Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Atjauniniet lietotāja lietotājvārdu Keycloak, kad tas ir mainīts HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Izmantot Keycloak nosūtīto e-pastu tikai tad, ja tas ir verificēts Keycloak (ieteicams, ja Keycloak lietotāji var iestatīt e-pastu, to neverificējot).',
   'View error log' => 'Skatīt kļūdu žurnālu',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Brīdinājums: šī lapa neprasa pašreizējo paroli (lietotāji, kas piesakās, izmantojot Keycloak, to var nezināt). Tādēļ ikviens, kam ir piekļuve lietotāja atvērtai sesijai, var mainīt lietotāja Keycloak paroli.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Darbosies tikai tad, ja Keycloak sfēras iestatījumos ir atspējots “E-pasts kā lietotājvārds” un ir iespējota opcija “Rediģēt lietotājvārdu”.',
   'Your current password can be changed here.' => 'Šeit var mainīt savu pašreizējo paroli.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (lai izmantotu Keycloak lietotājvārdu), `sub` (lai izmantotu Keycloak ID) vai cits pielāgots Token Claim nosaukums',
   '{Credentials} tab: copy the secret key' => 'Cilne {Credentials} dati: kopējiet slepeno atslēgu',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Cilne {Settings} —> {ClientAuthenticationOn} (Humhub versijai <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Cilne {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

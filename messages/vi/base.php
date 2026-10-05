@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => 'Cấu hình đăng nhập bằng <strong>Keycloak</strong>',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Thêm một trang trong cài đặt tài khoản cho phép người dùng thay đổi mật khẩu Keycloak của họ',
   'Advanced settings (optional)' => 'Cài đặt nâng cao (tùy chọn)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Bí mật của ứng dụng khách nằm trong tab "Thông tin đăng nhập" (nếu trong cài đặt "Loại truy cập" được đặt thành "bí mật")',
   'Client secret key' => 'Khóa bí mật của khách hàng',
   'Confirm new password' => 'Xác nhận mật khẩu mới',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Vô hiệu hóa tài khoản người dùng trên Keycloak khi bị xóa trên HumHub.',
   'Enable this auth client' => 'Bật ứng dụng khách xác thực này',
   'For administrators allowed to manage users' => 'Đối với quản trị viên được phép quản lý người dùng',
   'Hide username field in registration form' => 'Ẩn trường tên người dùng trong biểu mẫu đăng ký',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'Đồng bộ hóa HumHub với Keycloak được thực hiện trong thời gian thực. Đồng bộ hóa Keycloak với HumHub được thực hiện mỗi ngày một lần. Các nhóm con Keycloak không được đồng bộ hóa.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Nếu được bật, email chưa được xác minh trên Keycloak sẽ bị bỏ qua khi đăng nhập: email này sẽ không được sử dụng để đăng nhập vào tài khoản HumHub hiện có bằng cùng email đó, để tạo tài khoản HumHub (nếu yêu cầu email, việc đăng nhập sẽ thất bại cho đến khi email được xác minh trên Keycloak), hoặc để cập nhật email HumHub. Người dùng đã kết nối với Keycloak vẫn có thể đăng nhập. Keycloak phải gửi yêu cầu {emailVerifiedClaim} (mặc định là vậy). Nếu bị tắt, email do Keycloak gửi luôn được tin cậy: nếu Keycloak cho phép thiết lập email mà không cần xác minh (ví dụ: tự đăng ký mà không cần xác minh email), bất kỳ ai cũng có thể đăng nhập vào tài khoản HumHub bằng email của họ trên Keycloak.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Nếu tên người dùng do Keycloak gửi là email của người dùng, nó sẽ được thay thế bằng tên người dùng được tạo tự động từ họ và tên (được định dạng CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Nếu bạn đặt tiêu đề tùy chỉnh, tiêu đề đó sẽ không được dịch sang ngôn ngữ của người dùng trừ khi bạn có tệp dịch tùy chỉnh trong thư mục bảo vệ / cấu hình. Để trống để đặt tiêu đề mặc định.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Nếu bạn muốn bật {BackChannelLogout} (cho phép tự động xóa phiên của người dùng khi đăng xuất khỏi Keycloak), hãy định cấu hình ứng dụng khách {LogoutSettings} :',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Đồng bộ cả 2 cách (nhưng không gỡ bỏ trên Keycloak hoặc HumHub)',
   'Sync both ways (but no removal on Keycloak)' => 'Đồng bộ hóa cả hai cách (nhưng không xóa trên Keycloak)',
   'Synchronize groups and their members' => 'Đồng bộ hóa các nhóm và các thành viên của họ',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Tài khoản Keycloak bị vô hiệu hóa (không bị xóa) và các phiên Keycloak của tài khoản đó bị gỡ bỏ. Có thể kích hoạt lại tài khoản này trên Keycloak. Người dùng quản trị API Keycloak không bao giờ bị vô hiệu hóa.',
   'The client id provided by Keycloak' => 'Id khách hàng do Keycloak cung cấp',
   'The new password could not be saved.' => 'Không thể lưu mật khẩu mới.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Người dùng quản trị này phải được tạo trong cùng một lĩnh vực với tên được nhập trong trường {RealmName} . Nếu vương quốc của bạn là {masterRealmName} , chỉ cần gán vai trò {adminRoleName} cho người dùng này. Nếu không, bạn cần phải thêm Vai trò Máy khách {realmManagementClientRole} và chỉ định tất cả các Vai trò. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Cập nhật email người dùng trên Keycloak khi thay đổi trên HumHub',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Cập nhật tên người dùng trên HumHub khi thay đổi trên Keycloak',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Cập nhật tên người dùng trên Keycloak khi thay đổi trên HumHub',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Chỉ sử dụng email do Keycloak gửi nếu email đó đã được xác minh trên Keycloak (khuyến nghị nếu người dùng Keycloak có thể thiết lập email mà không cần xác minh).',
   'View error log' => 'Xem nhật ký lỗi',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Cảnh báo: Trang này không yêu cầu mật khẩu hiện tại (người dùng đăng nhập bằng Keycloak có thể không biết mật khẩu của mình). Do đó, bất kỳ ai có quyền truy cập vào phiên đăng nhập đang mở của người dùng đều có thể thay đổi mật khẩu Keycloak của người dùng.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Sẽ chỉ hoạt động nếu trong cài đặt lĩnh vực của Keycloak, "Email dưới dạng tên người dùng" bị tắt và "Chỉnh sửa tên người dùng" được bật.',
   'Your current password can be changed here.' => 'Mật khẩu hiện tại của bạn có thể được thay đổi tại đây.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`favourite_username` (để sử dụng tên người dùng Keycloak),` sub` (để sử dụng Keycloak ID) hoặc Tên yêu cầu mã thông báo tùy chỉnh khác',
   '{Credentials} tab: copy the secret key' => 'Tab thông {Credentials} thực: sao chép khóa bí mật',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Tab {Settings} -> {ClientAuthenticationOn} (đối với phiên bản Humhub <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Tab {Settings} -> {ValidRedirectURIsValue} .',
-);
+];

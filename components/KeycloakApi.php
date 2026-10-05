@@ -18,6 +18,7 @@ use humhub\modules\authKeycloak\Module;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\User;
 use Keycloak\Admin\KeycloakClient;
+use Keycloak\Admin\TokenStorages\RuntimeTokenStorage;
 use Yii;
 use yii\base\Component;
 use yii\helpers\ArrayHelper;
@@ -86,7 +87,7 @@ class KeycloakApi extends Component
 
     /**
      * @param int $userId
-     * @return int[]
+     * @return string[] Keycloak group IDs (UUIDs)
      */
     public function getUserGroups($userId)
     {
@@ -104,7 +105,7 @@ class KeycloakApi extends Component
             Yii::error('Error retrieving user\'s groups from Keycloak for user ID: ' . $userId . ' (result is not an array)', 'auth-keycloak');
             return [];
         }
-        return array_map(static fn($group) => (int)$group['id'], $result);
+        return array_map(static fn($group) => (string)$group['id'], $result);
     }
 
     /**
@@ -130,7 +131,7 @@ class KeycloakApi extends Component
         if (!$this->isConnected()) {
             return null;
         }
-        $result = $this->api->getUsers(['email' => $email]);
+        $result = $this->api->getUsers(['email' => $email, 'exact' => true]);
         if ($this->hasError($result, 'Error retrieving user from Keycloak (email: ' . $email . ')')) {
             return null;
         }
@@ -281,6 +282,7 @@ class KeycloakApi extends Component
         /** @var Module $module */
         $module = Yii::$app->getModule('auth-keycloak');
 
+        $tokenStorage = new RuntimeTokenStorage();
         $this->api = KeycloakClient::factory([
             'realm' => $config->realm,
             'client_id' => $config->clientId,
@@ -290,6 +292,11 @@ class KeycloakApi extends Component
             'baseUri' => $config->baseUrl . '/',
             'scope' => 'openid email',
             'verify' => $module->apiVerifySsl,
+            'timeout' => $module->apiTimeout,
+            'connect_timeout' => $module->apiConnectTimeout,
+            'token_storage' => $tokenStorage,
+            // Gets the access token with the timeouts above, before the library's own token middleware
+            'middlewares' => [new RefreshTokenWithTimeout($tokenStorage)],
         ]);
         if ($config->realm !== 'master') {
             $this->api->setRealmName($config->realm);
@@ -379,6 +386,41 @@ class KeycloakApi extends Component
     }
 
     /**
+     * Disables the user's account on Keycloak and removes all their Keycloak sessions
+     * @param string $keycloakUserId
+     * @return bool
+     */
+    public function disableUser(string $keycloakUserId)
+    {
+        if (!$this->isConnected()) {
+            return false;
+        }
+
+        $keycloakUser = $this->api->getUser(['id' => $keycloakUserId]);
+        if ($this->hasError($keycloakUser, 'Error retrieving user from Keycloak (Keycloak user ID: ' . $keycloakUserId . ')')) {
+            return false;
+        }
+
+        // Never disable the API admin user (Keycloak usernames are lowercase), as it would break all the API features
+        $apiUsername = mb_strtolower(trim((string)(new ConfigureForm())->apiUsername));
+        if (mb_strtolower((string)($keycloakUser['username'] ?? '')) === $apiUsername) {
+            Yii::warning('The Keycloak API admin user (Keycloak user ID: ' . $keycloakUserId . ') has not been disabled on Keycloak', 'auth-keycloak');
+            return false;
+        }
+
+        $result = $this->api->updateUser([
+            'id' => $keycloakUserId,
+            'enabled' => false,
+        ]);
+        if ($this->hasError($result, 'Error disabling user on Keycloak (Keycloak user ID: ' . $keycloakUserId . ')')) {
+            return false;
+        }
+
+        $result = $this->api->logoutUser(['id' => $keycloakUserId]);
+        return !$this->hasError($result, 'Error removing user\'s sessions on Keycloak (Keycloak user ID: ' . $keycloakUserId . ')');
+    }
+
+    /**
      * @param int $userId
      * @return bool|null
      */
@@ -432,6 +474,13 @@ class KeycloakApi extends Component
                 'first' => $first,
                 'max' => self::MAX_USERS_RESULT,
             ]);
+            // Return null (not a partial list) so that callers do not consider missing members as removed from the group
+            if (
+                $this->hasError($currentMembers, 'Error retrieving members of the Keycloak group ID ' . $groupId)
+                || !is_array($currentMembers)
+            ) {
+                return null;
+            }
             $currentMemberIds = array_map(static fn($member) => $member['id'] ?? null, $currentMembers);
             $currentMemberIds = array_filter($currentMemberIds);
             array_push($memberIds, ...$currentMemberIds);

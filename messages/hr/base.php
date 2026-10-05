@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Keycloak</strong> Sign-In configuration' => '<strong>Keycloak</strong> konfiguracija prijave',
   'Add a page in account settings allowing users to change their Keycloak password' => 'Dodajte stranicu u postavke računa koja korisnicima omogućuje promjenu zaporke za Keycloak',
   'Advanced settings (optional)' => 'Napredne postavke (izborno)',
@@ -13,10 +13,12 @@ return array (
   'Client secret is in the "Credentials" tab (if in the settings "Access Type" is set to "confidential")' => 'Tajna klijenta nalazi se na kartici "Vrednosti" (ako je u postavkama "Vrsta pristupa" postavljeno na "povjerljivo")',
   'Client secret key' => 'Tajni ključ klijenta',
   'Confirm new password' => 'Potvrdi novu lozinku',
+  'Deactivate user\'s account on Keycloak when deleted on HumHub' => 'Deaktiviraj korisnički račun na Keycloaku kada se izbriše na HumHubu',
   'Enable this auth client' => 'Omogućite ovaj auth klijent',
   'For administrators allowed to manage users' => 'Za administratore kojima je dopušteno upravljanje korisnicima',
   'Hide username field in registration form' => 'Sakrij polje za korisničko ime u obrascu za registraciju',
   'HumHub to Keycloak sync is done in real time. Keycloak to HumHub sync is done once a day. Keycloak subgroups are not synced.' => 'Sinkronizacija HumHub-a i Keycloaka obavlja se u stvarnom vremenu. Sinkronizacija Keycloak-a s HumHubom obavlja se jednom dnevno. Keycloak podgrupe nisu sinkronizirane.',
+  'If enabled, an email that is not verified on Keycloak is ignored when signing in: it is not used to sign in to an existing HumHub account with the same email, to create a HumHub account (if an email is required, signing in fails until the email is verified on Keycloak), or to update the HumHub email. Users already connected with Keycloak can still sign in. Keycloak must send the {emailVerifiedClaim} claim (it does by default). If disabled, the email sent by Keycloak is always trusted: if Keycloak allows setting an email without verifying it (e.g. self-registration without email verification), anyone can sign in to a HumHub account by using its email on Keycloak.' => 'Ako je omogućeno, e-pošta koja nije potvrđena na Keycloaku zanemaruje se prilikom prijave: ne koristi se za prijavu na postojeći HumHub račun s istom e-poštom, za stvaranje HumHub računa (ako je potrebna e-pošta, prijava neće uspjeti dok se e-pošta ne potvrdi na Keycloaku) ili za ažuriranje HumHub e-pošte. Korisnici koji su već povezani s Keycloakom i dalje se mogu prijaviti. Keycloak mora poslati zahtjev {emailVerifiedClaim} (to čini prema zadanim postavkama). Ako je onemogućeno, e-pošta koju šalje Keycloak uvijek se smatra pouzdanom: ako Keycloak dopušta postavljanje e-pošte bez provjere (npr. samoregistracija bez provjere e-pošte), svatko se može prijaviti na HumHub račun koristeći svoju e-poštu na Keycloaku.',
   'If the username sent by Keycloak is the user\'s email, it is replaced by a username auto-generated from the first and last name (CamelCase formatted)' => 'Ako je korisničko ime koje šalje Keycloak korisnikova e-pošta, zamjenjuje se korisničkim imenom automatski generiranim od imena i prezimena (format CamelCase)',
   'If you set a custom title, it will not be translated to the user\'s language unless you have a custom translation file in the protected/config folder. Leave blank to set default title.' => 'Ako postavite prilagođeni naslov, on neće biti preveden na jezik korisnika osim ako nemate prilagođenu prijevodnu datoteku u zaštićenoj/konfiguracijskoj mapi. Ostavite prazno za postavljanje zadanog naslova.',
   'If you want to enable {BackChannelLogout} (which allows removing user sessions automatically when signing out from Keycloak), configure the client {LogoutSettings}:' => 'Ako želite omogućiti {BackChannelLogout} (koji omogućuje automatsko uklanjanje korisničkih sesija prilikom odjave s Keycloaka), konfigurirajte {LogoutSettings} klijenta:',
@@ -40,6 +42,7 @@ return array (
   'Sync both ways (but no removal on Keycloak or HumHub)' => 'Sinkronizacija u oba smjera (ali bez uklanjanja na Keycloaku ili HumHubu)',
   'Sync both ways (but no removal on Keycloak)' => 'Sinkronizacija u oba smjera (ali bez uklanjanja na Keycloaku)',
   'Synchronize groups and their members' => 'Sinkronizirajte grupe i njihove članove',
+  'The Keycloak account is disabled (not deleted) and its Keycloak sessions are removed. It can be re-enabled on Keycloak. The Keycloak API admin user is never disabled.' => 'Keycloak račun je onemogućen (ne izbrisan) i njegove Keycloak sesije su uklonjene. Može se ponovno omogućiti na Keycloaku. Administratorski korisnik Keycloak API-ja nikada nije onemogućen.',
   'The client id provided by Keycloak' => 'ID klijenta pruža Keycloak',
   'The new password could not be saved.' => 'Nova lozinka nije mogla biti spremljena.',
   'This admin user must be created in the same realm as the one entered in the {RealmName} field. If your realm is {masterRealmName}, just assign the {adminRoleName} role to this user. Otherwise, you need to add the {realmManagementClientRole} Client Role and assign all Roles. {MoreInformationHere}' => 'Ovaj admin korisnik mora biti kreiran u istom području kao onaj unesen u polje {RealmName} . Ako je vaše područje {masterRealmName} , samo dodijelite ulogu {adminRoleName} ovom korisniku. U suprotnom, morate dodati {realmManagementClientRole} klijentsku ulogu i dodijeliti sve uloge. {MoreInformationHere}',
@@ -48,11 +51,13 @@ return array (
   'Update user\'s email on Keycloak when changed on HumHub' => 'Ažurirajte korisničku e-poštu na Keycloaku kada se promijeni na HumHubu',
   'Update user\'s username on HumHub when changed on Keycloak' => 'Ažurirajte korisničko ime korisnika na HumHubu kada se promijeni na Keycloaku',
   'Update user\'s username on Keycloak when changed on HumHub' => 'Ažurirajte korisničko ime korisnika na Keycloaku kada se promijeni na HumHubu',
+  'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)' => 'Koristite e-poštu koju je poslao Keycloak samo ako je potvrđena na Keycloaku (preporučuje se ako korisnici Keycloaka mogu postaviti e-poštu bez provjere)',
   'View error log' => 'Pogledajte zapisnik grešaka',
+  'Warning: this page does not ask for the current password (users signing in with Keycloak may not know it). Anyone with access to an open session of the user can therefore change the user\'s Keycloak password.' => 'Upozorenje: ova stranica ne traži trenutnu lozinku (korisnici koji se prijavljuju putem Keycloaka možda je ne znaju). Stoga svatko tko ima pristup otvorenoj sesiji korisnika može promijeniti korisnikovu lozinku za Keycloak.',
   'Will only work if in Keycloak\'s realm settings "Email as username" is disabled and "Edit username" is enabled.' => 'Radit će samo ako je u postavkama područja Keycloak "E-pošta kao korisničko ime" onemogućena i "Uredi korisničko ime" omogućeno.',
   'Your current password can be changed here.' => 'Vaša trenutna lozinka se može promijeniti ovdje.',
   '`preferred_username` (to use Keycloak username), `sub` (to use Keycloak ID) or other custom Token Claim Name' => '`preferred_username` (za korištenje Keycloak korisničkog imena), `sub` (za korištenje Keycloak ID-a) ili drugi prilagođeni naziv zahtjeva za token',
   '{Credentials} tab: copy the secret key' => 'Kartica {Credentials} : kopirajte tajni ključ',
   '{Settings} tab -> {ClientAuthenticationOn} (for Keycloak version <20: {AccessTypeValue}).' => 'Kartica {Settings} -> {ClientAuthenticationOn} (za Humhub verziju <20: {AccessTypeValue} ).',
   '{Settings} tab -> {ValidRedirectURIsValue}.' => 'Kartica {Settings} -> {ValidRedirectURIsValue} .',
-);
+];
