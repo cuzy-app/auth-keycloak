@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.5.5 (Unreleased)
+------------------
+- Enh: Add a hint to the "change password" configuration option
+
 1.5.4 (October 5, 2026)
 -----------------------
 - Fix: Minor cleanup of model validation rules.

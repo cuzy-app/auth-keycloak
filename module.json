@@ -6,7 +6,7 @@
         "auth",
         "keycloak"
     ],
-    "version": "1.5.4",
+    "version": "1.5.5",
     "humhub": {
         "minVersion": "1.18",
         "maxVersion": "1.18"
