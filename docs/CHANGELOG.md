@@ -1,7 +1,11 @@
 Changelog
 =========
 
-1.5.6 (October 5, 2026)
+1.6.5 (October 21, 2026)
+------------------
+- Fix: Update `guzzlehttp/guzzle`, `guzzlehttp/psr7`, `guzzlehttp/guzzle-services` and `symfony/process` dependencies to fix security vulnerabilities
+
+1.6.4 (October 5, 2026)
 ------------------
 - Enh: Add an option to deactivate the user's account on Keycloak when the user is deleted on HumHub
 - Enh: Add an option to ignore the email sent by Keycloak if it is not verified on Keycloak
@@ -9,16 +13,28 @@ Changelog
 - Fix: Keycloak to HumHub groups sync on login never worked (Keycloak group IDs were cast to integers)
 - Fix: Do not link a Keycloak user to an existing HumHub account having the same username, as Keycloak users may be able to choose any username
 - Fix: Groups full sync removed all members of a HumHub group when the Keycloak API failed to return the group members
-- Fix: When a user had no Keycloak Auth record, the Keycloak account of another user could be used (e.g. to change the password)
 
-1.5.5 (October 5, 2026)
+1.6.3 (October 5, 2026)
 -----------------------
 - Enh: Add a hint to the "change password" configuration option
 
-1.5.4 (October 5, 2026)
+1.6.2 (October 5, 2026)
 -----------------------
 - Fix: Minor cleanup of model validation rules.
+
+1.6.1 (September 3, 2026))
+--------------------
 - Fix: Do not bundle `web-token/jwt-library`: HumHub core requires it (^4.1) for `yii\authclient\OpenIdConnect` ID token validation, and the bundled 3.x copy could shadow it mid-validation
+- Fix: The client secret and the Keycloak API admin password are no longer echoed into the configuration form once saved, so they cannot be revealed or copied by another admin; the form keeps the stored values when the fields are left unchanged
+
+1.6.0 (July 16, 2026)
+--------------------
+- Enh: Compatibility with HumHub 1.19 user/auth refactor (humhub/humhub#TBD)
+- Enh: Register `KeycloakUserSource` — Keycloak users are now properly owned by this module (`user.user_source = 'Keycloak'`), replacing the pre-1.19 `PrimaryClient` semantic. Locked profile attributes follow the existing `updateHumhubEmailFromBrokerEmail` / `updateHumhubUsernameFromBrokerUsername` settings. Opt out via `Module::$provideUserSource = false`.
+- Enh: One-time migration backfills `user_source = 'Keycloak'` for every existing user with a Keycloak `user_auth` row (core's 1.19 migration only backfills LDAP).
+- Chg: Drop `PrimaryClient` marker on `Keycloak` auth client (interface is now an empty marker in core)
+- Chg: Drop legacy `user.auth_mode` lookups — the column is removed in core 1.19. Auth record recovery on first login now relies solely on the missing `user_auth` row + the current OAuth session.
+- Chg: Minimum HumHub version is now 1.19
 
 1.5.3 (May 6, 2026)
 --------------------

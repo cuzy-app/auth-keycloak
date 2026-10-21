@@ -27,13 +27,23 @@ class ConfigController extends Controller
     public function actionIndex()
     {
         $model = new ConfigureForm();
+        $storedClientSecret = $model->clientSecret;
+        $storedApiPassword = $model->apiPassword;
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->save()) {
-            $this->view->saved();
+        if ($model->load(Yii::$app->request->post())) {
+            $model->restoreSecretsIfUnchanged($storedClientSecret, $storedApiPassword);
+            if ($model->validate() && $model->save()) {
+                $this->view->saved();
+            }
         }
 
+        // Uses the real secrets, so this must run before they are masked for display below.
         $keycloakApi = new KeycloakApi();
         $apiAuthentificationSuccess = $keycloakApi->isConnected();
+
+        // Never echo a real stored secret back into the form: any other admin could read or copy
+        // it via the password field's reveal icon.
+        $model->maskSecretsForDisplay();
 
         return $this->render('index', [
             'model' => $model,

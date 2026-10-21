@@ -1,37 +1,35 @@
 {
-  "name": "cuzy-app/auth-keycloak",
-  "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
-  "minimum-stability": "stable",
-  "config": {
-    "platform": {
-      "php": "8.2"
+    "name": "cuzy-app/auth-keycloak",
+    "description": "Integrating Keycloak Sign-In (OAuth 2.0)",
+    "autoload": {
+        "psr-4": {
+            "humhub\\modules\\authKeycloak\\": ""
+        }
+    },
+    "minimum-stability": "stable",
+    "config": {
+        "platform": {
+            "php": "8.2"
+        }
+    },
+    "type": "humhub-module",
+    "extra": {
+        "hasOnlyHumHubModuleCodingStandards": false
+    },
+    "require": {
+        "mohammad-waleed/keycloak-admin-client": "^0.38.0"
+    },
+    "repositories": [{
+        "name": "humhub-module-coding-standards",
+        "type": "vcs",
+        "url": "https://github.com/humhub/module-coding-standards.git"
+    }],
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "humhub/module-coding-standards": "dev-main"
+    },
+    "scripts": {
+        "rector": "vendor/bin/rector process --config=vendor/humhub/module-coding-standards/rector.php",
+        "fixer": "vendor/bin/php-cs-fixer fix --config=vendor/humhub/module-coding-standards/php-cs-fixer.php"
     }
-  },
-  "type": "humhub-module",
-  "autoload": {
-    "psr-4": {
-      "humhub\\modules\\authKeycloak\\": ""
-    }
-  },
-  "extra": {
-    "hasOnlyHumHubModuleCodingStandards": false
-  },
-  "require": {
-    "mohammad-waleed/keycloak-admin-client": "^0.38.0"
-  },
-  "repositories": [
-    {
-      "name": "humhub-module-coding-standards",
-      "type": "vcs",
-      "url": "https://github.com/humhub/module-coding-standards.git"
-    }
-  ],
-  "require-dev": {
-    "roave/security-advisories": "dev-latest",
-    "humhub/module-coding-standards": "dev-main"
-  },
-  "scripts": {
-    "rector": "vendor/bin/rector process --config=vendor/humhub/module-coding-standards/rector.php",
-    "fixer": "vendor/bin/php-cs-fixer fix --config=vendor/humhub/module-coding-standards/php-cs-fixer.php"
-  }
 }
