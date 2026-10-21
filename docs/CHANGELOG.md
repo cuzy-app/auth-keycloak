@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.6.5 (October 21, 2026)
+------------------
+- Fix: Update `guzzlehttp/guzzle`, `guzzlehttp/psr7`, `guzzlehttp/guzzle-services` and `symfony/process` dependencies to fix security vulnerabilities
+
 1.6.4 (October 5, 2026)
 ------------------
 - Enh: Add an option to deactivate the user's account on Keycloak when the user is deleted on HumHub
