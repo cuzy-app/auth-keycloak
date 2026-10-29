@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.6.6 (Unreleased)
+------------------
+- Fix: Reviewed French, German, Spanish, Portuguese, Brazilian Portuguese, Italian and Dutch translations (wrong meanings, HumHub terminology, consistent wording and form of address); Traditional Chinese is now actually in Traditional Chinese and Norwegian Nynorsk in Nynorsk (they were copies of Simplified Chinese and Bokmål)
+
 1.6.5 (October 21, 2026)
 ------------------
 - Fix: Update `guzzlehttp/guzzle`, `guzzlehttp/psr7`, `guzzlehttp/guzzle-services` and `symfony/process` dependencies to fix security vulnerabilities
