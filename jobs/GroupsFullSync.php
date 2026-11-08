@@ -16,13 +16,13 @@ use humhub\modules\authKeycloak\models\GroupKeycloak;
 use humhub\modules\queue\ActiveJob;
 use humhub\modules\queue\interfaces\ExclusiveJobInterface;
 use humhub\modules\user\models\Auth;
+use humhub\modules\user\models\GroupUser;
 use humhub\modules\user\models\User;
 use ReflectionClass;
 use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\StaleObjectException;
-use yii\helpers\ArrayHelper;
 use yii\queue\RetryableJobInterface;
 
 class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, RetryableJobInterface
@@ -63,9 +63,14 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     protected $humhubGroupsByKeycloakId = [];
 
     /**
-     * @var array
+     * @var array Keycloak user ID => HumHub user ID
      */
     protected $usersKeycloakIdToHumhubId = [];
+
+    /**
+     * @var array HumHub user ID => Keycloak user ID (reverse of [[$usersKeycloakIdToHumhubId]], for O(1) lookups)
+     */
+    protected $usersHumhubIdToKeycloakId = [];
 
     /**
      * @inhertidoc
@@ -245,14 +250,24 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
      */
     protected function initUsersKeycloakIdToHumhubId()
     {
-        $auths = Auth::find()
-            ->joinWith('user')
+        // Only the two columns needed, no model hydration (the users are not eager-loaded either)
+        $rows = Auth::find()
+            ->select(['user_auth.user_id', 'user_auth.source_id'])
+            ->innerJoin('user', 'user.id = user_auth.user_id')
             ->andWhere(['user.status' => User::STATUS_ENABLED])
             ->andWhere(['user_auth.source' => Keycloak::DEFAULT_NAME])
             ->orderBy(['user_auth.id' => SORT_ASC]) // Get the latest if it has multiple
-            ->indexBy('user_id') // Removes duplicated
+            ->asArray()
             ->all();
-        $this->usersKeycloakIdToHumhubId = ArrayHelper::map($auths, 'source_id', 'user_id');
+
+        $this->usersHumhubIdToKeycloakId = [];
+        foreach ($rows as $row) {
+            $this->usersHumhubIdToKeycloakId[(int)$row['user_id']] = $row['source_id']; // Removes duplicated
+        }
+        $this->usersKeycloakIdToHumhubId = [];
+        foreach ($this->usersHumhubIdToKeycloakId as $humhubUserId => $keycloakUserId) {
+            $this->usersKeycloakIdToHumhubId[$keycloakUserId] = $humhubUserId;
+        }
     }
 
     /**
@@ -294,8 +309,13 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     {
         foreach ($this->humhubGroupsByKeycloakId as $humhubGroup) {
             $this->humhubGroupsMembers[$humhubGroup->id] = [];
-            foreach ($humhubGroup->groupUsers as $groupUser) {
-                $userId = $groupUser->user_id;
+            // Member ids only, no GroupUser model per member
+            $memberIds = GroupUser::find()
+                ->select('user_id')
+                ->where(['group_id' => $humhubGroup->id])
+                ->column();
+            foreach ($memberIds as $userId) {
+                $userId = (int)$userId;
                 if ($this->isKeycloakUser($userId)) {
                     $this->humhubGroupsMembers[$humhubGroup->id][] = $userId;
                 }
@@ -309,7 +329,7 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
      */
     protected function isKeycloakUser($humhubUserId)
     {
-        return in_array($humhubUserId, $this->usersKeycloakIdToHumhubId);
+        return isset($this->usersHumhubIdToKeycloakId[(int)$humhubUserId]);
     }
 
     /**
@@ -373,7 +393,7 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
      */
     protected function getKeycloakUserId($humhubUserId)
     {
-        return array_search($humhubUserId, $this->usersKeycloakIdToHumhubId) ?: null;
+        return $this->usersHumhubIdToKeycloakId[(int)$humhubUserId] ?? null;
     }
 
     /**
