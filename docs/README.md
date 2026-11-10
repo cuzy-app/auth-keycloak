@@ -45,7 +45,7 @@ https://github.com/cuzy-app/auth-keycloak
 
 ## Publisher
 
-[CUZY.APP](https://www.cuzy.app/)
+[CUZY.app](https://www.cuzy.app)
 
 ## Licence
 
