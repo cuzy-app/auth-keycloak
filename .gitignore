@@ -1,3 +1,6 @@
 /composer.phar
 /vendor/
 node_modules
+
+# Codeception build artefacts
+tests/codeception/_support/_generated/
