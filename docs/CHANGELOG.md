@@ -3,6 +3,8 @@ Changelog
 
 1.6.6 (Unreleased)
 ------------------
+- Enh: The back-channel logout looks the session up through an index on the Keycloak session ID instead of scanning the authentication table
+- Enh: The groups full sync no longer loads every Keycloak user and every group member as full records; it works on ids only
 - Fix: Reviewed French, German, Spanish, Portuguese, Brazilian Portuguese, Italian and Dutch translations (wrong meanings, HumHub terminology, consistent wording and form of address); Traditional Chinese is now actually in Traditional Chinese and Norwegian Nynorsk in Nynorsk (they were copies of Simplified Chinese and Bokmål)
 
 1.6.5 (October 21, 2026)
