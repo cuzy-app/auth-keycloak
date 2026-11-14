@@ -4,3 +4,4 @@ node_modules
 
 # Codeception build artefacts
 tests/codeception/_support/_generated/
+.php-cs-fixer.cache
