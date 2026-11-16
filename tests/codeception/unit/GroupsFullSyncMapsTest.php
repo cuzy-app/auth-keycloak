@@ -36,21 +36,18 @@ class GroupsFullSyncMapsTest extends HumHubDbTestCase
     private function call(GroupsFullSync $job, string $method, ...$args)
     {
         $m = (new ReflectionClass($job))->getMethod($method);
-        $m->setAccessible(true);
         return $m->invoke($job, ...$args);
     }
 
     private function get(GroupsFullSync $job, string $property)
     {
         $p = (new ReflectionClass($job))->getProperty($property);
-        $p->setAccessible(true);
         return $p->getValue($job);
     }
 
     private function set(GroupsFullSync $job, string $property, $value): void
     {
         $p = (new ReflectionClass($job))->getProperty($property);
-        $p->setAccessible(true);
         $p->setValue($job, $value);
     }
 

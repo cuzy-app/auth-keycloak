@@ -18,9 +18,7 @@ if (count($env) > 0) {
     }
 }
 
-if (!isset($cfg)) {
-    $cfg = require_once(__DIR__ . '/../config/test.php');
-}
+$cfg ??= require_once(__DIR__ . '/../config/test.php');
 
 // Fall back: assume the module lives inside a standard HumHub checkout at
 // protected/modules_cuzy/auth-keycloak — four levels above the tests/ directory.
