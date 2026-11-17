@@ -33,6 +33,7 @@ Changelog
 - Fix: The groups sync failed with an uncaught exception when the members of a Keycloak group could not be retrieved (e.g. timeout)
 - Fix: The `show-user` console command did not find users by a Keycloak ID that is not a UUID (e.g. users of a user federation without import)
 - Enh: Add an option to adopt existing users with the users sync (`adoptExistingUsers`, for migrations): HumHub accounts of other user sources (e.g. local or LDAP) linked to an enabled Keycloak user, or having its email, are assigned to the Keycloak user source and updated from Keycloak
+- Fix: When the Keycloak API rejected the requests (e.g. HTTP 401 Unauthorized), the module settings showed "Authentication to Keycloak API succeeded!" and the API features still sent their requests
 
 1.6.6 (Unreleased)
 ------------------

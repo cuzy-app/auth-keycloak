@@ -529,11 +529,22 @@ class KeycloakApi extends Component
         }
 
         try {
-            $this->realm = $this->api->getRealm();
+            $realm = $this->api->getRealm();
         } catch (CommandClientException|CommandException $e) {
             Yii::error('Error trying to connect to Keycloak API: ' . $e, 'auth-keycloak');
             return;
         }
+
+        // HTTP errors (e.g. 401 Unauthorized) are not thrown by the library, but returned as the response
+        if ($this->hasError($realm, 'Error trying to connect to Keycloak API')) {
+            return;
+        }
+        if (!isset($realm['realm'])) {
+            // E.g. an HTML page of a reverse proxy
+            Yii::error('Error trying to connect to Keycloak API: unexpected response: ' . mb_substr(json_encode($realm), 0, 500), 'auth-keycloak');
+            return;
+        }
+        $this->realm = $realm;
     }
 
     /**
