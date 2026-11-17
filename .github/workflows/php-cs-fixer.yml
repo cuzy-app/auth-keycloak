@@ -1,7 +1,7 @@
 name: PHP CS Fixer
 
+# Runs locally instead, as a pre-commit hook; kept here as a manual button.
 on:
-  push:
   workflow_dispatch:
 
 jobs:

@@ -1,8 +1,7 @@
 name: Rector
 
+# Run by hand locally instead; kept here as a manual button.
 on:
-  schedule:
-    - cron: "0 5 * * 5"
   workflow_dispatch:
 
 jobs:

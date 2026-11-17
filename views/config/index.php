@@ -35,7 +35,7 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
         <div class="alert alert-info cuzy-free-module-info" role="alert">
             This module was created and is maintained by
             <a href="https://www.cuzy.app/"
-               target="_blank">CUZY.APP (view other modules)</a>.
+               target="_blank">CUZY.app (view other modules)</a>.
             <br>
             It's free, but it's the result of a lot of design and maintenance work over time.
             <br>

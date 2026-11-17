@@ -33,6 +33,17 @@ Changelog
 - Fix: The groups sync failed with an uncaught exception when the members of a Keycloak group could not be retrieved (e.g. timeout)
 - Fix: The `show-user` console command did not find users by a Keycloak ID that is not a UUID (e.g. users of a user federation without import)
 
+1.6.6 (Unreleased)
+------------------
+- Enh: The back-channel logout looks the session up through an index on the Keycloak session ID instead of scanning the authentication table
+- Enh: The groups full sync no longer loads every Keycloak user and every group member as full records; it works on ids only
+- Fix: Reviewed French, German, Spanish, Portuguese, Brazilian Portuguese, Italian and Dutch translations (wrong meanings, HumHub terminology, consistent wording and form of address); Traditional Chinese is now actually in Traditional Chinese and Norwegian Nynorsk in Nynorsk (they were copies of Simplified Chinese and Bokmål)
+- Enh: Automated code refactoring for HumHub 1.19 using Rector
+
+1.6.5 (October 21, 2026)
+------------------
+- Fix: Update `guzzlehttp/guzzle`, `guzzlehttp/psr7`, `guzzlehttp/guzzle-services` and `symfony/process` dependencies to fix security vulnerabilities
+
 1.6.4 (October 5, 2026)
 ------------------
 - Enh: Add an option to deactivate the user's account on Keycloak when the user is deleted on HumHub

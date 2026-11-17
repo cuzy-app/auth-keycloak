@@ -4,7 +4,7 @@
  * Keycloak Sign-In
  * @link https://github.com/cuzy-app/auth-keycloak
  * @license https://github.com/cuzy-app/auth-keycloak/blob/main/docs/LICENCE.md
- * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
+ * @author [Marc FARRE](https://marc.fun) for [CUZY.app](https://www.cuzy.app)
  */
 
 namespace humhub\modules\authKeycloak\models;

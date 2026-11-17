@@ -52,8 +52,12 @@ https://github.com/cuzy-app/auth-keycloak
 
 ## Publisher
 
-[CUZY.APP](https://www.cuzy.app/)
+[CUZY.app](https://www.cuzy.app)
 
 ## Licence
 
 [GNU AGPL](https://github.com/cuzy-app/auth-keycloak/blob/main/docs/LICENCE.md)
+
+## Hosting
+
+This module is installed and updated for you on [CUZY Hosting](https://www.cuzy.app/hosting), managed HumHub hosting with every CUZY module included.
