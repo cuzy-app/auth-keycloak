@@ -53,6 +53,7 @@ abstract class KeycloakTestCase extends HumHubDbTestCase
             'apiAuthMethod' => ConfigureForm::API_AUTH_METHOD_SERVICE_ACCOUNT,
             'attributeMapping' => '',
             'syncUsers' => false,
+            'adoptExistingUsers' => false,
             'groupsSyncMode' => ConfigureForm::GROUP_SYNC_MODE_NONE,
             'trustOnlyVerifiedEmail' => false,
             'updateHumhubUsernameFromBrokerUsername' => false,

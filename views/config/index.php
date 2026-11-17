@@ -112,6 +112,7 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
         <?= $form->field($model, 'apiPassword')->textInput(['type' => 'password', 'autocomplete' => 'new-password']) ?>
         <?= $form->field($model, 'apiReadOnly')->checkbox() ?>
         <?= $form->field($model, 'syncUsers')->checkbox(['disabled' => !$module->provideUserSource]) ?>
+        <?= $form->field($model, 'adoptExistingUsers')->checkbox(['disabled' => !$module->provideUserSource]) ?>
         <?= $form->field($model, 'removeKeycloakSessionsAfterLogout')->checkbox() ?>
         <?= $form->field($model, 'updateHumhubUsernameFromBrokerUsername')->checkbox() ?>
         <?= $form->field($model, 'updatedBrokerUsernameFromHumhubUsername')->checkbox() ?>

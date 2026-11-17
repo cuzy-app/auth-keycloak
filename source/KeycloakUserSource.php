@@ -40,6 +40,7 @@ class KeycloakUserSource extends BaseUserSource
      * Results of a user sync, see {@see syncUsers()}
      */
     public const SYNC_CREATED = 'created';
+    public const SYNC_ADOPTED = 'adopted';
     public const SYNC_UPDATED = 'updated';
     public const SYNC_UNCHANGED = 'unchanged';
     public const SYNC_ENABLED = 'enabled';
@@ -230,7 +231,9 @@ class KeycloakUserSource extends BaseUserSource
      * Called by {@see \humhub\modules\authKeycloak\jobs\UsersFullSync} and the `auth-keycloak/sync-users` console command.
      *
      * Only users owned by this source are updated or deactivated. Keycloak users whose email is already used
-     * by another HumHub account are skipped (they are linked on their first sign in with Keycloak, if allowed).
+     * by another HumHub account are skipped (they are linked on their first sign in with Keycloak, if allowed),
+     * unless the `adoptExistingUsers` setting is enabled: the HumHub accounts of other user sources are then
+     * adopted, see {@see findAdoptionCandidate()} and {@see adoptUser()}.
      *
      * @param callable|null $onProgress function (string $step, int $done, ?int $total, int $pass):
      * $step is PROGRESS_LIST (retrieving the Keycloak users, $pass being the number of the list request,
@@ -267,6 +270,7 @@ class KeycloakUserSource extends BaseUserSource
 
         $results = array_fill_keys([
             self::SYNC_CREATED,
+            self::SYNC_ADOPTED,
             self::SYNC_UPDATED,
             self::SYNC_UNCHANGED,
             self::SYNC_ENABLED,
@@ -274,7 +278,8 @@ class KeycloakUserSource extends BaseUserSource
             self::SYNC_SKIPPED,
             self::SYNC_FAILED,
         ], 0);
-        $apiUsername = mb_strtolower(trim((string)(new ConfigureForm())->apiUsername));
+        $config = new ConfigureForm();
+        $apiUsername = mb_strtolower(trim((string)$config->apiUsername));
         $syncedUserIds = [];
         // Skipped or failed Keycloak users, with the reason
         $notSynced = [];
@@ -289,11 +294,23 @@ class KeycloakUserSource extends BaseUserSource
             $attributes = $authClient->normalizeApiUserAttributes($keycloakUser);
             $isEnabledOnKeycloak = (bool)($keycloakUser['enabled'] ?? true);
 
+            // The API user and the service accounts are technical accounts: no HumHub account is created or adopted for them
+            $technicalReason = null;
+            if (mb_strtolower((string)($keycloakUser['username'] ?? '')) === $apiUsername) {
+                $technicalReason = 'Keycloak API user';
+            } elseif (!empty($keycloakUser['serviceAccountClientId'])) {
+                $technicalReason = 'service account of the client "' . $keycloakUser['serviceAccountClientId'] . '"';
+            }
+            $canAdopt = $config->adoptExistingUsers && $isEnabledOnKeycloak && $technicalReason === null;
+
             $reason = null;
-            $user = $this->findUser($attributes);
+            $user = $this->findUser($attributes) ?? ($canAdopt ? $this->findAdoptionCandidate($attributes) : null);
             if ($user !== null) {
+                // Only the users of this source are deactivated if not synced
                 $syncedUserIds[$user->id] = true;
-                $result = $this->syncUser($user, $attributes, $isEnabledOnKeycloak, $reason);
+                $result = $canAdopt && $this->isAdoptable($user)
+                    ? $this->adoptUser($user, $attributes, $reason)
+                    : $this->syncUser($user, $attributes, $isEnabledOnKeycloak, $reason);
                 $results[$result]++;
                 if ($reason !== null) {
                     $notSynced[$result][] = $this->formatKeycloakUser($keycloakUser) . ': ' . $reason;
@@ -304,10 +321,8 @@ class KeycloakUserSource extends BaseUserSource
             // Do not create accounts for disabled users, the API user, service accounts and already used emails
             if (!$isEnabledOnKeycloak) {
                 $reason = 'disabled on Keycloak';
-            } elseif (mb_strtolower((string)($keycloakUser['username'] ?? '')) === $apiUsername) {
-                $reason = 'Keycloak API user';
-            } elseif (!empty($keycloakUser['serviceAccountClientId'])) {
-                $reason = 'service account of the client "' . $keycloakUser['serviceAccountClientId'] . '"';
+            } elseif ($technicalReason !== null) {
+                $reason = $technicalReason;
             } elseif (
                 !empty($attributes['email'])
                 && ($existingUser = User::findOne(['email' => $attributes['email']])) !== null
@@ -392,6 +407,104 @@ class KeycloakUserSource extends BaseUserSource
 
         $this->addAuth($user, $attributes['id']);
         return $user;
+    }
+
+    /**
+     * Whether the users sync may adopt the HumHub user (`adoptExistingUsers` setting): only enabled or deactivated
+     * users of another user source. Soft deleted users and users awaiting approval are never adopted.
+     */
+    private function isAdoptable(User $user): bool
+    {
+        return $user->user_source !== $this->getId()
+            && in_array((int)$user->status, [User::STATUS_ENABLED, User::STATUS_DEACTIVATED], true);
+    }
+
+    /**
+     * Finds the HumHub user of another user source having the email of a Keycloak user not linked to a HumHub user yet.
+     * A user already linked to another Keycloak user is not adopted.
+     *
+     * @param array $attributes normalized Keycloak user attributes
+     */
+    private function findAdoptionCandidate(array $attributes): ?User
+    {
+        // The email is missing if not verified on Keycloak and only verified emails are trusted
+        if (empty($attributes['email'])) {
+            return null;
+        }
+        $user = User::findOne(['email' => $attributes['email']]);
+        if (
+            $user === null
+            || !$this->isAdoptable($user)
+            || Auth::find()->where(['source' => Keycloak::DEFAULT_NAME, 'user_id' => $user->id])->exists()
+        ) {
+            return null;
+        }
+
+        return $user;
+    }
+
+    /**
+     * Adopts a HumHub user of another user source (`adoptExistingUsers` setting): assigns it to this source, links it
+     * to the Keycloak user (if not linked yet) and syncs it like the users of this source. All or nothing: if the
+     * user cannot be synced, it keeps its user source. A username already taken by another user is not applied.
+     *
+     * @param array $attributes normalized Keycloak user attributes (of an enabled Keycloak user)
+     * @param string|null $reason set to the reason if the adoption failed
+     * @return string SYNC_ADOPTED or SYNC_FAILED
+     */
+    private function adoptUser(User $user, array $attributes, ?string &$reason = null): string
+    {
+        if (
+            isset($attributes['username'])
+            && User::find()->where(['username' => $attributes['username']])->andWhere(['!=', 'id', $user->id])->exists()
+        ) {
+            Yii::warning('Users sync: the username ' . $attributes['username'] . ' is already used by another HumHub user, so the adopted user '
+                . $user->username . ' (' . $user->id . ') keeps its username', 'auth-keycloak');
+            unset($attributes['username']);
+        }
+
+        $previousSource = $user->user_source;
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $user->user_source = $this->getId();
+            if (!$user->save()) {
+                $reason = 'could not adopt the HumHub user ' . $user->username . ' (ID ' . $user->id . ', user source "' . $previousSource . '"): '
+                    . $this->formatErrors($user->getErrors());
+                $result = self::SYNC_FAILED;
+            } elseif (
+                !Auth::find()->where(['source' => Keycloak::DEFAULT_NAME, 'user_id' => $user->id])->exists()
+                && !$this->addAuth($user, $attributes['id'])
+            ) {
+                $reason = 'could not link the adopted HumHub user ' . $user->username . ' (ID ' . $user->id . ') to the Keycloak user';
+                $result = self::SYNC_FAILED;
+            } else {
+                $result = $this->syncUser($user, $attributes, true, $reason);
+                // The status may be synced even if the attributes could not be updated (reason set)
+                if ($result === self::SYNC_FAILED || $reason !== null) {
+                    $reason = 'could not adopt the HumHub user of the user source "' . $previousSource . '": ' . $reason;
+                    $result = self::SYNC_FAILED;
+                }
+            }
+
+            if ($result === self::SYNC_FAILED) {
+                $transaction->rollBack();
+                $user->refresh();
+                return self::SYNC_FAILED;
+            }
+            $transaction->commit();
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+
+        $message = 'Users sync: adopted the HumHub user ' . $user->username . ' (' . $user->id . ', previous user source: "' . $previousSource . '")';
+        if ($user->isSystemAdmin()) {
+            Yii::warning($message . '. This user is a system administrator.', 'auth-keycloak');
+        } else {
+            Yii::info($message, 'auth-keycloak');
+        }
+
+        return self::SYNC_ADOPTED;
     }
 
     /**
@@ -491,7 +604,7 @@ class KeycloakUserSource extends BaseUserSource
         return $values;
     }
 
-    private function addAuth(User $user, string $keycloakUserId): void
+    private function addAuth(User $user, string $keycloakUserId): bool
     {
         $auth = new Auth([
             'user_id' => $user->id,
@@ -504,7 +617,9 @@ class KeycloakUserSource extends BaseUserSource
                 . '. Errors: ' . VarDumper::dumpAsString($auth->getErrors()),
                 'auth-keycloak',
             );
+            return false;
         }
+        return true;
     }
 
     private function getKeycloakModule(): ?Module

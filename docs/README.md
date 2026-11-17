@@ -10,7 +10,7 @@ A new button "Keycloak" (which can be renamed) will appear on the login page.
 - Optionally, always sign in with Keycloak (the login page redirects to Keycloak)
 - Keycloak Back-channel logout (1)
 - Possibility to add a page in account settings allowing users to change their Keycloak password
-- Users synchronization from Keycloak (hourly and with the console command `php yii auth-keycloak/sync-users`): HumHub accounts are created, updated, and deactivated when disabled or removed on Keycloak
+- Users synchronization from Keycloak (hourly and with the console command `php yii auth-keycloak/sync-users`): HumHub accounts are created, updated, and deactivated when disabled or removed on Keycloak; existing accounts of other user sources (e.g. local or LDAP) can be adopted for a migration
 - Attribute mapping (Keycloak user attributes to the HumHub username and profile fields), and the console command `php yii auth-keycloak/show-user` to display all the attributes of a Keycloak user
 - Keycloak API access with an admin user or with the service account of the client (no password, "Direct access grants" not required)
 - Read-only API user support (only the `view-users`, `query-groups` and `view-realm` roles of the `realm-management` client are required)

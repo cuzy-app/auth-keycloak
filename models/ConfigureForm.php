@@ -180,6 +180,10 @@ class ConfigureForm extends Model
      */
     public $syncUsers = false;
     /**
+     * @var bool The users sync adopts the HumHub users of other user sources matching a Keycloak user (migration)
+     */
+    public $adoptExistingUsers = false;
+    /**
      * @var string
      */
     public $groupsSyncMode = self::GROUP_SYNC_MODE_NONE;
@@ -198,7 +202,7 @@ class ConfigureForm extends Model
             [['clientId', 'clientSecret', 'realm', 'baseUrl'], 'required'],
             [['clientId', 'clientSecret', 'baseUrl', 'title', 'realm', 'apiUsername', 'apiPassword'], 'string'],
             [['apiAuthMethod'], 'in', 'range' => [self::API_AUTH_METHOD_USER, self::API_AUTH_METHOD_SERVICE_ACCOUNT]],
-            [['enabled', 'forceKeycloakAuth', 'hideRegistrationUsernameField', 'hideAdminUserEditPassword', 'trustOnlyVerifiedEmail', 'removeKeycloakSessionsAfterLogout', 'updateHumhubUsernameFromBrokerUsername', 'updatedBrokerUsernameFromHumhubUsername', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount', 'disableKeycloakUserOnDelete', 'apiReadOnly', 'syncUsers'], 'boolean'],
+            [['enabled', 'forceKeycloakAuth', 'hideRegistrationUsernameField', 'hideAdminUserEditPassword', 'trustOnlyVerifiedEmail', 'removeKeycloakSessionsAfterLogout', 'updateHumhubUsernameFromBrokerUsername', 'updatedBrokerUsernameFromHumhubUsername', 'updateHumhubEmailFromBrokerEmail', 'updatedBrokerEmailFromHumhubEmail', 'addChangePasswordFormToAccount', 'disableKeycloakUserOnDelete', 'apiReadOnly', 'syncUsers', 'adoptExistingUsers'], 'boolean'],
             [['groupsSyncMode'], 'safe'],
             [['attributeMapping'], 'string'],
             [['attributeMapping'], 'validateAttributeMapping'],
@@ -321,6 +325,7 @@ class ConfigureForm extends Model
         $this->groupsSyncMode = $settings->get('groupsSyncMode', $this->groupsSyncMode);
         $this->apiReadOnly = (bool)$settings->get('apiReadOnly', $this->apiReadOnly);
         $this->syncUsers = (bool)$settings->get('syncUsers', $this->syncUsers);
+        $this->adoptExistingUsers = (bool)$settings->get('adoptExistingUsers', $this->adoptExistingUsers);
         $this->applyApiReadOnly();
 
         $this->redirectUri = Url::to(['/user/auth/external', 'authclient' => Keycloak::DEFAULT_NAME], true);
@@ -357,6 +362,7 @@ class ConfigureForm extends Model
             'groupsSyncMode' => Yii::t('AuthKeycloakModule.base', 'Groups sync'),
             'apiReadOnly' => Yii::t('AuthKeycloakModule.base', 'The API user or service account has only read permissions'),
             'syncUsers' => Yii::t('AuthKeycloakModule.base', 'Fetch/Update users automatically'),
+            'adoptExistingUsers' => Yii::t('AuthKeycloakModule.base', 'Adopt existing users (migration)'),
         ];
     }
 
@@ -444,6 +450,9 @@ class ConfigureForm extends Model
             'syncUsers' => Yii::t('AuthKeycloakModule.base', 'Every hour, HumHub accounts are created for new Keycloak users, updated (first name, last name and, depending on the settings above, username and email), and deactivated if the user is disabled or removed on Keycloak. Can also be run with the command {command}.', [
                 'command' => '`php yii auth-keycloak/sync-users`',
             ]) . $this->getUserSourceCountHint(),
+            'adoptExistingUsers' => Yii::t('AuthKeycloakModule.base', 'While enabled, the users sync takes over the HumHub accounts of other user sources (e.g. local or LDAP) matching an enabled Keycloak user, instead of skipping them: accounts already linked to the Keycloak user, or having the same email if not linked to another Keycloak user. They are assigned to the Keycloak user source and updated from Keycloak, and can then only sign in with Keycloak. Soft deleted accounts and accounts awaiting approval are not adopted. Intended for migrations to Keycloak: enable it for the migration only, then disable it. Every adoption is logged. Recommended: also enable {trustOnlyVerifiedEmail}.', [
+                'trustOnlyVerifiedEmail' => '“' . Yii::t('AuthKeycloakModule.base', 'Use the email sent by Keycloak only if it is verified on Keycloak (recommended if Keycloak users can set an email without verifying it)') . '”',
+            ]),
         ];
     }
 
@@ -511,10 +520,12 @@ class ConfigureForm extends Model
             $this->addChangePasswordFormToAccount = false;
             $this->disableKeycloakUserOnDelete = false;
             $this->syncUsers = false;
+            $this->adoptExistingUsers = false;
         }
         $this->applyApiReadOnly();
         $module->settings->set('groupsSyncMode', $this->groupsSyncMode);
         $module->settings->set('syncUsers', $this->syncUsers);
+        $module->settings->set('adoptExistingUsers', $this->adoptExistingUsers);
         $module->settings->set('removeKeycloakSessionsAfterLogout', $this->removeKeycloakSessionsAfterLogout);
         $module->settings->set('updateHumhubUsernameFromBrokerUsername', $this->updateHumhubUsernameFromBrokerUsername);
         $module->settings->set('updatedBrokerUsernameFromHumhubUsername', $this->updatedBrokerUsernameFromHumhubUsername);

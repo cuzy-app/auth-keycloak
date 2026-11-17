@@ -61,9 +61,25 @@ If **Fetch/Update users automatically** is enabled (requires the API access, see
 
 Only HumHub accounts of the Keycloak user source are managed. The following Keycloak users are skipped:
 
-- users whose email is already used by another HumHub account (e.g. a local account with a password): they are linked on their first sign-in with Keycloak
+- users whose email is already used by another HumHub account (e.g. a local account with a password): they are linked on their first sign-in with Keycloak (unless adopted, see below)
+- users linked to a HumHub account of another user source (unless adopted, see below)
 - the API admin user and the service accounts
 - disabled Keycloak users having no HumHub account
+
+### Adopting existing users (migration)
+
+To migrate existing HumHub accounts (e.g. local or LDAP accounts) to Keycloak, enable **Adopt existing users (migration)**. While enabled, the users sync (hourly or with the console command) adopts the HumHub accounts of other user sources matching an enabled Keycloak user:
+
+- the account already linked to the Keycloak user (e.g. a local account whose owner signed in with Keycloak), or
+- the account having the same email, if it is not linked to another Keycloak user.
+
+An adopted account is assigned to the Keycloak user source, linked to the Keycloak user, and updated from Keycloak like the other accounts of the Keycloak user source. From then on, Keycloak is authoritative: the account can only sign in with Keycloak (its HumHub password is not used anymore), and it is deactivated when disabled or removed on Keycloak.
+
+- Soft deleted accounts and accounts awaiting approval are never adopted, nor are the accounts matching the API admin user, a service account or a disabled Keycloak user.
+- The adoption is all or nothing: if the account cannot be updated (e.g. a required profile field is empty on Keycloak), it keeps its user source and is counted as "failed". If the Keycloak username is already used by another HumHub account, the adopted account keeps its username.
+- Each adoption is logged with the previous user source (at warning level for system administrators).
+- If emails can be set on Keycloak without verifying them, enable **Use the email sent by Keycloak only if it is verified on Keycloak**: otherwise, a Keycloak user could adopt any HumHub account by using its email.
+- Once the migration is done, disable this option (and, if no longer needed, the previous user source, e.g. the LDAP connection).
 
 Good to know:
 
@@ -79,7 +95,7 @@ Good to know:
 From the HumHub root folder:
 
 ```bash
-# Run the users sync now and display the results (created, updated, unchanged, enabled, disabled, skipped, failed)
+# Run the users sync now and display the results (created, adopted, updated, unchanged, enabled, disabled, skipped, failed)
 php protected/yii auth-keycloak/sync-users
 
 # List the Keycloak users and their linked HumHub account
