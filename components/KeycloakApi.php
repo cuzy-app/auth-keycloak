@@ -432,7 +432,9 @@ class KeycloakApi extends Component
      * @param callable $request function (int $first, int $max): array
      * @param string $errorMessage
      * @param int|null $total number of results: if set, pages are requested up to it, even after a page having
-     * less than the maximum results (with a user federation, Keycloak may return such pages before the last one)
+     * less than the maximum results (with a user federation, Keycloak may return such pages before the last one).
+     * No page goes beyond it, as with a user federation, Keycloak may fail while sending such a page; the results
+     * beyond it (e.g. users of a user federation without import) are then requested until a page having less than the maximum results
      * @param callable|null $onPage called after each page: function (int $resultsCount)
      * @param int $pageSize
      * @param bool $untilEmptyPage if no total is given, request pages until an empty one (instead of until a page having
@@ -444,8 +446,9 @@ class KeycloakApi extends Component
         $first = 0;
         $results = [];
         do {
+            $max = $total !== null && $first < $total ? min($pageSize, $total - $first) : $pageSize;
             try {
-                $page = $request($first, $pageSize);
+                $page = $request($first, $max);
             } catch (CommandClientException|CommandException $e) {
                 Yii::error($errorMessage . ': ' . $e->getMessage(), 'auth-keycloak');
                 return null;
@@ -453,14 +456,41 @@ class KeycloakApi extends Component
             if ($this->hasError($page, $errorMessage) || !is_array($page)) {
                 return null;
             }
-            array_push($results, ...array_values($page));
-            $first += $pageSize;
+            // The Keycloak client returns ['content' => <response body>] if the response is not valid JSON
+            // (e.g. truncated because Keycloak failed while sending it)
+            if (!array_is_list($page)) {
+                Yii::error($errorMessage . ': ' . $this->describeInvalidListResponse($page), 'auth-keycloak');
+                return null;
+            }
+            array_push($results, ...$page);
+            $first += $max;
             if ($onPage !== null) {
                 $onPage(count($results));
             }
-        } while ($total !== null ? $first < $total : ($untilEmptyPage ? $page !== [] : count($page) === $pageSize));
+        } while (
+            $total !== null && $first < $total
+            || ($untilEmptyPage ? $page !== [] : count($page) === $max)
+        );
 
         return $results;
+    }
+
+    /**
+     * If Keycloak fails while sending a response (e.g. while querying a user federation), it appends its error
+     * to the part of the response already sent with the HTTP status 200: this error is returned as is.
+     *
+     * @param array $page response that is not a list ['content' => <response body>] if it is not valid JSON
+     * @return string description of the response for the log
+     */
+    private function describeInvalidListResponse(array $page): string
+    {
+        $body = is_string($page['content'] ?? null) ? $page['content'] : (string)json_encode($page);
+        if (preg_match('/\{"error":[^{}]*\}$/', rtrim($body), $matches) && json_decode($matches[0]) !== null) {
+            return 'Keycloak failed while sending the response (' . strlen($body) . ' bytes received, see the Keycloak server log): ' . $matches[0];
+        }
+        json_decode($body);
+        return 'the response is not a JSON list (' . json_last_error_msg() . ', ' . strlen($body)
+            . ' bytes, ending with: ' . mb_scrub(substr($body, -200), 'UTF-8') . ')';
     }
 
     /**
@@ -756,8 +786,9 @@ class KeycloakApi extends Component
      * Returns all users of the realm (Keycloak user representations).
      *
      * With a user federation (e.g. LDAP), Keycloak may return pages having less than the maximum results before
-     * the last one, and a different list on each request. So the pages are requested up to the number of users
-     * of the realm, and the list is requested again (merging the lists) until it is complete,
+     * the last one, a different list on each request, and fail while sending a page going beyond the number of users
+     * of the realm. So the pages are requested up to the number of users of the realm (the last one being limited to it,
+     * see {@see getAllPages()}), and the list is requested again (merging the lists) until it is complete,
      * at most {@see MAX_USERS_LIST_PASSES} times.
      *
      * @param bool|null $isComplete set to false if the list is still incomplete after all passes

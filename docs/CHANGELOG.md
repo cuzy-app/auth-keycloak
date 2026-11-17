@@ -34,6 +34,8 @@ Changelog
 - Fix: The `show-user` console command did not find users by a Keycloak ID that is not a UUID (e.g. users of a user federation without import)
 - Enh: Add an option to adopt existing users with the users sync (`adoptExistingUsers`, for migrations): HumHub accounts of other user sources (e.g. local or LDAP) linked to an enabled Keycloak user, or having its email, are assigned to the Keycloak user source and updated from Keycloak
 - Fix: When the Keycloak API rejected the requests (e.g. HTTP 401 Unauthorized), the module settings showed "Authentication to Keycloak API succeeded!" and the API features still sent their requests
+- Fix: When Keycloak returned an invalid JSON response while listing users, groups or group members (e.g. truncated because Keycloak failed while sending it), the page was silently counted as one item without ID; the list now fails with an error logging the error Keycloak appended to the response (e.g. "Cannot parse the JSON" when the user federation fails), or else the JSON error and the end of the response
+- Fix: With a user federation (e.g. LDAP or Active Directory), Keycloak could fail while sending a users page going beyond the number of users of the realm (HTTP 200 response ending with "Cannot parse the JSON"), so that the users sync only retrieved the first pages: the last page is now limited to the number of users, and the users beyond it (e.g. of a user federation without import) are requested separately
 
 1.6.6 (Unreleased)
 ------------------
