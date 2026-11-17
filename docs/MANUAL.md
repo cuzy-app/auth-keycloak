@@ -68,18 +68,30 @@ Only HumHub accounts of the Keycloak user source are managed. The following Keyc
 
 ### Adopting existing users (migration)
 
-To migrate existing HumHub accounts (e.g. local or LDAP accounts) to Keycloak, enable **Adopt existing users (migration)**. While enabled, the users sync (hourly or with the console command) adopts the HumHub accounts of other user sources matching an enabled Keycloak user:
+To migrate existing HumHub accounts (e.g. local or LDAP accounts) to Keycloak, set **Adopt existing users (migration)** (requires **Fetch/Update users automatically**). While enabled, the users sync (hourly or with the console command) adopts the HumHub accounts of other user sources matching an enabled Keycloak user:
 
 - the account already linked to the Keycloak user (e.g. a local account whose owner signed in with Keycloak), or
 - the account having the same email, if it is not linked to another Keycloak user.
 
 An adopted account is assigned to the Keycloak user source, linked to the Keycloak user, and updated from Keycloak like the other accounts of the Keycloak user source. From then on, Keycloak is authoritative: the account can only sign in with Keycloak (its HumHub password is not used anymore), and it is deactivated when disabled or removed on Keycloak.
 
+Which accounts are adopted depends on the option value:
+
+| | Yes, only safe matches | Yes, Keycloak is trusted |
+|---|---|---|
+| Email not verified on Keycloak | not used for the adoption | used, unless **Use the email sent by Keycloak only if it is verified on Keycloak** is enabled |
+| System administrators | adopted only if already linked to the Keycloak user (by signing in with Keycloak, or by connecting Keycloak in the account settings) | also adopted by email |
+| Deactivated accounts (e.g. by a HumHub admin) | not adopted | adopted and enabled |
+| Accounts of a user source not allowing linking by email (e.g. SCIM) | not adopted by email | also adopted by email |
+
+**Yes, only safe matches** is meant for a Keycloak whose users can set an email without verifying it: an email is then no proof that the Keycloak user owns the HumHub account. If the Keycloak users are imported (e.g. from an LDAP user federation), mark their emails as verified (e.g. with the **Trust Email** option of the user federation) or, if Keycloak is the trusted source of the users, choose **Yes, Keycloak is trusted**.
+
+In both cases:
+
 - Soft deleted accounts and accounts awaiting approval are never adopted, nor are the accounts matching the API admin user, a service account or a disabled Keycloak user.
 - The adoption is all or nothing: if the account cannot be updated (e.g. a required profile field is empty on Keycloak), it keeps its user source and is counted as "failed". If the Keycloak username is already used by another HumHub account, the adopted account keeps its username.
-- Each adoption is logged with the previous user source (at warning level for system administrators).
-- If emails can be set on Keycloak without verifying them, enable **Use the email sent by Keycloak only if it is verified on Keycloak**: otherwise, a Keycloak user could adopt any HumHub account by using its email.
-- Once the migration is done, disable this option (and, if no longer needed, the previous user source, e.g. the LDAP connection).
+- Each adoption is logged with the previous user source (at warning level for system administrators). The Keycloak users matching an account that is not adopted are logged as "skipped" with the reason.
+- Once the migration is done, disable this option (and, if no longer needed, the previous user source, e.g. the LDAP connection). The adopted accounts remain synced as the other accounts of the Keycloak user source.
 
 Good to know:
 

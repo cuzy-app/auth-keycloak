@@ -32,6 +32,12 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
             <?= Alert::danger(Html::tag('strong', 'A requirement is not met: ' . $requirements)) ?>
         <?php endif; ?>
 
+        <?php if ($model->isAdoptingExistingUsers()): ?>
+            <?= Alert::warning(Yii::t('AuthKeycloakModule.base', '{adoptExistingUsers} is enabled: the users sync takes over the matching HumHub accounts of other user sources. Disable it once the migration to Keycloak is done.', [
+                'adoptExistingUsers' => Html::tag('strong', Html::encode($model->getAttributeLabel('adoptExistingUsers'))),
+            ])) ?>
+        <?php endif; ?>
+
         <div class="alert alert-info cuzy-free-module-info" role="alert">
             This module was created and is maintained by
             <a href="https://www.cuzy.app/"
@@ -112,7 +118,7 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
         <?= $form->field($model, 'apiPassword')->textInput(['type' => 'password', 'autocomplete' => 'new-password']) ?>
         <?= $form->field($model, 'apiReadOnly')->checkbox() ?>
         <?= $form->field($model, 'syncUsers')->checkbox(['disabled' => !$module->provideUserSource]) ?>
-        <?= $form->field($model, 'adoptExistingUsers')->checkbox(['disabled' => !$module->provideUserSource]) ?>
+        <?= $form->field($model, 'adoptExistingUsers')->dropDownList($model->adoptExistingUsersItems(), ['disabled' => !$module->provideUserSource]) ?>
         <?= $form->field($model, 'removeKeycloakSessionsAfterLogout')->checkbox() ?>
         <?= $form->field($model, 'updateHumhubUsernameFromBrokerUsername')->checkbox() ?>
         <?= $form->field($model, 'updatedBrokerUsernameFromHumhubUsername')->checkbox() ?>
@@ -142,6 +148,25 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
                 }
 
                 $authMethod.on("change", apply);
+                apply();
+            })();
+        ');
+
+        // The users are adopted by the users sync
+        $this->registerJs('
+            (function () {
+                var $syncUsers = $(' . json_encode('#' . Html::getInputId($model, 'syncUsers')) . ');
+                var $adoptExistingUsers = $(' . json_encode('#' . Html::getInputId($model, 'adoptExistingUsers')) . ');
+
+                function apply() {
+                    var disabled = !$syncUsers.is(":checked") || $syncUsers.is(":disabled");
+                    if (disabled) {
+                        $adoptExistingUsers.val(' . json_encode(ConfigureForm::ADOPT_USERS_NONE) . ');
+                    }
+                    $adoptExistingUsers.prop("disabled", disabled);
+                }
+
+                $syncUsers.on("change", apply);
                 apply();
             })();
         ');
