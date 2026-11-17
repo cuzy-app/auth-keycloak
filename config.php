@@ -12,6 +12,7 @@ use humhub\compat\HForm;
 use humhub\modules\authKeycloak\Events;
 use humhub\modules\user\authclient\Collection;
 use humhub\modules\user\controllers\AuthController;
+use humhub\modules\user\controllers\RegistrationController;
 use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\Group;
 use humhub\modules\user\models\GroupUser;
@@ -25,7 +26,20 @@ return [
     'id' => 'auth-keycloak',
     'class' => humhub\modules\authKeycloak\Module::class,
     'namespace' => 'humhub\modules\authKeycloak',
+    'consoleControllerMap' => [
+        'auth-keycloak' => 'humhub\modules\authKeycloak\commands\KeycloakController',
+    ],
     'events' => [
+        [
+            'class' => AuthController::class,
+            'event' => AuthController::EVENT_BEFORE_ACTION,
+            'callback' => [Events::class, 'onAuthControllerBeforeAction'],
+        ],
+        [
+            'class' => RegistrationController::class,
+            'event' => RegistrationController::EVENT_BEFORE_ACTION,
+            'callback' => [Events::class, 'onRegistrationControllerBeforeAction'],
+        ],
         [
             'class' => AuthController::class,
             'event' => AuthController::EVENT_AFTER_LOGIN,
@@ -100,6 +114,11 @@ return [
             'class' => CronController::class,
             'event' => CronController::EVENT_ON_DAILY_RUN,
             'callback' => [Events::class, 'onCronDailyRun'],
+        ],
+        [
+            'class' => CronController::class,
+            'event' => CronController::EVENT_ON_HOURLY_RUN,
+            'callback' => [Events::class, 'onCronHourlyRun'],
         ],
         [
             'class' => Auth::class,

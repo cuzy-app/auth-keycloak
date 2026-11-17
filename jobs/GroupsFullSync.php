@@ -41,9 +41,9 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     protected $keycloakApi;
 
     /**
-     * @var array
+     * @var array Keycloak group ID => ['name' => string, 'parentId' => string|null], see {@see KeycloakApi::getGroupsTree()}
      */
-    protected $keycloakGroupsNamesById = [];
+    protected $keycloakGroups = [];
 
     /**
      * @var array Keycloak group ID => [Keycloak user ID]
@@ -63,6 +63,11 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     protected $humhubGroupsByKeycloakId = [];
 
     /**
+     * @var GroupKeycloak[] HumHub groups linked to a Keycloak group that is not in {@see $keycloakGroups} anymore
+     */
+    protected $humhubGroupsMissingOnKeycloak = [];
+
+    /**
      * @var array Keycloak user ID => HumHub user ID
      */
     protected $usersKeycloakIdToHumhubId = [];
@@ -71,6 +76,23 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
      * @var array HumHub user ID => Keycloak user ID (reverse of [[$usersKeycloakIdToHumhubId]], for O(1) lookups)
      */
     protected $usersHumhubIdToKeycloakId = [];
+
+    /**
+     * @var string[][] names of the Keycloak groups, by result: 'created', 'linked' (to an existing HumHub group)
+     * and 'withoutMembers' (not created, as they have no members with a HumHub account)
+     */
+    public $results = ['created' => [], 'linked' => [], 'withoutMembers' => []];
+
+    /**
+     * @var bool|null whether the sync ran entirely, null if it was not run (disabled)
+     */
+    public $isCompleted;
+
+    /**
+     * @var callable|null called after retrieving the members of a Keycloak group (console only, not serialized):
+     * function (int $groupsDone, int $groupsTotal)
+     */
+    public $onProgress;
 
     /**
      * @inhertidoc
@@ -90,30 +112,39 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
         $config = new ConfigureForm();
         if (
             !$config->enabled
-            || !$config->apiUsername
-            || !$config->apiPassword
+            || !$config->hasApiParams()
             || $config->groupsSyncMode === ConfigureForm::GROUP_SYNC_MODE_NONE
         ) {
             return;
         }
+        $this->isCompleted = false;
         $this->keycloakApi = new KeycloakApi();
 
-        if (!$this->initKeycloakGroupsNamesById()) {
+        if (!$this->initKeycloakGroups()) {
             return;
         }
         $this->initHumhubGroupsByKeycloakId();
-
-        if ($config->syncKeycloakGroupsToHumhub()) {
-            $this->addKeycloakGroupsToHumhub();
-        }
-        if ($this->firstSync && $config->syncHumhubGroupsToKeycloak()) {
-            $this->addHumhubGroupsToKeycloak();
-        }
-
         $this->initUsersKeycloakIdToHumhubId();
+
+        // The members of the groups to create are retrieved while adding them, as only groups having members are created
+        if ($config->syncKeycloakGroupsToHumhub() && !$this->addKeycloakGroupsToHumhub()) {
+            return;
+        }
         if (!$this->initKeycloakGroupsMembers()) {
             return;
         }
+        if ($this->firstSync && $config->syncHumhubGroupsToKeycloak()) {
+            $this->addHumhubGroupsToKeycloak();
+            // Groups have been linked or created on Keycloak
+            if (!$this->initKeycloakGroups()) {
+                return;
+            }
+            $this->initHumhubGroupsByKeycloakId();
+            if (!$this->initKeycloakGroupsMembers()) {
+                return;
+            }
+        }
+
         $this->initHumhubGroupsMembers();
 
         if ($config->syncKeycloakGroupsToHumhub()) {
@@ -129,9 +160,19 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
                 $this->deleteHumhubUsersFromHumhubGroups();
             }
             if ($config->syncKeycloakGroupsToHumhub()) {
-                $this->renameHumhubGroups();
+                $this->updateHumhubGroups();
             }
         }
+
+        if ($this->results['withoutMembers'] !== []) {
+            Yii::warning(
+                'Groups full sync: ' . count($this->results['withoutMembers'])
+                . ' Keycloak groups not created on HumHub, as they have no members with a HumHub account: '
+                . implode(', ', $this->results['withoutMembers']),
+                'auth-keycloak',
+            );
+        }
+        $this->isCompleted = true;
     }
 
     /**
@@ -164,13 +205,14 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     /**
      * @return bool
      */
-    protected function initKeycloakGroupsNamesById()
+    protected function initKeycloakGroups()
     {
-        $this->keycloakGroupsNamesById = $this->keycloakApi->getGroupsNamesById();
-        if (!is_array($this->keycloakGroupsNamesById)) {
-            Yii::error('Error retrieving groups on Keycloak: ', 'auth-keycloak');
+        $keycloakGroups = $this->keycloakApi->getGroupsTree();
+        if (!is_array($keycloakGroups)) {
+            Yii::error('Groups full sync aborted: the Keycloak groups could not be retrieved', 'auth-keycloak');
             return false;
         }
+        $this->keycloakGroups = $keycloakGroups;
         return true;
     }
 
@@ -184,43 +226,97 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
             ->indexBy('keycloak_id')
             ->all();
         // Remove groups not in Keycloak
+        $this->humhubGroupsMissingOnKeycloak = [];
         foreach ($this->humhubGroupsByKeycloakId as $keycloakGroupId => $humhubGroup) {
-            if (!array_key_exists($keycloakGroupId, $this->keycloakGroupsNamesById)) {
+            if (!array_key_exists($keycloakGroupId, $this->keycloakGroups)) {
+                $this->humhubGroupsMissingOnKeycloak[] = $humhubGroup;
                 unset($this->humhubGroupsByKeycloakId[$keycloakGroupId]);
             }
         }
     }
 
     /**
-     * @return void
+     * Links the Keycloak groups to the HumHub groups having the same name and the same parent, or creates them on HumHub.
+     * Keycloak subgroups are HumHub subgroups of the HumHub group linked to their parent.
+     * Groups are created only if they (or one of their subgroups) have members with a HumHub account,
+     * hidden in the directory and not selectable at registration.
+     * @return bool false if the members of a group could not be retrieved
      */
     protected function addKeycloakGroupsToHumhub()
     {
-        $groupsKeycloakByHumhubName = GroupKeycloak::find()
-            ->where(['keycloak_id' => null])
-            ->indexBy('name')
-            ->all();
         $allHumhubGroupsByKeycloakId = GroupKeycloak::find()
             ->where(['not', ['keycloak_id' => null]])
             ->indexBy('keycloak_id')
             ->all();
-        foreach ($this->keycloakGroupsNamesById as $keycloakGroupId => $keycloakGroupName) {
+        // Parent groups come first
+        foreach ($this->keycloakGroups as $keycloakGroupId => $keycloakGroup) {
             // Check if HumHub group exists
-            if (!array_key_exists($keycloakGroupId, $allHumhubGroupsByKeycloakId)) {
-                // Search for existing HumHub group with same name
-                if (array_key_exists($keycloakGroupName, $groupsKeycloakByHumhubName)) {
-                    $groupKeycloak = $groupsKeycloakByHumhubName[$keycloakGroupName];
-                } else { // Add missing group to HumHub
-                    $groupKeycloak = new GroupKeycloak();
-                    $groupKeycloak->name = $keycloakGroupName;
-                }
-                $groupKeycloak->keycloak_id = $keycloakGroupId;
-                if (!$groupKeycloak->save()) {
+            if (array_key_exists($keycloakGroupId, $allHumhubGroupsByKeycloakId)) {
+                continue;
+            }
+
+            $parentGroupId = null;
+            if ($keycloakGroup['parentId'] !== null) {
+                $parentGroup = $this->humhubGroupsByKeycloakId[$keycloakGroup['parentId']] ?? null;
+                if ($parentGroup === null) {
                     continue;
                 }
-                $this->humhubGroupsByKeycloakId[$keycloakGroupId] = $groupKeycloak;
+                $parentGroupId = $parentGroup->id;
+            }
+
+            // Search for existing HumHub group with same name and parent, or add missing group to HumHub
+            $groupKeycloak = GroupKeycloak::find()
+                ->where(['keycloak_id' => null, 'name' => $keycloakGroup['name'], 'parent_group_id' => $parentGroupId])
+                ->one();
+            if ($groupKeycloak === null) {
+                $hasMembers = $this->hasKeycloakGroupMembers($keycloakGroupId);
+                if ($hasMembers === null) {
+                    return false;
+                }
+                if (!$hasMembers) {
+                    $this->results['withoutMembers'][] = $keycloakGroup['name'];
+                    continue;
+                }
+                $groupKeycloak = new GroupKeycloak();
+                $groupKeycloak->name = $keycloakGroup['name'];
+                $groupKeycloak->parent_group_id = $parentGroupId;
+                $groupKeycloak->show_at_directory = 0;
+                $groupKeycloak->show_at_registration = 0;
+            }
+            $isNew = $groupKeycloak->isNewRecord;
+            $groupKeycloak->keycloak_id = $keycloakGroupId;
+            if (!$groupKeycloak->save()) {
+                Yii::warning('Groups full sync: could not save the HumHub group for the Keycloak group "' . $keycloakGroup['name'] . '". Errors: ' . json_encode($groupKeycloak->getErrors()), 'auth-keycloak');
+                continue;
+            }
+            $this->results[$isNew ? 'created' : 'linked'][] = $keycloakGroup['name'];
+            $this->humhubGroupsByKeycloakId[$keycloakGroupId] = $groupKeycloak;
+        }
+        return true;
+    }
+
+    /**
+     * @param string $keycloakGroupId
+     * @return bool|null whether the Keycloak group or one of its subgroups has members with a HumHub account,
+     * null if the members of a group could not be retrieved
+     */
+    protected function hasKeycloakGroupMembers($keycloakGroupId)
+    {
+        $groupIds = [$keycloakGroupId];
+        foreach ($this->keycloakGroups as $subgroupId => $keycloakGroup) {
+            if ($keycloakGroup['parentId'] === $keycloakGroupId) {
+                $groupIds[] = $subgroupId;
             }
         }
+        foreach ($groupIds as $groupId) {
+            if (!$this->initKeycloakGroupMembers($groupId)) {
+                return null;
+            }
+            if (!empty($this->keycloakGroupsMembers[$groupId])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -229,18 +325,17 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
      */
     protected function addHumhubGroupsToKeycloak()
     {
-        foreach (GroupKeycloak::find()->each() as $humhubGroup) {
+        // Parent groups first, so that their subgroups are created under them
+        $humhubGroups = GroupKeycloak::find()->all();
+        usort($humhubGroups, static fn($a, $b) => ($a->parent_group_id !== null) <=> ($b->parent_group_id !== null));
+        foreach ($humhubGroups as $humhubGroup) {
             // Check if Keycloak group exists
             if (
                 $humhubGroup->keycloak_id === null
-                || !array_key_exists($humhubGroup->keycloak_id, $this->keycloakGroupsNamesById)
+                || !array_key_exists($humhubGroup->keycloak_id, $this->keycloakGroups)
             ) {
-                // Link to a same group name on Keycloak or create group on Keycloak
-                if ($this->keycloakApi->linkSameGroupNameOrCreateGroup($humhubGroup->id)) {
-                    // Update HumHub group with the new created Keycloak ID
-                    $humhubGroup = GroupKeycloak::findOne($humhubGroup->id);
-                    $this->keycloakGroupsNamesById[$humhubGroup->keycloak_id] = $humhubGroup->name;
-                }
+                // Link to a same group name (and parent) on Keycloak or create group on Keycloak
+                $this->keycloakApi->linkSameGroupNameOrCreateGroup($humhubGroup->id);
             }
         }
     }
@@ -271,24 +366,44 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     }
 
     /**
+     * Retrieves the members of the Keycloak groups not retrieved yet
      * @return bool false if the members of a group could not be retrieved
      */
     protected function initKeycloakGroupsMembers()
     {
-        foreach ($this->keycloakGroupsNamesById as $keycloakGroupId => $keycloakGroupName) {
-            $this->keycloakGroupsMembers[$keycloakGroupId] = [];
-            $keycloakUserIds = $this->keycloakApi->getGroupMemberIds($keycloakGroupId);
-            if ($keycloakUserIds === null) {
-                // Abort, otherwise all members of this group would be removed from the HumHub group
-                Yii::error('Groups full sync aborted: members of the Keycloak group ID ' . $keycloakGroupId . ' could not be retrieved', 'auth-keycloak');
+        foreach (array_keys($this->keycloakGroups) as $keycloakGroupId) {
+            if (!$this->initKeycloakGroupMembers($keycloakGroupId)) {
                 return false;
             }
-            foreach ($keycloakUserIds as $keycloakUserId) {
-                // If this user has an account on HumHub
-                if ($this->getHumhubUserId($keycloakUserId) !== null) {
-                    $this->keycloakGroupsMembers[$keycloakGroupId][] = $keycloakUserId;
-                }
+        }
+        return true;
+    }
+
+    /**
+     * Retrieves the members of the Keycloak group, if not retrieved yet
+     * @param string $keycloakGroupId
+     * @return bool false if the members could not be retrieved
+     */
+    protected function initKeycloakGroupMembers($keycloakGroupId)
+    {
+        if (array_key_exists($keycloakGroupId, $this->keycloakGroupsMembers)) {
+            return true;
+        }
+        $keycloakUserIds = $this->keycloakApi->getGroupMemberIds($keycloakGroupId);
+        if ($keycloakUserIds === null) {
+            // Abort, otherwise all members of this group would be removed from the HumHub group
+            Yii::error('Groups full sync aborted: members of the Keycloak group ID ' . $keycloakGroupId . ' could not be retrieved', 'auth-keycloak');
+            return false;
+        }
+        $this->keycloakGroupsMembers[$keycloakGroupId] = [];
+        foreach ($keycloakUserIds as $keycloakUserId) {
+            // If this user has an account on HumHub
+            if ($this->getHumhubUserId($keycloakUserId) !== null) {
+                $this->keycloakGroupsMembers[$keycloakGroupId][] = $keycloakUserId;
             }
+        }
+        if ($this->onProgress !== null) {
+            ($this->onProgress)(count($this->keycloakGroupsMembers), count($this->keycloakGroups));
         }
         return true;
     }
@@ -341,7 +456,10 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
         foreach ($this->keycloakGroupsMembers as $keycloakGroupId => $keycloakUserIds) {
             foreach ($keycloakUserIds as $keycloakUserId) {
                 $humhubUserId = $this->getHumhubUserId($keycloakUserId);
-                $humhubGroup = $this->humhubGroupsByKeycloakId[$keycloakGroupId];
+                $humhubGroup = $this->humhubGroupsByKeycloakId[$keycloakGroupId] ?? null;
+                if ($humhubGroup === null) {
+                    continue;
+                }
                 $humhubGroupMembers = $this->humhubGroupsMembers[$humhubGroup->id];
                 if ($humhubUserId !== null && !in_array($humhubUserId, $humhubGroupMembers)) {
                     $humhubGroup->addUser($humhubUserId);
@@ -397,19 +515,37 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     }
 
     /**
-     * Check for deleted groups on Keycloak
+     * Deletes the HumHub groups whose Keycloak group has been deleted.
+     * The admin and protected groups are only unlinked from Keycloak.
      * @return void
      * @throws StaleObjectException
      * @throws Throwable
      */
     protected function deleteHumhubGroups()
     {
-        foreach ($this->humhubGroupsByKeycloakId as $keycloakGroupId => $humhubGroup) {
-            if (!array_key_exists($keycloakGroupId, $this->keycloakGroupsNamesById)) {
-                $humhubGroup->delete();
-                unset($this->humhubGroupsByKeycloakId[$keycloakGroupId]);
+        // Subgroups first
+        $humhubGroups = $this->humhubGroupsMissingOnKeycloak;
+        usort($humhubGroups, static fn($a, $b) => ($b->parent_group_id !== null) <=> ($a->parent_group_id !== null));
+
+        foreach ($humhubGroups as $humhubGroup) {
+            // Make sure the group has been deleted on Keycloak (e.g. not moved deeper than the subgroups level)
+            if ($this->keycloakApi->groupExists($humhubGroup->keycloak_id) !== false) {
+                continue;
             }
+
+            // Unlink first, so that the group events do not try to update the Keycloak group
+            $keycloakGroupId = $humhubGroup->keycloak_id;
+            $humhubGroup->updateAttributes(['keycloak_id' => null]);
+
+            if ($humhubGroup->is_admin_group || $humhubGroup->is_protected) {
+                Yii::warning('Groups full sync: the Keycloak group ' . $keycloakGroupId . ' has been deleted, the admin or protected group "' . $humhubGroup->name . '" (ID ' . $humhubGroup->id . ') is only unlinked', 'auth-keycloak');
+                continue;
+            }
+
+            Yii::warning('Groups full sync: deleting the group "' . $humhubGroup->name . '" (ID ' . $humhubGroup->id . '), its Keycloak group ' . $keycloakGroupId . ' has been deleted', 'auth-keycloak');
+            $humhubGroup->delete();
         }
+        $this->humhubGroupsMissingOnKeycloak = [];
     }
 
     /**
@@ -435,16 +571,40 @@ class GroupsFullSync extends ActiveJob implements ExclusiveJobInterface, Retryab
     }
 
     /**
-     * Check if some groups have been renamed on Keycloak
+     * Check if some groups have been renamed or moved to another parent on Keycloak
      * @return void
      * @throws Throwable
      */
-    protected function renameHumhubGroups()
+    protected function updateHumhubGroups()
     {
-        foreach ($this->keycloakGroupsNamesById as $keycloakGroupId => $keycloakGroupName) {
-            $humhubGroup = $this->humhubGroupsByKeycloakId[$keycloakGroupId];
-            if ($humhubGroup->name !== $keycloakGroupName) {
-                $humhubGroup->name = $keycloakGroupName;
+        foreach ($this->keycloakGroups as $keycloakGroupId => $keycloakGroup) {
+            $humhubGroup = $this->humhubGroupsByKeycloakId[$keycloakGroupId] ?? null;
+            if ($humhubGroup === null) {
+                continue;
+            }
+
+            $parentGroupId = null;
+            if ($keycloakGroup['parentId'] !== null) {
+                $parentGroupId = ($this->humhubGroupsByKeycloakId[$keycloakGroup['parentId']] ?? null)?->id;
+                if ($parentGroupId === null) {
+                    continue;
+                }
+                $parentGroupId = (int)$parentGroupId;
+            }
+            $currentParentGroupId = $humhubGroup->parent_group_id === null ? null : (int)$humhubGroup->parent_group_id;
+            if (
+                $parentGroupId !== null
+                && $currentParentGroupId !== $parentGroupId
+                && GroupKeycloak::find()->where(['parent_group_id' => $humhubGroup->id])->exists()
+            ) {
+                // HumHub supports only one level of subgroups
+                Yii::warning('Groups full sync: the group "' . $humhubGroup->name . '" (ID ' . $humhubGroup->id . ') has subgroups and cannot become a subgroup', 'auth-keycloak');
+                $parentGroupId = $currentParentGroupId;
+            }
+
+            if ($humhubGroup->name !== $keycloakGroup['name'] || $currentParentGroupId !== $parentGroupId) {
+                $humhubGroup->name = $keycloakGroup['name'];
+                $humhubGroup->parent_group_id = $parentGroupId;
                 $humhubGroup->save();
             }
         }

@@ -10,13 +10,20 @@
 namespace humhub\modules\authKeycloak\controllers;
 
 use humhub\modules\authKeycloak\components\KeycloakApi;
+use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\user\components\BaseAccountController;
 use Yii;
+use yii\web\ForbiddenHttpException;
 
 class UserController extends BaseAccountController
 {
     public function actionChangePassword()
     {
+        $config = new ConfigureForm();
+        if (!$config->enabled || !$config->addChangePasswordFormToAccount) {
+            throw new ForbiddenHttpException();
+        }
+
         if (
             ($post = Yii::$app->request->post())
             && ($newPassword = $post['newPassword'] ?? null)

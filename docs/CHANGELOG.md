@@ -1,6 +1,42 @@
 Changelog
 =========
 
+1.7.0 (Unreleased)
+------------------
+- Enh: Only the Keycloak auth client updates the Keycloak-managed attributes on sign in; other allowed auth clients only authenticate (HumHub 1.19.4+, humhub/humhub#8673)
+- Enh: Add an option to synchronize the users with Keycloak (`syncUsers`): every hour, HumHub accounts are created for new Keycloak users (without admin approval), updated (first name, last name and, depending on the settings, username and email), and deactivated if disabled or removed on Keycloak; also available as the console command `php yii auth-keycloak/sync-users` (and `auth-keycloak/list-users`)
+- Enh: Add an option for a read-only Keycloak API user (`apiReadOnly`): settings requiring write access to Keycloak are disabled
+- Enh: Add an option to access the Keycloak API with the service account of the client (`apiAuthMethod`, "client_credentials" grant) instead of an admin user, so that "Direct access grants" can stay disabled on the client
+- Enh: When creating a user from Keycloak, an already taken username gets a numeric suffix instead of failing
+- Enh: Add an attribute mapping setting (`attributeMapping`, one `humhub-profile-field=keycloak-attribute` per line): mapped profile fields are filled on account creation, updated on each sign in and by the users sync, and read-only on HumHub
+- Chg: The "Username mapper" setting is replaced by a `username=<claim>` line of the attribute mapping (default: `sub`); existing settings are migrated
+- Enh: Groups sync supports HumHub subgroups (synced with the first level of Keycloak subgroups), and groups moved to another parent on HumHub or Keycloak
+- Fix: Groups deleted on Keycloak were never deleted on HumHub; the administrators group and protected groups are now only unlinked from Keycloak
+- Fix: On the first groups sync, the members of the HumHub groups newly linked or created on Keycloak were not added to Keycloak
+- Fix: Adding a member to a HumHub group not linked to Keycloak sent an invalid request instead of linking or creating the Keycloak group
+- Fix: Several HumHub groups with the same name could be linked to the same Keycloak group
+- Chg: The "Synchronize groups and their members" setting is renamed "Groups sync"
+- Enh: Add the console command `php yii auth-keycloak/show-user <user>` displaying all the attributes of a Keycloak user and the resulting HumHub attributes
+- Fix: The "change password" page was accessible by URL when the option was disabled
+- Enh: Add an option to always sign in with Keycloak (`forceKeycloakAuth`): the login page and the invite links redirect to Keycloak; the HumHub login form remains available with `?noKeycloak=1`
+- Enh: Add Codeception tests running against a Keycloak Docker container (GitHub workflows for HumHub master and develop)
+- Enh: Requests to the Keycloak API from the console (users and groups sync, console commands) use a longer timeout (`apiSyncTimeout` module property, default: 10 minutes), as listing the users can exceed the 10 seconds of `apiTimeout`
+- Enh: The users sync logs the skipped and failed Keycloak users (ID, username, first and last name) with the reason
+- Chg: The groups sync creates on HumHub only the Keycloak groups having members with a HumHub account (or a subgroup having such members); the created groups are hidden in the directory and not selectable at registration
+- Enh: The number of HumHub users of the Keycloak user source (by status) is displayed in the module settings and by the `sync-users` console command (with the number of Keycloak users, the duration and a progress bar)
+- Fix: The users sync stopped listing the Keycloak users at the first page having less than 100 users, which Keycloak may return before the last page with a user federation (e.g. LDAP): pages are now requested up to the number of users of the realm
+- Enh: The Keycloak users are listed by pages of 500 users instead of 100 (`usersListPageSize` module property), as Keycloak may skip users at the page boundaries with a user federation
+- Enh: The users sync compares the listed Keycloak users with the number of users of the realm and lists them again (up to 3 times, merging the lists) if some are missing, as Keycloak may return an incomplete list with a user federation (e.g. LDAP); if the list remains incomplete, no HumHub user is deactivated
+- Fix: The groups sync retrieved the members of all the Keycloak groups before creating any group: with many groups and a slow Keycloak, no group was created; the members are now retrieved while creating the groups
+- Fix: With a user federation (e.g. LDAP), the members of a Keycloak group could be incompletely retrieved (and then removed from the HumHub group), as Keycloak may return a page having less than the maximum results before the last one
+- Enh: Add the console command `php yii auth-keycloak/sync-groups` running the groups sync and displaying its progress, the duration and the created, linked and not created groups
+- Fix: The groups sync failed with an uncaught exception when the members of a Keycloak group could not be retrieved (e.g. timeout)
+- Fix: The `show-user` console command did not find users by a Keycloak ID that is not a UUID (e.g. users of a user federation without import)
+- Enh: Add an option to adopt existing users with the users sync (`adoptExistingUsers`, for migrations): HumHub accounts of other user sources (e.g. local or LDAP) linked to an enabled Keycloak user, or having its email, are assigned to the Keycloak user source and updated from Keycloak; "only safe matches" uses only verified emails, adopts system administrators only if already linked to Keycloak and skips deactivated accounts, "Keycloak is trusted" also uses unverified emails, adopts system administrators by email and enables deactivated accounts
+- Fix: When the Keycloak API rejected the requests (e.g. HTTP 401 Unauthorized), the module settings showed "Authentication to Keycloak API succeeded!" and the API features still sent their requests
+- Fix: When Keycloak returned an invalid JSON response while listing users, groups or group members (e.g. truncated because Keycloak failed while sending it), the page was silently counted as one item without ID; the list now fails with an error logging the error Keycloak appended to the response (e.g. "Cannot parse the JSON" when the user federation fails), or else the JSON error and the end of the response
+- Fix: With a user federation (e.g. LDAP or Active Directory), Keycloak could fail while sending a users page going beyond the number of users of the realm (HTTP 200 response ending with "Cannot parse the JSON"), so that the users sync only retrieved the first pages: the last page is now limited to the number of users, and the users beyond it (e.g. of a user federation without import) are requested separately
+
 1.6.6 (Unreleased)
 ------------------
 - Enh: The back-channel logout looks the session up through an index on the Keycloak session ID instead of scanning the authentication table

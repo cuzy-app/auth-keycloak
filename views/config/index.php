@@ -32,6 +32,12 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
             <?= Alert::danger(Html::tag('strong', 'A requirement is not met: ' . $requirements)) ?>
         <?php endif; ?>
 
+        <?php if ($model->isAdoptingExistingUsers()): ?>
+            <?= Alert::warning(Yii::t('AuthKeycloakModule.base', '{adoptExistingUsers} is enabled: the users sync takes over the matching HumHub accounts of other user sources. Disable it once the migration to Keycloak is done.', [
+                'adoptExistingUsers' => Html::tag('strong', Html::encode($model->getAttributeLabel('adoptExistingUsers'))),
+            ])) ?>
+        <?php endif; ?>
+
         <div class="alert alert-info cuzy-free-module-info" role="alert">
             This module was created and is maintained by
             <a href="https://www.cuzy.app/"
@@ -85,18 +91,19 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
               // ConfigController::actionIndex()). ?>
         <?= $form->field($model, 'clientSecret')->textInput(['type' => 'password', 'autocomplete' => 'new-password']) ?>
         <?= $form->field($model, 'redirectUri')->textInput(['readonly' => true]) ?>
-        <?= $form->field($model, 'usernameMapper') ?>
+        <?= $form->field($model, 'attributeMapping')->textarea(['rows' => 4, 'placeholder' => "username=preferred_username\nphone_work=phoneNumber\ncity=locality"]) ?>
 
         <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings (optional)')) ?>
         <?= $form->field($model, 'title') ?>
+        <?= $form->field($model, 'forceKeycloakAuth')->checkbox() ?>
         <?= $form->field($model, 'hideRegistrationUsernameField')->checkbox() ?>
         <?= $form->field($model, 'hideAdminUserEditPassword')->checkbox() ?>
         <?= $form->field($model, 'trustOnlyVerifiedEmail')->checkbox() ?>
         <?= $form->endCollapsibleFields(); ?>
 
-        <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings requiring an admin user for the API (optional)')) ?>
+        <?= $form->beginCollapsibleFields(Yii::t('AuthKeycloakModule.base', 'Advanced settings requiring access to the Keycloak API (optional)')) ?>
 
-        <?php if ($model->apiUsername) : ?>
+        <?php if ($model->hasApiParams()) : ?>
             <?= Alert::instance(
                 $apiAuthentificationSuccess
                     ? Yii::t('AuthKeycloakModule.base', 'Authentication to Keycloak API succeeded!')
@@ -105,9 +112,13 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
             ) ?>
         <?php endif; ?>
 
+        <?= $form->field($model, 'apiAuthMethod')->dropDownList($model->apiAuthMethodItems()) ?>
         <?= $form->field($model, 'apiUsername') ?>
         <?php // Same masking as the client secret above (see ConfigController::actionIndex()). ?>
         <?= $form->field($model, 'apiPassword')->textInput(['type' => 'password', 'autocomplete' => 'new-password']) ?>
+        <?= $form->field($model, 'apiReadOnly')->checkbox() ?>
+        <?= $form->field($model, 'syncUsers')->checkbox(['disabled' => !$module->provideUserSource]) ?>
+        <?= $form->field($model, 'adoptExistingUsers')->dropDownList($model->adoptExistingUsersItems(), ['disabled' => !$module->provideUserSource]) ?>
         <?= $form->field($model, 'removeKeycloakSessionsAfterLogout')->checkbox() ?>
         <?= $form->field($model, 'updateHumhubUsernameFromBrokerUsername')->checkbox() ?>
         <?= $form->field($model, 'updatedBrokerUsernameFromHumhubUsername')->checkbox() ?>
@@ -121,6 +132,74 @@ $requirements = file_exists($requirementsFile) ? (include $module->basePath . '/
         <?= Html::saveButton() ?>
 
         <?php ActiveForm::end() ?>
+
+        <?php
+        // The admin user fields are not used with the service account
+        $this->registerJs('
+            (function () {
+                var $authMethod = $(' . json_encode('#' . Html::getInputId($model, 'apiAuthMethod')) . ');
+                var $userFields = $(' . json_encode(implode(',', [
+                    '.field-' . Html::getInputId($model, 'apiUsername'),
+                    '.field-' . Html::getInputId($model, 'apiPassword'),
+                ])) . ');
+
+                function apply() {
+                    $userFields.toggle($authMethod.val() !== ' . json_encode(ConfigureForm::API_AUTH_METHOD_SERVICE_ACCOUNT) . ');
+                }
+
+                $authMethod.on("change", apply);
+                apply();
+            })();
+        ');
+
+        // The users are adopted by the users sync
+        $this->registerJs('
+            (function () {
+                var $syncUsers = $(' . json_encode('#' . Html::getInputId($model, 'syncUsers')) . ');
+                var $adoptExistingUsers = $(' . json_encode('#' . Html::getInputId($model, 'adoptExistingUsers')) . ');
+
+                function apply() {
+                    var disabled = !$syncUsers.is(":checked") || $syncUsers.is(":disabled");
+                    if (disabled) {
+                        $adoptExistingUsers.val(' . json_encode(ConfigureForm::ADOPT_USERS_NONE) . ');
+                    }
+                    $adoptExistingUsers.prop("disabled", disabled);
+                }
+
+                $syncUsers.on("change", apply);
+                apply();
+            })();
+        ');
+
+        // Settings requiring write access to the Keycloak API are disabled while the API is read-only
+        $this->registerJs('
+            (function () {
+                var $readOnly = $(' . json_encode('#' . Html::getInputId($model, 'apiReadOnly')) . ');
+                var $writeInputs = $(' . json_encode(implode(',', array_map(
+                    static fn($attribute) => '#' . Html::getInputId($model, $attribute),
+                    ConfigureForm::API_WRITE_ATTRIBUTES,
+                ))) . ');
+                var $groupsSyncMode = $(' . json_encode('#' . Html::getInputId($model, 'groupsSyncMode')) . ');
+                var readOnlyGroupsSyncModes = ' . json_encode(ConfigureForm::API_READ_ONLY_GROUP_SYNC_MODES) . ';
+
+                function apply() {
+                    var readOnly = $readOnly.is(":checked");
+                    if (readOnly) {
+                        $writeInputs.prop("checked", false);
+                    }
+                    $writeInputs.prop("disabled", readOnly);
+                    $groupsSyncMode.find("option").each(function () {
+                        $(this).prop("disabled", readOnly && this.value in readOnlyGroupsSyncModes);
+                    });
+                    if (readOnly && $groupsSyncMode.val() in readOnlyGroupsSyncModes) {
+                        $groupsSyncMode.val(readOnlyGroupsSyncModes[$groupsSyncMode.val()]);
+                    }
+                }
+
+                $readOnly.on("change", apply);
+                apply();
+            })();
+        ') ?>
 
     </div>
 </div>

@@ -7,12 +7,17 @@ A new button "Keycloak" (which can be renamed) will appear on the login page.
 ## Features
 
 - OpenID Connect
+- Optionally, always sign in with Keycloak (the login page redirects to Keycloak)
 - Keycloak Back-channel logout (1)
 - Possibility to add a page in account settings allowing users to change their Keycloak password
+- Users synchronization from Keycloak (hourly and with the console command `php yii auth-keycloak/sync-users`): HumHub accounts are created, updated, and deactivated when disabled or removed on Keycloak; existing accounts of other user sources (e.g. local or LDAP) can be adopted for a migration
+- Attribute mapping (Keycloak user attributes to the HumHub username and profile fields), and the console command `php yii auth-keycloak/show-user` to display all the attributes of a Keycloak user
+- Keycloak API access with an admin user or with the service account of the client (no password, "Direct access grants" not required)
+- Read-only API user support (only the `view-users`, `query-groups` and `view-realm` roles of the `realm-management` client are required)
 - Users' groups and email synchronization between Keycloak and HumHub in both directions (2):
     - HumHub to Keycloak sync is done in real time
     - Keycloak to HumHub sync is done once a day
-    - Keycloak subgroups are not synced
+    - HumHub subgroups are synced with the first level of Keycloak subgroups
 
 (1) Allows removing user sessions automatically when signing out from Keycloak (via a websocket).
 
@@ -32,6 +37,8 @@ A new button "Keycloak" (which can be renamed) will appear on the login page.
 ## Configuration
 
 Go to module's configuration at: `Administration -> Modules -> Keycloak Auth -> Configure`. And follow the instructions.
+
+See [INSTALLATION.md](INSTALLATION.md) for the Keycloak setup (client, API access with a service account or an admin user, roles) and [MANUAL.md](MANUAL.md) for the features (users sync, groups sync, console commands).
 
 ## Pricing
 

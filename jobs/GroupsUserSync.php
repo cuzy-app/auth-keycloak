@@ -56,8 +56,7 @@ class GroupsUserSync extends ActiveJob
         $config = new ConfigureForm();
         if (
             !$config->enabled
-            || !$config->apiUsername
-            || !$config->apiPassword
+            || !$config->hasApiParams()
             || !$config->syncKeycloakGroupsToHumhub()
         ) {
             return;

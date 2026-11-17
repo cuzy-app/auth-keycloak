@@ -4,19 +4,22 @@
  * Keycloak Sign-In
  * @link https://github.com/cuzy-app/auth-keycloak
  * @license https://github.com/cuzy-app/auth-keycloak/blob/main/docs/LICENCE.md
- * @author [Marc FARRE](https://marc.fun) for [CUZY.APP](https://www.cuzy.app)
+ * @author [Marc FARRE](https://marc.fun) for [CUZY.app](https://www.cuzy.app)
  */
 
 namespace tests\codeception\unit\modules\authKeycloak;
 
 use humhub\modules\authKeycloak\authclient\Keycloak;
 use humhub\modules\authKeycloak\jobs\GroupsFullSync;
+use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\models\GroupKeycloak;
+use humhub\modules\user\models\Auth;
 use humhub\modules\user\models\Group;
 use humhub\modules\user\models\User;
 use ReflectionClass;
 use tests\codeception\_support\HumHubDbTestCase;
 use Yii;
+use yii\db\Transaction;
 
 /**
  * The user maps of the groups full sync are built from ids only and must give the same answers as before
@@ -24,6 +27,29 @@ use Yii;
  */
 class GroupsFullSyncMapsTest extends HumHubDbTestCase
 {
+    private ?Transaction $transaction = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // No real time sync to Keycloak when adding group members (the settings are kept between tests)
+        Yii::$app->getModule('auth-keycloak')->settings->set('groupsSyncMode', ConfigureForm::GROUP_SYNC_MODE_NONE);
+
+        // The unit suite runs without transactions (see unit.suite.yml): roll back the rows inserted by this test
+        $this->transaction = Yii::$app->db->beginTransaction();
+        // Not reset by the fixtures: Keycloak auth records left by the previous tests
+        Auth::deleteAll(['source' => Keycloak::DEFAULT_NAME]);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->transaction?->rollBack();
+        $this->transaction = null;
+
+        parent::tearDown();
+    }
+
     private function insertAuth(int $userId, string $sourceId, string $source = Keycloak::DEFAULT_NAME): void
     {
         Yii::$app->db->createCommand()->insert('user_auth', [

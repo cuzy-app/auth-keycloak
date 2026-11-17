@@ -1,6 +1,19 @@
 <?php
 
 /**
- * Shared humhub configuration for all suites. Can be overwritten per suite in e.g. functional.php
+ * Keycloak Sign-In
+ * @link https://github.com/cuzy-app/auth-keycloak
+ * @license https://github.com/cuzy-app/auth-keycloak/blob/main/docs/LICENCE.md
  */
-return [];
+
+/*
+ * Shared test config. The module may be checked out outside of `protected/modules/`
+ * (e.g. in a separate modules folder), so the directory containing it is added
+ * to the module autoload paths.
+ */
+
+return [
+    'params' => [
+        'moduleAutoloadPaths' => [dirname(__DIR__, 3)],
+    ],
+];

@@ -64,7 +64,7 @@ class RefreshTokenWithTimeout extends RefreshToken
             'connect_timeout' => $options['connect_timeout'] ?? 0,
         ]);
 
-        return $httpClient->requestAsync('POST', $url, ['form_params' => $params])->then(function (ResponseInterface $response) {
+        return $httpClient->requestAsync('POST', $url, ['form_params' => $params])->then(function (ResponseInterface $response) use ($grantType) {
             if ($response->getStatusCode() !== 200) {
                 throw new RejectionException('expected to receive http status code 200 when requesting a token');
             }
@@ -72,6 +72,13 @@ class RefreshTokenWithTimeout extends RefreshToken
             $token = json_decode($response->getBody()->getContents(), true);
             if (!$token) {
                 throw new RejectionException('token returned in the response body is not in a valid json');
+            }
+
+            // No refresh token is returned for the "client_credentials" grant by default, so the library's middleware
+            // would get a new access token for each API request: the access token is used as refresh token instead,
+            // so that it is reused until it expires, and a new one is then requested with the client credentials
+            if ($grantType === 'client_credentials' && empty($token['refresh_token']) && !empty($token['access_token'])) {
+                $token['refresh_token'] = $token['access_token'];
             }
 
             return $token;

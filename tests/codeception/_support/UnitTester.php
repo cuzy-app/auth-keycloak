@@ -1,8 +1,12 @@
 <?php
 
-namespace authkeycloak;
+/**
+ * Keycloak Sign-In
+ * @link https://github.com/cuzy-app/auth-keycloak
+ * @license https://github.com/cuzy-app/auth-keycloak/blob/main/docs/LICENCE.md
+ */
 
-use Codeception\Actor;
+namespace humhub\modules\authKeycloak;
 
 /**
  * Inherited Methods
@@ -15,10 +19,11 @@ use Codeception\Actor;
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
+ * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = null)
  *
  * @SuppressWarnings(PHPMD)
  */
-class UnitTester extends Actor
+class UnitTester extends \UnitTester
 {
     use _generated\UnitTesterActions;
 }

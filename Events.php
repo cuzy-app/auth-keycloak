@@ -11,6 +11,7 @@ namespace humhub\modules\authKeycloak;
 
 use humhub\commands\CronController;
 use humhub\compat\HForm;
+use humhub\components\Controller;
 use humhub\helpers\ControllerHelper;
 use humhub\libs\ParameterEvent;
 use humhub\modules\admin\models\forms\UserEditForm;
@@ -21,6 +22,7 @@ use humhub\modules\authKeycloak\jobs\GroupsFullSync;
 use humhub\modules\authKeycloak\jobs\GroupsUserSync;
 use humhub\modules\authKeycloak\jobs\UpdateUserEmail;
 use humhub\modules\authKeycloak\jobs\UpdateUserUsername;
+use humhub\modules\authKeycloak\jobs\UsersFullSync;
 use humhub\modules\authKeycloak\models\ConfigureForm;
 use humhub\modules\authKeycloak\source\KeycloakUserSource;
 use humhub\modules\ui\menu\MenuLink;
@@ -34,6 +36,7 @@ use humhub\modules\user\models\User;
 use humhub\modules\user\widgets\AccountProfileMenu;
 use Throwable;
 use Yii;
+use yii\base\ActionEvent;
 use yii\base\Event;
 use yii\db\AfterSaveEvent;
 use yii\helpers\Console;
@@ -75,6 +78,67 @@ class Events
                 'clientSecret' => $config->clientSecret,
             ]);
         }
+    }
+
+    /**
+     * Redirects the login page to Keycloak if "Always sign in with Keycloak" is enabled
+     * (bypass: `?noKeycloak=1`)
+     * @param ActionEvent $event
+     */
+    public static function onAuthControllerBeforeAction(ActionEvent $event)
+    {
+        if ($event->action->id === 'login' && static::isForcedKeycloakAuth()) {
+            static::redirectToKeycloak($event);
+        }
+    }
+
+    /**
+     * Invite links (by e-mail token or by shared link) open the registration form instead of the login page:
+     * with "Always sign in with Keycloak", the invited users are also redirected to Keycloak
+     * @param ActionEvent $event
+     */
+    public static function onRegistrationControllerBeforeAction(ActionEvent $event)
+    {
+        if (
+            in_array($event->action->id, ['index', 'by-link'], true)
+            && Yii::$app->request->get('token')
+            && static::isForcedKeycloakAuth()
+        ) {
+            static::redirectToKeycloak($event);
+        }
+    }
+
+    private static function redirectToKeycloak(ActionEvent $event): void
+    {
+        $event->isValid = false;
+        $url = ['/user/auth/external', 'authclient' => Keycloak::DEFAULT_NAME];
+        $controller = $event->action->controller;
+        if (Yii::$app->request->isAjax && $controller instanceof Controller) {
+            // The login modal (e.g. "Sign in" button) is loaded by AJAX: a redirect would be followed by the XHR,
+            // not by the browser, so a page navigating to Keycloak is returned instead (as the core login does)
+            Yii::$app->response->content = $controller->htmlRedirect($url);
+        } else {
+            Yii::$app->response->redirect($url);
+        }
+    }
+
+    private static function isForcedKeycloakAuth(): bool
+    {
+        if (
+            !Yii::$app->request->isGet
+            || Yii::$app->request->get('noKeycloak')
+            || !Yii::$app->user->isGuest
+            // A failed Keycloak sign in redirects to the login page with an error message: show it
+            // instead of redirecting to Keycloak again (which could sign in the user again, in a loop)
+            || Yii::$app->session->getAllFlashes() !== []
+        ) {
+            return false;
+        }
+
+        $config = new ConfigureForm();
+        return $config->enabled
+            && $config->forceKeycloakAuth
+            && Yii::$app->authClientCollection->hasClient(Keycloak::DEFAULT_NAME);
     }
 
     /**
@@ -296,9 +360,10 @@ class Events
      */
     public static function onModelGroupAfterDelete($event)
     {
+        $config = new ConfigureForm();
         if (
             empty($event->sender)
-            || !(new ConfigureForm())->syncHumhubGroupsToKeycloak(true)
+            || !$config->syncHumhubGroupsToKeycloak()
         ) {
             return;
         }
@@ -306,7 +371,12 @@ class Events
         /** @var Group $group */
         $group = $event->sender;
 
-        (new KeycloakApi())->removeGroup($group->keycloak_id);
+        $keycloakApi = new KeycloakApi();
+        // HumHub moves the subgroups of a deleted group to the top level
+        $keycloakApi->moveSubgroupsToTopLevel($group->keycloak_id);
+        if ($config->syncHumhubGroupsToKeycloak(true)) {
+            $keycloakApi->removeGroup($group->keycloak_id);
+        }
     }
 
 
@@ -330,10 +400,13 @@ class Events
         // Get changed attributes
         $changedAttributes = $event->changedAttributes;
 
+        $keycloakApi = new KeycloakApi();
         // If name has changed
         if (array_key_exists('name', $changedAttributes)) {
-            (new KeycloakApi())->renameGroup($group->id);
+            $keycloakApi->renameGroup($group->id);
         }
+        // The parent group is updated without triggering any event, so the hierarchy is checked on each update
+        $keycloakApi->syncGroupHierarchy($group->id);
     }
 
 
@@ -416,6 +489,37 @@ class Events
         }
 
         Yii::$app->queue->push(new GroupsFullSync());
+
+        $controller->stdout('done.' . PHP_EOL, Console::FG_GREEN);
+    }
+
+
+    /**
+     * @param $event
+     * @return void
+     */
+    public static function onCronHourlyRun($event)
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        if (!$module?->isEnabled) {
+            return;
+        }
+
+        $config = new ConfigureForm();
+        if (
+            !$config->enabled
+            || !$config->syncUsers
+            || !$config->hasApiParams()
+        ) {
+            return;
+        }
+
+        /** @var CronController $controller */
+        $controller = $event->sender;
+        $controller->stdout("Auth Keycloak module: adding to jobs Keycloak users synchronization with the API...");
+
+        Yii::$app->queue->push(new UsersFullSync());
 
         $controller->stdout('done.' . PHP_EOL, Console::FG_GREEN);
     }

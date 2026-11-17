@@ -1,45 +1,48 @@
 <?php
 
 /**
- * Bootstrap for the auth-keycloak module test suite.
- * Loads the core HumHub bootstrap and sets module-specific aliases.
+ * Keycloak Sign-In
+ * @link https://github.com/cuzy-app/auth-keycloak
+ * @license https://github.com/cuzy-app/auth-keycloak/blob/main/docs/LICENCE.md
  */
 
-use Codeception\Configuration;
-use Codeception\Util\Autoload;
+/*
+ * Bootstraps the test runner: chains into the HumHub core test bootstrap so
+ * the module's tests share the same Yii application + fixtures pipeline as
+ * the core suite. Then starts the Keycloak test server (Docker container) if
+ * no Keycloak is reachable, see KeycloakTestServer.
+ */
 
-$env = $GLOBALS['env'] ?? [];
+use humhub\modules\authKeycloak\tests\codeception\_support\KeycloakTestServer;
 
-if (count($env) > 0) {
-    Configuration::append(['environment' => $env]);
-    $envCfgFile = dirname(__DIR__) . '/config/env/test.' . $env[0][0] . '.php';
-    if (file_exists($envCfgFile)) {
-        $cfg = array_merge(require_once(__DIR__ . '/../config/test.php'), require_once($envCfgFile));
+$testRoot = dirname(__DIR__);
+
+\Codeception\Configuration::append(['test_root' => $testRoot]);
+codecept_debug('Module root: ' . $testRoot);
+
+$humhubPath = getenv('HUMHUB_PATH');
+if ($humhubPath === false) {
+    $moduleConfig = require $testRoot . '/config/test.php';
+    if (isset($moduleConfig['humhub_root'])) {
+        $humhubPath = $moduleConfig['humhub_root'];
+    } else {
+        $humhubPath = dirname(__DIR__, 5);
     }
 }
 
-$cfg ??= require_once(__DIR__ . '/../config/test.php');
+\Codeception\Configuration::append(['humhub_root' => $humhubPath]);
+codecept_debug('HumHub Root: ' . $humhubPath);
 
-// Fall back: assume the module lives inside a standard HumHub checkout at
-// protected/modules_cuzy/auth-keycloak — four levels above the tests/ directory.
-$cfg['humhub_root'] ??= dirname(__DIR__) . '/../../../..';
+$globalConfig = require $humhubPath . '/protected/humhub/tests/codeception/_loadConfig.php';
+require $globalConfig['humhub_root'] . '/protected/humhub/tests/codeception/_bootstrap.php';
 
-require_once($cfg['humhub_root'] . '/protected/humhub/tests/codeception/_bootstrap.php');
+/*
+ * Register the module's namespace alias. The module may be loaded via a module
+ * autoload path rather than from `protected/modules/`, so the test runner would
+ * not resolve the `humhub\modules\authKeycloak\*` classes on its own.
+ */
+Yii::setAlias('@humhub/modules/authKeycloak', dirname($testRoot));
+Yii::setAlias('@auth-keycloak', dirname($testRoot));
 
-Yii::setAlias('@tests', dirname(__DIR__));
-Yii::setAlias('@env', '@tests/config/env');
-Yii::setAlias('@root', $cfg['humhub_root']);
-Yii::setAlias('@humhubTests', $cfg['humhub_root'] . '/protected/humhub/tests');
-Yii::setAlias('@authkeycloak', dirname(__DIR__, 2));
-
-Autoload::addNamespace('', Yii::getAlias('@humhubTests/codeception/_support'));
-Autoload::addNamespace('tests\codeception\fixtures', Yii::getAlias('@humhubTests/codeception/fixtures'));
-Autoload::addNamespace('', Yii::getAlias('@humhubTests/codeception/_pages'));
-
-if (isset($cfg['modules'])) {
-    Configuration::append(['humhub_modules' => $cfg['modules']]);
-}
-
-if (isset($cfg['fixtures'])) {
-    Configuration::append(['fixtures' => $cfg['fixtures']]);
-}
+require_once __DIR__ . '/_support/KeycloakTestServer.php';
+KeycloakTestServer::start();

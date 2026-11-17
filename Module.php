@@ -30,6 +30,21 @@ class Module extends BaseModule
     public $apiTimeout = 10;
 
     /**
+     * @var int|float Maximum duration in seconds of a request to the Keycloak API from the console
+     * (background jobs such as the users and groups sync, console commands), used instead of `apiTimeout`
+     * as listing many users can take much longer (e.g. with LDAP user federation) (0 to wait indefinitely)
+     */
+    public $apiSyncTimeout = 600;
+
+    /**
+     * @var int Number of users per request when listing all the Keycloak users (users sync, `list-users` command)
+     * or the members of a Keycloak group (groups sync).
+     * With a user federation (e.g. LDAP), Keycloak may skip some users at the page boundaries, so larger pages
+     * give a more complete list, but each request takes longer (see `apiSyncTimeout`)
+     */
+    public $usersListPageSize = 500;
+
+    /**
      * @var int|float Maximum duration in seconds to connect to the Keycloak API (0 to wait indefinitely)
      */
     public $apiConnectTimeout = 5;

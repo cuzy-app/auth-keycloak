@@ -266,6 +266,55 @@ class Keycloak extends OpenIdConnect
     }
 
     /**
+     * Returns the normalized user attributes from a Keycloak API user representation,
+     * the same way as the ones received on sign in
+     *
+     * @param array $keycloakUser user representation returned by the Keycloak admin API
+     * @return array
+     * @throws InvalidConfigException
+     */
+    public function normalizeApiUserAttributes(array $keycloakUser): array
+    {
+        $claims = [
+            'sub' => $keycloakUser['id'] ?? null,
+            'preferred_username' => $keycloakUser['username'] ?? null,
+            'email' => $keycloakUser['email'] ?? null,
+            'email_verified' => $keycloakUser['emailVerified'] ?? false,
+            'given_name' => $keycloakUser['firstName'] ?? null,
+            'family_name' => $keycloakUser['lastName'] ?? null,
+        ];
+
+        // Custom claims (username mapper, profile fields mapping) can only be resolved from a user attribute having the same name
+        foreach ($this->getNormalizeUserAttributeMap() as $actualName) {
+            if (is_string($actualName) && !array_key_exists($actualName, $claims)) {
+                $claims[$actualName] = $keycloakUser['attributes'][$actualName][0] ?? null;
+            }
+        }
+
+        $attributes = $this->normalizeUserAttributes(array_filter($claims, static fn($value) => $value !== null));
+        $attributes = array_filter($attributes, static fn($value) => $value !== null && $value !== '');
+
+        // The API returns all the user attributes: a mapped profile field that is missing has been removed on Keycloak
+        foreach (array_keys($this->getAttributeMapping()) as $field) {
+            if ($field !== 'username') {
+                $attributes[$field] ??= '';
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @return array HumHub profile field (or `username`) => Keycloak claim name, from the "Attribute mapping" setting
+     */
+    public function getAttributeMapping(): array
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('auth-keycloak');
+        return ConfigureForm::parseAttributeMapping($module->settings->get('attributeMapping'));
+    }
+
+    /**
      * @inheridoc
      */
     protected function initUserAttributes()
@@ -305,16 +354,14 @@ class Keycloak extends OpenIdConnect
 
     protected function defaultNormalizeUserAttributeMap()
     {
-        /** @var Module $module */
-        $module = Yii::$app->getModule('auth-keycloak');
-
-        return [
-            'id' => 'sub',
-            'username' => $module->settings->get('usernameMapper'),
+        return array_merge([
+            'username' => 'sub',
             'firstname' => 'given_name',
             'lastname' => 'family_name',
+        ], $this->getAttributeMapping(), [
+            'id' => 'sub',
             'email' => 'email',
-        ];
+        ]);
     }
 
     /**
@@ -326,13 +373,21 @@ class Keycloak extends OpenIdConnect
     protected function normalizeUserAttributes($attributes)
     {
         $attributes = parent::normalizeUserAttributes($attributes);
+
+        // Multivalued claims: only the first value is used
+        foreach (array_keys($this->getAttributeMapping()) as $field) {
+            if (isset($attributes[$field]) && is_array($attributes[$field])) {
+                $attributes[$field] = $attributes[$field] === [] ? null : reset($attributes[$field]);
+            }
+        }
+
         if (
             isset($attributes['username'], $attributes['email'])
             && $attributes['username'] === $attributes['email']
         ) {
             $attributes['username'] = BaseInflector::id2camel(
                 BaseInflector::slug(
-                    $attributes['firstname'] . ' ' . $attributes['lastname'],
+                    ($attributes['firstname'] ?? '') . ' ' . ($attributes['lastname'] ?? ''),
                 ),
             );
         }

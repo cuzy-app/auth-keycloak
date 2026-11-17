@@ -1,0 +1,16 @@
+name: Codeception Tests - develop
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
+
+jobs:
+  tests:
+    uses: humhub/module-coding-standards/.github/workflows/codeception-develop.yml@main
+    with:
+      module-id: auth-keycloak
+      # bcmath (or gmp) is required by the module (see requirements.php)
+      extensions: curl, intl, pdo, pdo_mysql, zip, exif, fileinfo, mbstring, gd, ldap, bcmath
