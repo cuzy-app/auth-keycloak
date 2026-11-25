@@ -1,12 +1,21 @@
 Changelog
 =========
 
-1.6.6 (Unreleased)
+1.6.6 (November 25, 2026)
 ------------------
+**Security fix – please update.** With versions 1.6.0 to 1.6.5 (HumHub 1.19), a user signing in with Keycloak for the first time could land in another user's account, at each sign-in. This happened when their Keycloak user ID started with digits (e.g. `8c08488d-…`) and the HumHub account with that number as ID (here `8`) was a Keycloak account. If the "update email / username from Keycloak" options were enabled, the email or username of that account was replaced by the new user's.
+
+Accounts already affected are not repaired by the update, because the database does not record these sign-ins. To find them:
+- In the Keycloak admin console, list the users whose ID starts with a digit from 1 to 9, or with zeros followed by such a digit. Those who have a session or a sign-in event for the HumHub client, but no row in the HumHub `user_auth` table with `source = 'Keycloak'` and their ID as `source_id`, were signed in to the account whose ID is that leading number.
+- In HumHub, compare the email and username of each Keycloak account with the Keycloak user stored as `source_id` in `user_auth`: a difference points to an affected account. Also check the accounts linked to several Keycloak users: `SELECT user_id FROM user_auth WHERE source = 'Keycloak' GROUP BY user_id HAVING COUNT(*) > 1`.
+
+For each affected account, restore its email and username, remove the `user_auth` rows that are not its own, and review what was read or posted meanwhile. After the update, the other user gets an account of their own at the next sign-in (once the email of the affected account is restored).
+
 - Enh: The back-channel logout looks the session up through an index on the Keycloak session ID instead of scanning the authentication table
 - Enh: The groups full sync no longer loads every Keycloak user and every group member as full records; it works on ids only
 - Fix: Reviewed French, German, Spanish, Portuguese, Brazilian Portuguese, Italian and Dutch translations (wrong meanings, HumHub terminology, consistent wording and form of address); Traditional Chinese is now actually in Traditional Chinese and Norwegian Nynorsk in Nynorsk (they were copies of Simplified Chinese and Bokmål)
 - Enh: Automated code refactoring for HumHub 1.19 using Rector
+- Fix: Security: a new Keycloak user could be signed in to another user's account (see above). The user source ID is now `keycloak_source` instead of `Keycloak` (existing users are migrated), and an account already linked to another Keycloak user is no longer linked by email
 
 1.6.5 (October 21, 2026)
 ------------------

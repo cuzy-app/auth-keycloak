@@ -29,7 +29,13 @@ use yii\helpers\VarDumper;
  */
 class KeycloakUserSource extends BaseUserSource
 {
-    public const SOURCE_ID = Keycloak::DEFAULT_NAME;
+    /**
+     * Must differ from the auth client ID (`Keycloak`): when both are equal, core's
+     * `AuthClientService::getUser()` takes the auth client's attributes['id'] as the HumHub `user.id`,
+     * but ours is the Keycloak `sub`, which MySQL casts to a number when it starts with digits,
+     * so a new Keycloak user could be signed in to another user's account.
+     */
+    public const SOURCE_ID = 'keycloak_source';
 
     public function init()
     {
@@ -39,7 +45,7 @@ class KeycloakUserSource extends BaseUserSource
             $this->id = self::SOURCE_ID;
         }
         if ($this->allowedAuthClientIds === []) {
-            $this->allowedAuthClientIds = [self::SOURCE_ID];
+            $this->allowedAuthClientIds = [Keycloak::DEFAULT_NAME];
         }
     }
 
@@ -97,7 +103,16 @@ class KeycloakUserSource extends BaseUserSource
     }
 
     /**
-     * Creates a HumHub user with `user_source = 'Keycloak'`.
+     * Email linking is done by {@see Keycloak::getUser()}, which refuses users already linked to another
+     * Keycloak identity ({@see Keycloak::isUserSafeToLink()}); core's email auto-link would bypass that check.
+     */
+    public function allowEmailAutoLink(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Creates a HumHub user with `user_source = 'keycloak_source'`.
      *
      * Note: the user_auth row is written by the auth client's
      * {@see Keycloak::createOrUpdateAuthRecord()} (which also stores
@@ -127,7 +142,7 @@ class KeycloakUserSource extends BaseUserSource
     private function buildRegistration(array $attributes): ?Registration
     {
         $registration = new Registration(enableEmailField: true, enablePasswordForm: false);
-        $registration->enableUserApproval = $this->requiresApproval(self::SOURCE_ID);
+        $registration->enableUserApproval = $this->requiresApproval(Keycloak::DEFAULT_NAME);
 
         unset(
             $attributes['id'],
